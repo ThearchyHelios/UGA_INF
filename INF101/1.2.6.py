@@ -1,6 +1,6 @@
 prenom = input("Votre prenom svp ")
 
-langue = input("Votre langue: ") #Langue devait etre "francais" ou "anglais"
+langue = input("Votre langue: ")  # Langue devait etre "francais" ou "anglais"
 
 if langue == "francais":
     print("Bonjour %s" % prenom)
