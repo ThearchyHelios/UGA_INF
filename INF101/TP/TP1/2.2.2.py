@@ -59,7 +59,7 @@ while True:
     (chance_rest, chance_utilise, vectoire, continuer) = jeu(nombre_saisser)
     if vectoire:
         vectoire_fois += 1
-    else:
+    if not continuer:
         print("Tu as gagné %s parties sur %s jouées, tu as mis en moyenne %s essais pour deviner" % (vectoire, fois, chance_utilise/(chance_utilise+chance_rest)))
         break
     chance_total_rest += chance_rest
