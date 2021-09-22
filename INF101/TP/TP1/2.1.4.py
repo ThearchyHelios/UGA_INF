@@ -9,6 +9,6 @@ resultat = ""
 
 if (z < 0):
     resultat = -z
-else :
+else:
     z = resultat
     print("valeur absolue :", resultat)
