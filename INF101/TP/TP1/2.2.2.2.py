@@ -43,6 +43,7 @@ print(time.time() - start_time, "seconds")
 plt.plot(fois_count, "ro")
 # plt.plot(fois_count)
 count = 0
+
 for i in fois_count:
     plt.bar(count, i)
     count += 1
