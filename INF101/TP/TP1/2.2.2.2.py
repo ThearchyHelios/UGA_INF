@@ -44,13 +44,9 @@ print(time.time() - start_time, "seconds")
 plt.subplot(211)
 plt.plot(fois_count, "ro")
 plt.plot(fois_count)
-count = 0
 
 plt.subplot(212)
-for i in fois_count:
-    plt.bar(count, i)
-    count += 1
+count = Counter(fois_count)
+plt.bar(count.keys(), count.values())
 
 plt.show()
-
-print(Counter(fois_count))
