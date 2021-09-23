@@ -37,5 +37,7 @@ print("Il utilise %s fois en %s.\nEn moyenne il utilise %s fois chaque question"
     nombre_fois_utilise_total, fois_jouer, nombre_fois_utilise_total / fois_jouer))
 print(fois_count)
 
+plt.plot(fois_count, "ro")
 plt.plot(fois_count)
 plt.show()
+
