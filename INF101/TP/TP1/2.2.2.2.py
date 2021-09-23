@@ -1,6 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 import time
+from collections import Counter
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
@@ -40,11 +41,16 @@ print("Il utilise %s fois en %s jeu(s).\nEn moyenne il utilise %s fois chaque je
 print(fois_count)
 print(time.time() - start_time, "seconds")
 
+plt.subplot(211)
 plt.plot(fois_count, "ro")
-# plt.plot(fois_count)
+plt.plot(fois_count)
 count = 0
 
+plt.subplot(212)
 for i in fois_count:
     plt.bar(count, i)
     count += 1
+
 plt.show()
+
+print(Counter(fois_count))
