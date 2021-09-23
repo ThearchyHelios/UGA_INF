@@ -35,11 +35,15 @@ for i in range(0, fois_jouer):
             fois_count.append(nombre_fois_utilise_une_fois)
             break
 
-print("Il utilise %s fois en %s.\nEn moyenne il utilise %s fois chaque question" % (
+print("Il utilise %s fois en %s jeu(s).\nEn moyenne il utilise %s fois chaque jeu" % (
     nombre_fois_utilise_total, fois_jouer, nombre_fois_utilise_total / fois_jouer))
 print(fois_count)
 print(time.time() - start_time, "seconds")
 
 plt.plot(fois_count, "ro")
-plt.plot(fois_count)
+# plt.plot(fois_count)
+count = 0
+for i in fois_count:
+    plt.bar(count, i)
+    count += 1
 plt.show()
