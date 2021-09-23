@@ -1,17 +1,19 @@
 import random
 import matplotlib.pyplot as plt
+import time
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
 nombre_maximeme = 100
 fois_count = []
+start_time = time.time()
 
 for i in range(0, fois_jouer):
     nombre_random = random.randint(0, nombre_maximeme)
     print("Le nombre correst est %s" % nombre_random)
     nombre_temp_gauche = 0
     nombre_temp_droite = nombre_maximeme
-    nombre_fois_utilise_une_fois =0
+    nombre_fois_utilise_une_fois = 0
     while True:
         nombre_temp_random = random.randint(nombre_temp_gauche, nombre_temp_droite)
         print("Je choisi %s" % nombre_temp_random)
@@ -36,8 +38,8 @@ for i in range(0, fois_jouer):
 print("Il utilise %s fois en %s.\nEn moyenne il utilise %s fois chaque question" % (
     nombre_fois_utilise_total, fois_jouer, nombre_fois_utilise_total / fois_jouer))
 print(fois_count)
+print(time.time() - start_time, "seconds")
 
 plt.plot(fois_count, "ro")
 plt.plot(fois_count)
 plt.show()
-
