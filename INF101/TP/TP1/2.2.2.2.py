@@ -6,7 +6,7 @@ import multiprocessing as mp
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
-nombre_maximeme = 100
+nombre_maximeme = 9999999999999
 fois_count = []
 start_time = time.time()
 
