@@ -1,12 +1,12 @@
 import random
 import matplotlib.pyplot as plt
 import time
-from collections import Counter
+from collections import Counter, OrderedDict
 import multiprocessing as mp
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
-nombre_maximeme = 9999
+nombre_maximeme = 99
 fois_count = []
 start_time = time.time()
 
@@ -18,7 +18,7 @@ for i in range(0, fois_jouer):
     nombre_fois_utilise_une_fois = 0
     while True:
         nombre_temp_random = random.randint(nombre_temp_gauche, nombre_temp_droite)
-        print("Je choisi %s" % nombre_temp_random)
+        print("Je choisi %s (%s fois)" % (nombre_temp_random, nombre_fois_utilise_une_fois + 1))
         if nombre_temp_random < nombre_random:
             print("Cest trop petit")
             nombre_fois_utilise_une_fois += 1
@@ -48,6 +48,13 @@ plt.plot(fois_count)
 
 plt.subplot(212)
 count = Counter(fois_count)
+print(count)
 plt.bar(count.keys(), count.values())
+plt.xlabel("Fois Utilise")
+plt.ylabel("Fois Count")
+plt.grid(True)
 
+for i in (count.keys()):
+    v = count.get(i)
+    plt.text(i, v + 5, "%d" % v, ha="center")
 plt.show()
