@@ -2,6 +2,7 @@ import random
 import matplotlib.pyplot as plt
 import time
 from collections import Counter
+import multiprocessing as mp
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
