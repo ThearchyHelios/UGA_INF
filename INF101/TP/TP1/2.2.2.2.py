@@ -6,10 +6,6 @@ import multiprocessing as mp
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 
-num_cores = int(mp.cpu_count())
-pool = mp.Pool(num_cores)
-
-
 def jeu(a):
     nombre_fois_utilise_total = 0
     nombre_maximeme = 9999
@@ -57,5 +53,8 @@ def jeu(a):
 
     plt.show()
 
+num_cores = int(mp.cpu_count())
+pool = mp.Pool(num_cores)
+print(num_cores)
 
 result = pool.apply_async(jeu(fois_jouer))
