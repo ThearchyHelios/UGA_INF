@@ -12,5 +12,6 @@ while Un != 1:
         Un = Un / 2
     else:
         Un = 3 * Un + 1
+        print("La valeur dela suite au terme %i est egale a %i" % (n, Un))
     n += 1
 print("Un = 1 lorsque n eset egale a %i et la plus grand valeur atteint par la suite %i" % (n, Un_max))
