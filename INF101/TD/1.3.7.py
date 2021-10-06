@@ -1,3 +1,11 @@
+'''
+Author: JIANG Yilun
+Date: 2021-09-21 09:05:28
+LastEditTime: 2021-10-06 10:04:00
+LastEditors: JIANG Yilun
+Description: 
+FilePath: /INF/INF101/TD/1.3.7.py
+'''
 # temp = []
 # sum = 0
 # for a in range(5):

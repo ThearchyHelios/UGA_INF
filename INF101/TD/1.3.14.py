@@ -1,3 +1,11 @@
+'''
+Author: JIANG Yilun
+Date: 2021-10-02 15:56:57
+LastEditTime: 2021-10-06 10:04:04
+LastEditors: JIANG Yilun
+Description: 
+FilePath: /INF/INF101/TD/1.3.14.py
+'''
 n = float(input("Saissez un nombre n"))
 
 tmp = 0
