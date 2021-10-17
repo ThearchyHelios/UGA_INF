@@ -1,4 +1,8 @@
 {
     "discord.enabled": true,
+<<<<<<< HEAD
     "git.ignoreLimitWarning": true
+=======
+    "python.formatting.provider": "yapf"
+>>>>>>> 8e420c4e82a77d60b39baeb5e38605c0bd437aa7
 }
