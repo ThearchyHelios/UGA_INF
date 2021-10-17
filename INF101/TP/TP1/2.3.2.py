@@ -74,7 +74,7 @@ x = 20
 turtle.up()
 for j in range(3):
     for i in range(4):
-        circle_unfinie(4 * x * (i + 1), 4 * x * (j + 1), x, 1000)
+        circle_unfinie(4 * x * (i + 1), 4 * x * (j + 1), x, 20)
 
 # turtle.setworldcoordinates(3 * x  , 3 * x, 4 * x * (i), 4 * x * (j))
 
