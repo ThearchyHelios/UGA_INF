@@ -3,7 +3,7 @@ import time
 from collections import Counter, OrderedDict
 from rich.progress import track
 import multiprocessing as mp
-import asyncio
+import threading
 
 fois_jouer = int(input("Combien de fois tu vous jouer?"))
 nombre_fois_utilise_total = 0
@@ -11,15 +11,12 @@ nombre_maximeme = 99
 fois_count = []
 start_time = time.time()
 
-for i in track(range(0, fois_jouer), description="Calculing..."):
-    nombre_random = random.randint(0, nombre_maximeme)
-    # print("Le nombre correst est %s" % nombre_random)
-    nombre_temp_gauche = 0
-    nombre_temp_droite = nombre_maximeme
+
+def jeu(nombre_random, nombre_temp_gauche, nombre_temp_droite, nombre_fois_utilise_total):
     nombre_fois_utilise_une_fois = 0
     while True:
         nombre_temp_random = random.randint(nombre_temp_gauche, nombre_temp_droite)
-        # print("Je choisi %s (%s fois)" % (nombre_temp_random, nombre_fois_utilise_une_fois + 1))
+            # print("Je choisi %s (%s fois)" % (nombre_temp_random, nombre_fois_utilise_une_fois + 1))
         if nombre_temp_random < nombre_random:
             # print("Cest trop petit")
             nombre_fois_utilise_une_fois += 1
@@ -36,7 +33,25 @@ for i in track(range(0, fois_jouer), description="Calculing..."):
             nombre_fois_utilise_total += nombre_fois_utilise_une_fois
             # print("---------------------------------")
             fois_count.append(nombre_fois_utilise_une_fois)
-            break
+            return nombre_fois_utilise_total
+
+
+for i in track(range(0, fois_jouer), description="Calculing..."):
+    nombre_random = random.randint(0, nombre_maximeme)
+    # print("Le nombre correst est %s" % nombre_random)
+    nombre_temp_gauche = 0
+    nombre_temp_droite = nombre_maximeme
+    nombre_fois_utilise_une_fois = 0
+    threads = []
+    for _ in range(1):
+        t = threading.Thread(target=jeu(nombre_random,nombre_temp_gauche,nombre_temp_droite, nombre_fois_utilise_total))
+        threads.append(t)
+        t.setDaemon(True)
+    for t in threads:
+        t.start()
+
+
+    # nombre_fois_utilise_total = jeu(nombre_random,nombre_temp_gauche,nombre_temp_droite, nombre_fois_utilise_total)
 
 print("Il utilise %s fois en %s jeu(s).\nEn moyenne il utilise %s fois chaque jeu" % (
     nombre_fois_utilise_total, fois_jouer, nombre_fois_utilise_total / fois_jouer))
