@@ -16,6 +16,7 @@ def competeur_face(liste_n_tirage):
     return liste_de_compteur
 
 
+
 entier = int(input("Saissez un nombre"))
 list_gerer = une_partie(entier)
 print(list_gerer)
