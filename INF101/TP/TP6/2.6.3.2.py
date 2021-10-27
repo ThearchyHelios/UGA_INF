@@ -37,7 +37,7 @@ while True:
     sum_count = 0
     for count in list_count:
         sum_count += count
-    count_moyenne = sum_count / count
+    count_moyenne = sum_count / len(list_count)
 
     print("sum_count: ", sum_count)
     print("Count_moyenne: ", count_moyenne)
@@ -79,4 +79,5 @@ while True:
     for mot in b:
         for i in mot:
             list.append(i)
-    print(Counter(list))
+    list = Counter(list)
+    print(list)

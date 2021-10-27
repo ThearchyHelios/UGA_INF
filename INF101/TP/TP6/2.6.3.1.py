@@ -8,7 +8,7 @@ for i in alphabet_cap:
     list_alphabet_cap.append(i)
 
 while True:
-    a = input("saissez un mot: ")
+    a = input("saissez un mot (taper enter pour arreter): ")
     if a is not "":
         b = a.split(" ")
         print(b)
