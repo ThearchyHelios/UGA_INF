@@ -30,7 +30,7 @@ else:
 question2_reponse = input("\nY a-t-il un seul nombre impair parmi %s , %s , %s ?\nVotre reponse: " % (a, b, c))
 
 if question2_reponse == "V" or question2_reponse == "F":
-    if a % 2 == 0 and b % 2 == 0 and c % 2 == 0:
+    if a % 2 == 1 or b % 2 == 1 or c % 2 == 1:
         if question2_reponse == "V":
             print("Question2 Correct")
             total_bon_reponse += 1
