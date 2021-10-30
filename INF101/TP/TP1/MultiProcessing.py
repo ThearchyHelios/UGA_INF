@@ -24,8 +24,11 @@ if __name__ == '__main__':
                   'task5': list(range(120000000, 150000000)),
                   'task6': list(range(150000000, 180000000)),
                   'task7': list(range(180000000, 210000000)),
-                  'task8': list(range(210000000, 240000000))}
+                  'task8': list(range(210000000, 240000000)),
+                  'task9': list(range(210000000, 240000000)),
+                  'task10': list(range(210000000, 240000000))}
     results = [pool.apply_async(train_on_parameter, args=(name, param)) for name, param in param_dict.items()]
+    print(results)
     results = [p.get() for p in results]
 
     end_t = datetime.datetime.now()
