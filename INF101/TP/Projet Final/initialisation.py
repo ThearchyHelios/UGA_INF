@@ -134,7 +134,7 @@ def gagnant(scores):
     point_gagnant = 0
     for nom in scores:
         for nom_item, item in scores[nom].items():
-            if nom_item == "score":
+            if nom_item == "score" and scores[nom]["give_up"] == True:
                 if item > point_gagnant and item <= 21:
                     nom_gagnant_plus = nom
                     point_gagnant = item

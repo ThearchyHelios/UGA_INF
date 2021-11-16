@@ -46,6 +46,7 @@ def tourJoueur(j, scores, pioche):
 
     print("You have %s scores now " % score)
     if continuer():
+        # if not scores[j]["out"] and not scores[j]["give_up"]
         liste_pioche_joueur = pioche[numero_joueur]
         liste_carte = initialisation.piocheCarte(liste_pioche_joueur, 1)
         for carte in liste_carte:
@@ -71,14 +72,35 @@ def tourJoueur(j, scores, pioche):
 def tourComplet(scores, pioche):
     while True:
         count_out = 0
+        count_giveup = 0
+        count_success = 0
         for nom in scores:
             if scores[nom]["out"]:
                 count_out += 1
-            else:
-                if count_out == len(scores) - 1: # 只剩一名玩家
+            elif scores[nom]["give_up"]:
+                count_giveup += 1
+            elif scores[nom]["success"]:
+                count_success += 1
+            elif not scores[nom]["give_up"] and not scores[nom]["success"]:
+                if count_out == len(scores) - 1:  # 只剩一名玩家
                     scores[nom]["success"] = True
                     scores[nom]["point"] += 1
                     print("%s a reussi" % nom)
-                tourJoueur(nom, scores, pioche)
-
-
+                else:
+                    tourJoueur(nom, scores, pioche)
+            else:
+                print("Player %s please wait until all players given up" % nom)
+        if count_giveup == len(scores) - count_out - count_success:
+            if count_success == len(scores) - 1:
+                for nom in scores:
+                    if scores[nom]["success"] == False:
+                        print("You have loss %s" % nom)
+                        return
+            else:
+                nom, score = initialisation.gagnant(scores)
+                for nom_dans_liste in scores:
+                    if nom_dans_liste == nom:
+                        scores[nom]["success"] = True
+                        scores[nom]["point"] += 1
+                        print("You have success %s" % nom)
+                        return
