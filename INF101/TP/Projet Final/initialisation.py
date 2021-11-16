@@ -110,7 +110,7 @@ def initJoueurs(n):
 def initScores(joueurs, v):
     dict_joueurs = {}
     for nom in joueurs:
-        dict_joueurs[nom] = {"score": v, "round": 0, "success": False}
+        dict_joueurs[nom] = {"score": v, "round": 0, "give_up": False, "out": False, "success": False, "point": 0}
     return dict_joueurs
 
 
@@ -120,8 +120,8 @@ def premierTour(joueurs):
     for i in range(len(joueurs)):
         liste_carte_joueurs.append(piocheCarte(initPioche(len(joueurs))[i], 2))
     count = 0
-    for liste_carte_joueur in liste_carte_joueurs:
 
+    for liste_carte_joueur in liste_carte_joueurs:
         for carte in liste_carte_joueur:
             dict_joueurs[joueurs[count]]["score"] += int(valeurCarte(carte))
         count += 1

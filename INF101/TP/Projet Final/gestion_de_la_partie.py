@@ -1,3 +1,5 @@
+import time
+
 import initialisation
 
 
@@ -53,9 +55,30 @@ def tourJoueur(j, scores, pioche):
         scores[j]["score"] = score
         if score > 21:
             print("You lose the game!")
-            del scores[j]
+            scores[j]["out"] = True
+        elif score == 21:
+            print("You win the game!")
+            scores[j]["success"] = True
+            scores[j]["point"] += 1
         print(scores)
     else:
-        print("You have been deleted from list")
+        scores[j]["give_up"] = True
+        print("You have given up")
+
+    time.sleep(2)
+
+
+def tourComplet(scores, pioche):
+    while True:
+        count_out = 0
+        for nom in scores:
+            if scores[nom]["out"]:
+                count_out += 1
+            else:
+                if count_out == len(scores) - 1: # 只剩一名玩家
+                    scores[nom]["success"] = True
+                    scores[nom]["point"] += 1
+                    print("%s a reussi" % nom)
+                tourJoueur(nom, scores, pioche)
 
 
