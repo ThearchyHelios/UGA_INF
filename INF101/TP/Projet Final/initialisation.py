@@ -115,7 +115,7 @@ def initScores(joueurs, v):
     return dict_joueurs
 
 
-def  premierTour(joueurs):
+def premierTour(joueurs):
     liste_carte_joueurs = []
     dict_joueurs = initScores(joueurs, 0)
     for i in range(len(joueurs)):
@@ -130,13 +130,23 @@ def  premierTour(joueurs):
 
 
 def gagnant(scores):
-    list_score = []
+    # list_score = []
+    nom_gagnant_plus = ""
+    point_gagnant = 0
     for nom in scores:
         for nom_item, item in scores[nom].items():
             if nom_item == "score":
-                list_score.append(item)
-    print(list_score)
-    for score in list_score:
-        if score
+                if item > point_gagnant and item <= 21:
+                    nom_gagnant_plus = nom
+                    point_gagnant = item
+    print(scores)
+    return nom_gagnant_plus, point_gagnant
+    # list_score.append(item)
 
-gagnant(premierTour(initJoueurs(3)))
+    # # for score in list_score:
+    # #     if score
+
+
+
+
+print(gagnant(premierTour(initJoueurs(3))))
