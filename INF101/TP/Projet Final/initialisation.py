@@ -73,7 +73,16 @@ def paquet():
 def valeurCarte(carte):
     temp = str(carte)
     nombre_liste = temp.split(" ")
-    nombre = nombre_liste[0]
+    if nombre_liste[0] == "A":
+        nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+    elif nombre_liste[0] == "valet":
+        nombre = 10
+    elif nombre_liste[0] == "dame":
+        nombre = 10
+    elif nombre_liste[0] == "roi":
+        nombre = 10
+    else:
+        nombre = int(nombre_liste[0])
     return nombre
 
 
@@ -91,4 +100,43 @@ def piocheCarte(p, x):
     return liste_carte
 
 
-print(initPioche(3))
+def initJoueurs(n):
+    liste_joueurs = []
+    for i in range(n):
+        nom = input("Quel est le nom du joueur?")
+        liste_joueurs.append(nom)
+    return liste_joueurs
+
+
+def initScores(joueurs, v):
+    dict_joueurs = {}
+    for nom in joueurs:
+        dict_joueurs[nom] = {"score": v}
+    return dict_joueurs
+
+
+def  premierTour(joueurs):
+    liste_carte_joueurs = []
+    dict_joueurs = initScores(joueurs, 0)
+    for i in range(len(joueurs)):
+        liste_carte_joueurs.append(piocheCarte(initPioche(len(joueurs))[i], 2))
+    count = 0
+    for liste_carte_joueur in liste_carte_joueurs:
+
+        for carte in liste_carte_joueur:
+            dict_joueurs[joueurs[count]]["score"] += int(valeurCarte(carte))
+        count += 1
+    return dict_joueurs
+
+
+def gagnant(scores):
+    list_score = []
+    for nom in scores:
+        for nom_item, item in scores[nom].items():
+            if nom_item == "score":
+                list_score.append(item)
+    print(list_score)
+    for score in list_score:
+        if score
+
+gagnant(premierTour(initJoueurs(3)))
