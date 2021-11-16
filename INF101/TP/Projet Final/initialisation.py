@@ -144,4 +144,3 @@ def gagnant(scores):
 
     # # for score in list_score:
     # #     if score
-
