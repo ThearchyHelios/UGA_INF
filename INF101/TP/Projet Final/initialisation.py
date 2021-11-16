@@ -75,11 +75,7 @@ def valeurCarte(carte):
     nombre_liste = temp.split(" ")
     if nombre_liste[0] == "A":
         nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
-    elif nombre_liste[0] == "valet":
-        nombre = 10
-    elif nombre_liste[0] == "dame":
-        nombre = 10
-    elif nombre_liste[0] == "roi":
+    elif nombre_liste[0] == "valet" or nombre_liste[0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
         nombre = int(nombre_liste[0])
@@ -87,16 +83,19 @@ def valeurCarte(carte):
 
 
 def initPioche(n):
-    liste_carte_rmeplacer = []
+    liste_carte_remplacer = []
     for i in range(n):
-        liste_carte_rmeplacer.append(paquet())
-    return liste_carte_rmeplacer
+        liste_carte_remplacer.append(paquet())
+    return liste_carte_remplacer
 
 
 def piocheCarte(p, x):
     liste_carte = []
     for i in range(x):
         liste_carte.append(p[i])
+        p.append(p[i])
+        del p[0]
+
     return liste_carte
 
 
@@ -111,7 +110,7 @@ def initJoueurs(n):
 def initScores(joueurs, v):
     dict_joueurs = {}
     for nom in joueurs:
-        dict_joueurs[nom] = {"score": v}
+        dict_joueurs[nom] = {"score": v, "round": 0, "success": False}
     return dict_joueurs
 
 
@@ -146,7 +145,3 @@ def gagnant(scores):
     # # for score in list_score:
     # #     if score
 
-
-
-
-print(gagnant(premierTour(initJoueurs(3))))
