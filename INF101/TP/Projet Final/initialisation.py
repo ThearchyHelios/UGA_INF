@@ -66,10 +66,6 @@ def paquet():
     return liste_carte
 
 
-# print(paquet())
-# print(len(paquet()))
-
-
 def valeurCarte(carte):
     temp = str(carte)
     nombre_liste = temp.split(" ")
@@ -130,17 +126,16 @@ def premierTour(joueurs):
 
 def gagnant(scores):
     # list_score = []
-    nom_gagnant_plus = ""
-    point_gagnant = 0
+    nom_gagnant_plus = []
+    point_gagnant_plus = 0
     for nom in scores:
         for nom_item, item in scores[nom].items():
             if nom_item == "score" and scores[nom]["give_up"] == True:
-                if item > point_gagnant and item <= 21:
-                    nom_gagnant_plus = nom
-                    point_gagnant = item
+                if item > point_gagnant_plus and item <= 21:
+                    # nom_gagnant_plus = nom
+                    point_gagnant_plus = item
+    for nom in scores:
+        if scores[nom]["score"] == point_gagnant_plus:
+            nom_gagnant_plus.append(nom)
     print(scores)
-    return nom_gagnant_plus, point_gagnant
-    # list_score.append(item)
-
-    # # for score in list_score:
-    # #     if score
+    return nom_gagnant_plus, point_gagnant_plus

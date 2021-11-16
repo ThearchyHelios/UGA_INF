@@ -44,6 +44,12 @@ def tourJoueur(j, scores, pioche):
         else:
             print("%s " % liste_score[i], end="")
 
+    if score == 21:
+        print("You win the game!")
+        scores[j]["success"] = True
+        scores[j]["point"] += 1
+        return
+
     print("You have %s scores now " % score)
     if continuer():
         # if not scores[j]["out"] and not scores[j]["give_up"]
@@ -98,9 +104,11 @@ def tourComplet(scores, pioche):
                         return
             else:
                 nom, score = initialisation.gagnant(scores)
-                for nom_dans_liste in scores:
-                    if nom_dans_liste == nom:
-                        scores[nom]["success"] = True
-                        scores[nom]["point"] += 1
-                        print("You have success %s" % nom)
-                        return
+                for nom_gagner_plus_point in nom:
+                    for nom_dans_liste in scores:
+                        if nom_dans_liste == nom_gagner_plus_point:
+                            scores[nom_gagner_plus_point]["success"] = True
+                            scores[nom_gagner_plus_point]["point"] += 1
+                            print("You have success %s" % nom_gagner_plus_point)
+
+                return
