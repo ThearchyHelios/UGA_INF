@@ -1,0 +1,17 @@
+2,round 1:14,round 2:24,False,True
+3,round 1:7,round 2:14,round 3:24,False,True
+1,round 1:21,True,False
+3,round 1:15,round 2:16,round 3:25,False,True
+2,round 1:13,round 2:21,True,False
+1,round 1:17,False,False
+1,round 1:20,True,False
+1,round 1:12,False,False
+1,round 1:21,True,False
+1,round 1:20,True,False
+1,round 1:18,False,False
+2,round 1:20,round 2:24,False,True
+1,round 1:13,True,False
+1,round 1:19,True,False
+2,round 1:13,round 2:23,False,True
+1,round 1:19,True,False
+3,round 1:11,round 2:16,round 3:26,False,True
