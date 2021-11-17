@@ -3,25 +3,7 @@ import time
 import initialisation
 
 
-def continuer(path, score):
-    history = {}
-    scores = []
-    count = 0
-    for line in open(path, "r"):
-        line = line[:-1]  # delete \n
-        # list_chaque_personne = f.split("\n")
-        history[count] = {}
-        item_list = line.split(",")
-        history[count]["round"] = int(item_list[0])
-        history[count]["score"] = {}
-        for score in item_list[1:-3]:
-            list_temp = score.split(":")
-            history[count]["score"][list_temp[0]] = int(list_temp[1])
-        history[count]["success"] = bool(item_list[-3])
-        history[count]["out"] = bool(item_list[-2])
-        history[count]["give_up"] = bool(item_list[-1])
-        count += 1
-    print(history)
+def continuer():
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n")
     if continuer_le_jeux == "y":
         return True
@@ -31,7 +13,7 @@ def continuer(path, score):
     # if history["score"][""]
 
 
-def tourJoueur(j, scores, pioche):
+def tourJoueur(j, scores, pioche, score_croupier_premier_round):
     score = 0
     round = 0
     print(scores)
@@ -59,6 +41,7 @@ def tourJoueur(j, scores, pioche):
             print("%s points." % liste_score[i])
         else:
             print("%s " % liste_score[i], end="")
+    print("Le croupier a %s." % score_croupier_premier_round)
 
     scores[j]["history"]["round %s" % round] = score
     if score == 21:
@@ -68,7 +51,7 @@ def tourJoueur(j, scores, pioche):
         return
     print("You have %s scores now " % score)
     print(scores)
-    if continuer("history.txt", scores):
+    if continuer():
         # if not scores[j]["out"] and not scores[j]["give_up"]
 
         liste_pioche = pioche
@@ -95,6 +78,7 @@ def tourJoueur(j, scores, pioche):
 
 
 def tourComplet(scores, pioche):
+    score_sroupier_premier_round = croupier_prendre_carte(pioche, 1)
     while True:
         count_out = 0
         count_giveup = 0
@@ -108,28 +92,91 @@ def tourComplet(scores, pioche):
                 count_success += 1
 
         if count_giveup == len(scores) - count_out - count_success:
-            if count_success == len(scores) - 1:  # il est le seul person de n'a pas reussir
-                for nom in scores:
-                    if scores[nom]["success"] == False:
-                        print("You have loss %s" % nom)
-                        return
-            elif count_out == len(scores) - 1:  # il est le seule personne n'a pas out donc il est reussir
-                for nom in scores:
-                    if scores[nom]["out"] == False:  # pour trouver le personne
-                        print("You win the game! %s" % nom)
-                        scores[nom]["success"] = True
-                        scores[nom]["point"] += 1
-                        return
-            else:  # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
-                nom, score = initialisation.gagnant(scores)
-                for nom_gagner_plus_point in nom:
-                    for nom_dans_liste in scores:
-                        if nom_dans_liste == nom_gagner_plus_point:
-                            scores[nom_gagner_plus_point]["success"] = True
-                            scores[nom_gagner_plus_point]["point"] += 1
-                            print("You have success %s" % nom_gagner_plus_point)
-                return
+            # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
+            score_croupier = score_sroupier_premier_round
+            # TODO: Croupier condition
+            # while True:
+            #     score = croupier_prendre_carte(pioche, 1)
+            #     print("Croupier a prendre %s" % score)
+            #     score_croupier += score
 
-        for nom in scores:
-            if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"]:
-                tourJoueur(nom, scores, pioche)
+            nom, score = initialisation.gagnant(scores, 18)
+            for nom_gagner_plus_point in nom:
+                for nom_dans_liste in scores:
+                    if nom_dans_liste == nom_gagner_plus_point:
+                        scores[nom_gagner_plus_point]["success"] = True
+                        scores[nom_gagner_plus_point]["point"] += 1
+                        print("You have success %s" % nom_gagner_plus_point)
+            return
+        elif count_out == len(scores):
+            # Cest a dire que tous les personnes sont out
+            return
+        else:
+            for nom in scores:
+                if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"] and not \
+                        scores[nom][
+                            "draw"]:
+                    tourJoueur(nom, scores, pioche, score_sroupier_premier_round)
+
+
+def croupier_prendre_carte(pioche, nombre):
+    liste_pioche = pioche
+    liste_carte = initialisation.piocheCarte(liste_pioche, nombre)
+    score = 0
+    for carte in liste_carte:
+        print("You get %s" % carte)
+        score += initialisation.valeurCarte(carte)
+    return score
+
+
+def bot_decision(path, scores, nom):
+    history = {}
+    count = 0
+    for line in open(path, "r"):
+        line = line[:-1]  # delete \n
+        # list_chaque_personne = f.split("\n")
+        history[count] = {}
+        item_list = line.split(",")
+        history[count]["round"] = int(item_list[0])
+        history[count]["score"] = {}
+        for score in item_list[1:-3]:
+            list_temp = score.split(":")
+            history[count]["score"][list_temp[0]] = int(list_temp[1])
+        history[count]["success"] = bool(item_list[-3])
+        history[count]["out"] = bool(item_list[-2])
+        history[count]["give_up"] = bool(item_list[-1])
+        count += 1
+    print(history)
+    score = scores[nom]["score"]
+    liste_chance = []
+    success = 50
+    defayant = 50
+    for i in range(21 - score):
+        liste_temp = []  # stocker les resultats ancient
+        for items in history:
+            if history[items]["out"]:
+                for key, item in history[items]["score"].items():
+                    liste_temp.append(item)
+
+                for i in liste_temp:
+                    if i == score and i < len(liste_temp) - 1:
+                        score_suite = liste_temp[i + 1]
+                        if score_suite > 21:
+                            defayant *= 0.75
+                        else:
+                            success *= 0.25
+            else:
+                for key, item in history[items]["score"].items():
+                    liste_temp.append(item)
+
+                for i in liste_temp:
+                    if i == score and i < len(liste_temp) - 1:
+                        score_suite = liste_temp[i + 1]
+                        if score_suite > 21:
+                            defayant *= 0.25
+                        else:
+                            success *= 0.75
+
+    print(success, defayant)
+
+# def croupier_decision(scores, ):

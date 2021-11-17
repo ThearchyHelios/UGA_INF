@@ -22,3 +22,6 @@
 1,round 1:19,True,False,True
 2,round 1:13,round 2:23,False,True,False
 6,round 1:12,round 2:15,round 3:17,round 4:18,round 5:19,round 6:29,False,True,False
+1,round 1:17,False,False,True
+1,round 1:18,False,False,True
+2,round 1:10,round 2:20,True,False,True
