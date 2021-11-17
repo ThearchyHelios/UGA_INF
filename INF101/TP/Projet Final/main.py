@@ -8,8 +8,8 @@ liste_joueurs = initialisation.initJoueurs(nombre_de_personne)
 scores = initialisation.premierTour(liste_joueurs)
 
 while True:
-    liste_pioche_chaque_personne = initialisation.initPioche(nombre_de_personne)
-    gestion_de_la_partie.tourComplet(scores, liste_pioche_chaque_personne)
+    liste_pioche = initialisation.initPioche(nombre_de_personne)
+    gestion_de_la_partie.tourComplet(scores, liste_pioche)
     score_stock.history_save_to_txt("history.txt", scores)
     continuer = input("Est-ce que vous voulais rejouer? y ou n")
     if continuer == "n":

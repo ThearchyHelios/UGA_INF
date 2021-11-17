@@ -81,7 +81,9 @@ def valeurCarte(carte):
 def initPioche(n):
     liste_carte_remplacer = []
     for i in range(n):
-        liste_carte_remplacer.append(paquet())
+        liste_paquet = paquet()
+        for j in liste_paquet:
+            liste_carte_remplacer.append(j)
     return liste_carte_remplacer
 
 #TODO: bug
@@ -115,7 +117,7 @@ def premierTour(joueurs):
     liste_carte_joueurs = []
     dict_joueurs = initScores(joueurs, 0)
     for i in range(len(joueurs)):
-        liste_carte_joueurs.append(piocheCarte(initPioche(len(joueurs))[i], 2))
+        liste_carte_joueurs.append(piocheCarte(initPioche(len(joueurs)), 2))
     count = 0
 
     for liste_carte_joueur in liste_carte_joueurs:

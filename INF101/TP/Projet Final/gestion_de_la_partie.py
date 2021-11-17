@@ -55,8 +55,8 @@ def tourJoueur(j, scores, pioche):
     if continuer():
         # if not scores[j]["out"] and not scores[j]["give_up"]
 
-        liste_pioche_joueur = pioche[numero_joueur]
-        liste_carte = initialisation.piocheCarte(liste_pioche_joueur, 1)
+        liste_pioche = pioche
+        liste_carte = initialisation.piocheCarte(liste_pioche, 1)
         for carte in liste_carte:
             print("You get %s" % carte)
             score += initialisation.valeurCarte(carte)
@@ -83,6 +83,21 @@ def tourComplet(scores, pioche):
         count_out = 0
         count_giveup = 0
         count_success = 0
+        if count_giveup == len(scores) - count_out - count_success:
+            if count_success == len(scores) - 1:
+                for nom in scores:
+                    if scores[nom]["success"] == False:
+                        print("You have loss %s" % nom)
+                        return
+            else:
+                nom, score = initialisation.gagnant(scores)
+                for nom_gagner_plus_point in nom:
+                    for nom_dans_liste in scores:
+                        if nom_dans_liste == nom_gagner_plus_point:
+                            scores[nom_gagner_plus_point]["success"] = True
+                            scores[nom_gagner_plus_point]["point"] += 1
+                            print("You have success %s" % nom_gagner_plus_point)
+                return
         for nom in scores:
             if scores[nom]["out"]:
                 count_out += 1
@@ -113,7 +128,6 @@ def tourComplet(scores, pioche):
                             scores[nom_gagner_plus_point]["success"] = True
                             scores[nom_gagner_plus_point]["point"] += 1
                             print("You have success %s" % nom_gagner_plus_point)
-
                 return
 
 # TODO: Il y a une question si il y a 4 personnes et les points sont 21 20 20 19 et donc 21 win mais les autre?
