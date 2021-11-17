@@ -12,17 +12,19 @@ def history_save_to_txt(path, scores):
         count_round = len(scores[nom]["history"])
         success = False
         out = False
+        give_up = False
         history = ""
         for items in scores[nom]:
             if scores[nom]["success"]:
                 success = True
             if scores[nom]["out"]:
                 out = True
+            if scores[nom]["give_up"]:
+                give_up = True
         for key, items in scores[nom]["history"].items():
-            history = history + str(key) + ":"+ str(items) + ","
+            history = history + str(key) + ":" + str(items) + ","
 
-        string = str(count_round) + "," + history+ str(success) + "," + str(out) + "\n"
+        string = str(count_round) + "," + history + str(success) + "," + str(out) + str(give_up) + "\n"
         with open(path, 'a+') as f:
             f.write(string)
             f.close()
-

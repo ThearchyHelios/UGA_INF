@@ -3,12 +3,32 @@ import time
 import initialisation
 
 
-def continuer():
+def continuer(path, score):
+    history = {}
+    scores = []
+    count = 0
+    for line in open(path, "r"):
+        line = line[:-1]  # delete \n
+        # list_chaque_personne = f.split("\n")
+        history[count] = {}
+        item_list = line.split(",")
+        history[count]["round"] = int(item_list[0])
+        history[count]["score"] = {}
+        for score in item_list[1:-3]:
+            list_temp = score.split(":")
+            history[count]["score"][list_temp[0]] = int(list_temp[1])
+        history[count]["success"] = bool(item_list[-3])
+        history[count]["out"] = bool(item_list[-2])
+        history[count]["give_up"] = bool(item_list[-1])
+        count += 1
+    print(history)
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n")
     if continuer_le_jeux == "y":
         return True
     else:
         return False
+
+    # if history["score"][""]
 
 
 def tourJoueur(j, scores, pioche):
@@ -16,11 +36,8 @@ def tourJoueur(j, scores, pioche):
     round = 0
     print(scores)
     liste_score = []
-    count_joueurs = 0
-    numero_joueur = 0
     for nom in scores:
         if nom == j:
-            numero_joueur = count_joueurs
             for nom_item, item in scores[nom].items():
                 if nom_item == "score":
                     score = item
@@ -29,7 +46,6 @@ def tourJoueur(j, scores, pioche):
         for nom_item, item in scores[nom].items():
             if nom_item == "score":
                 liste_score.append(item)
-        count_joueurs += 1
 
     round += 1
     scores[j]["round"] = round
@@ -52,7 +68,7 @@ def tourJoueur(j, scores, pioche):
         return
     print("You have %s scores now " % score)
     print(scores)
-    if continuer():
+    if continuer("history.txt", scores):
         # if not scores[j]["out"] and not scores[j]["give_up"]
 
         liste_pioche = pioche
@@ -89,6 +105,13 @@ def tourComplet(scores, pioche):
                     if scores[nom]["success"] == False:
                         print("You have loss %s" % nom)
                         return
+            elif count_out == len(scores) - 1:
+                for nom in scores:
+                    if scores[nom]["out"] == False:
+                        print("You win the game! %s" % nom)
+                        scores[nom]["success"] = True
+                        scores[nom]["point"] += 1
+                        return
             else:
                 nom, score = initialisation.gagnant(scores)
                 for nom_gagner_plus_point in nom:
@@ -120,6 +143,13 @@ def tourComplet(scores, pioche):
                     if scores[nom]["success"] == False:
                         print("You have loss %s" % nom)
                         return
+            elif count_out == len(scores) - 1:
+                for nom in scores:
+                    if scores[nom]["out"] == False:
+                        print("You win the game! %s" % nom)
+                        scores[nom]["success"] = True
+                        scores[nom]["point"] += 1
+                        return
             else:
                 nom, score = initialisation.gagnant(scores)
                 for nom_gagner_plus_point in nom:
@@ -129,5 +159,3 @@ def tourComplet(scores, pioche):
                             scores[nom_gagner_plus_point]["point"] += 1
                             print("You have success %s" % nom_gagner_plus_point)
                 return
-
-# TODO: Il y a une question si il y a 4 personnes et les points sont 21 20 20 19 et donc 21 win mais les autre?
