@@ -112,3 +112,5 @@ def tourComplet(scores, pioche):
                             print("You have success %s" % nom_gagner_plus_point)
 
                 return
+
+#TODO: Il y a une question si il y a 4 personnes et les points sont 21 20 20 19 et donc 21 win mais les autre?
