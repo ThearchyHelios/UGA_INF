@@ -44,15 +44,17 @@ def tourJoueur(j, scores, pioche):
         else:
             print("%s " % liste_score[i], end="")
 
+    scores[j]["history"]["round %s" % round] = score
     if score == 21:
         print("You win the game!")
         scores[j]["success"] = True
         scores[j]["point"] += 1
         return
-
     print("You have %s scores now " % score)
+    print(scores)
     if continuer():
         # if not scores[j]["out"] and not scores[j]["give_up"]
+
         liste_pioche_joueur = pioche[numero_joueur]
         liste_carte = initialisation.piocheCarte(liste_pioche_joueur, 1)
         for carte in liste_carte:
@@ -63,11 +65,12 @@ def tourJoueur(j, scores, pioche):
         if score > 21:
             print("You lose the game!")
             scores[j]["out"] = True
+            scores[j]["history"]["round %s" % (round + 1)] = score
         elif score == 21:
             print("You win the game!")
             scores[j]["success"] = True
             scores[j]["point"] += 1
-        print(scores)
+            scores[j]["history"]["round %s" % (round + 1)] = score
     else:
         scores[j]["give_up"] = True
         print("You have given up")
@@ -113,4 +116,4 @@ def tourComplet(scores, pioche):
 
                 return
 
-#TODO: Il y a une question si il y a 4 personnes et les points sont 21 20 20 19 et donc 21 win mais les autre?
+# TODO: Il y a une question si il y a 4 personnes et les points sont 21 20 20 19 et donc 21 win mais les autre?

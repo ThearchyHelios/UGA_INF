@@ -84,6 +84,7 @@ def initPioche(n):
         liste_carte_remplacer.append(paquet())
     return liste_carte_remplacer
 
+#TODO: bug
 
 def piocheCarte(p, x):
     liste_carte = []
@@ -106,7 +107,7 @@ def initJoueurs(n):
 def initScores(joueurs, v):
     dict_joueurs = {}
     for nom in joueurs:
-        dict_joueurs[nom] = {"score": v, "round": 0, "give_up": False, "out": False, "success": False, "point": 0}
+        dict_joueurs[nom] = {"score": v, "round": 0, "give_up": False, "out": False, "success": False, "point": 0, "history": {}}
     return dict_joueurs
 
 
@@ -131,6 +132,7 @@ def gagnant(scores):
     for nom in scores:
         for nom_item, item in scores[nom].items():
             if nom_item == "score" and scores[nom]["give_up"] == True:
+                #TODO: 改善算法
                 if item > point_gagnant_plus and item <= 21:
                     # nom_gagnant_plus = nom
                     point_gagnant_plus = item

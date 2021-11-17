@@ -1,5 +1,6 @@
 import initialisation
 import gestion_de_la_partie
+import score_stock
 
 nombre_de_personne = int(input("Il y a combien de joueurs?"))
 
@@ -9,6 +10,7 @@ scores = initialisation.premierTour(liste_joueurs)
 while True:
     liste_pioche_chaque_personne = initialisation.initPioche(nombre_de_personne)
     gestion_de_la_partie.tourComplet(scores, liste_pioche_chaque_personne)
+    score_stock.history_save_to_txt("history.txt", scores)
     continuer = input("Est-ce que vous voulais rejouer? y ou n")
     if continuer == "n":
         dict_point = {}
