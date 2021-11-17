@@ -1,4 +1,5 @@
 import time
+import distutils.core
 
 import initialisation
 
@@ -142,40 +143,45 @@ def bot_decision(path, scores, nom):
         for score in item_list[1:-3]:
             list_temp = score.split(":")
             history[count]["score"][list_temp[0]] = int(list_temp[1])
-        history[count]["success"] = bool(item_list[-3])
-        history[count]["out"] = bool(item_list[-2])
-        history[count]["give_up"] = bool(item_list[-1])
+        history[count]["success"] = bool(distutils.util.strtobool(item_list[-3]))
+        history[count]["out"] = bool(distutils.util.strtobool(item_list[-2]))
+        history[count]["give_up"] = bool(distutils.util.strtobool(item_list[-1]))
         count += 1
     print(history)
     score = scores[nom]["score"]
     liste_chance = []
-    success = 50
-    defayant = 50
+    success = 0
+    defayant = 0
     for i in range(21 - score):
-        liste_temp = []  # stocker les resultats ancient
+
+          # stocker les resultats ancient
         for items in history:
-            if history[items]["out"]:
-                for key, item in history[items]["score"].items():
-                    liste_temp.append(item)
 
-                for i in liste_temp:
-                    if i == score and i < len(liste_temp) - 1:
-                        score_suite = liste_temp[i + 1]
-                        if score_suite > 21:
-                            defayant *= 0.75
-                        else:
-                            success *= 0.25
-            else:
+            if history[items]["out"]:  # le resultat il est out
+                liste_temp_out = []
                 for key, item in history[items]["score"].items():
-                    liste_temp.append(item)
+                    liste_temp_out.append(item)
 
-                for i in liste_temp:
-                    if i == score and i < len(liste_temp) - 1:
-                        score_suite = liste_temp[i + 1]
+                for i in liste_temp_out:
+                    if i == score and i < len(liste_temp_out) - 1:
+                        score_suite = liste_temp_out[i + 1]
                         if score_suite > 21:
-                            defayant *= 0.25
+                            defayant += 2
                         else:
-                            success *= 0.75
+                            success += 1
+
+
+            else:  # le resultat il nest pas out
+                liste_temp_continue = []
+                for key, item in history[items]["score"].items():
+                    liste_temp_continue.append(item)
+                for i in liste_temp_continue:
+                    if i == score and i < len(liste_temp_continue) - 1:
+                        score_suite = liste_temp_continue[i + 1]
+                        if score_suite > 21:
+                            defayant += 1
+                        else:
+                            success += 2
 
     print(success, defayant)
 
