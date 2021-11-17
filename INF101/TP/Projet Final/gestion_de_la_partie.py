@@ -99,28 +99,6 @@ def tourComplet(scores, pioche):
         count_out = 0
         count_giveup = 0
         count_success = 0
-        if count_giveup == len(scores) - count_out - count_success:
-            if count_success == len(scores) - 1:
-                for nom in scores:
-                    if scores[nom]["success"] == False:
-                        print("You have loss %s" % nom)
-                        return
-            elif count_out == len(scores) - 1:
-                for nom in scores:
-                    if scores[nom]["out"] == False:
-                        print("You win the game! %s" % nom)
-                        scores[nom]["success"] = True
-                        scores[nom]["point"] += 1
-                        return
-            else:
-                nom, score = initialisation.gagnant(scores)
-                for nom_gagner_plus_point in nom:
-                    for nom_dans_liste in scores:
-                        if nom_dans_liste == nom_gagner_plus_point:
-                            scores[nom_gagner_plus_point]["success"] = True
-                            scores[nom_gagner_plus_point]["point"] += 1
-                            print("You have success %s" % nom_gagner_plus_point)
-                return
         for nom in scores:
             if scores[nom]["out"]:
                 count_out += 1
@@ -128,29 +106,21 @@ def tourComplet(scores, pioche):
                 count_giveup += 1
             elif scores[nom]["success"]:
                 count_success += 1
-            elif not scores[nom]["give_up"] and not scores[nom]["success"]:
-                if count_out == len(scores) - 1:  # 只剩一名玩家
-                    scores[nom]["success"] = True
-                    scores[nom]["point"] += 1
-                    print("%s a reussi" % nom)
-                else:
-                    tourJoueur(nom, scores, pioche)
-            else:
-                print("Player %s please wait until all players given up" % nom)
+
         if count_giveup == len(scores) - count_out - count_success:
-            if count_success == len(scores) - 1:
+            if count_success == len(scores) - 1:  # il est le seul person de n'a pas reussir
                 for nom in scores:
                     if scores[nom]["success"] == False:
                         print("You have loss %s" % nom)
                         return
-            elif count_out == len(scores) - 1:
+            elif count_out == len(scores) - 1:  # il est le seule personne n'a pas out donc il est reussir
                 for nom in scores:
-                    if scores[nom]["out"] == False:
+                    if scores[nom]["out"] == False:  # pour trouver le personne
                         print("You win the game! %s" % nom)
                         scores[nom]["success"] = True
                         scores[nom]["point"] += 1
                         return
-            else:
+            else:  # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
                 nom, score = initialisation.gagnant(scores)
                 for nom_gagner_plus_point in nom:
                     for nom_dans_liste in scores:
@@ -159,3 +129,7 @@ def tourComplet(scores, pioche):
                             scores[nom_gagner_plus_point]["point"] += 1
                             print("You have success %s" % nom_gagner_plus_point)
                 return
+
+        for nom in scores:
+            if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"]:
+                tourJoueur(nom, scores, pioche)

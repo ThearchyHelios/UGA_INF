@@ -24,7 +24,7 @@ def history_save_to_txt(path, scores):
         for key, items in scores[nom]["history"].items():
             history = history + str(key) + ":" + str(items) + ","
 
-        string = str(count_round) + "," + history + str(success) + "," + str(out) + str(give_up) + "\n"
+        string = str(count_round) + "," + history + str(success) + "," + str(out) + "," + str(give_up) + "\n"
         with open(path, 'a+') as f:
             f.write(string)
             f.close()

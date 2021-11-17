@@ -17,7 +17,7 @@ while True:
         for nom in scores:
             dict_point[nom] = scores[nom]["point"]
         print(dict_point)
-        break
+        exit()
     else:
         # scores = gestion_de_la_partie.rejouer(scores)
         dict_point = {}
