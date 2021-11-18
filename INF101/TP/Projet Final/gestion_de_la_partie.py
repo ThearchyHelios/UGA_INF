@@ -170,22 +170,21 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
                 i = 1
 
         for item in history:
-
+            list_temp_2 = []
             for i in range(int(history[item]["round"]) - 1):
                 list_temp_1 = []
-                list_temp_2 = []
+
                 for key, item_score in history[item]["score"].items():
                     list_temp_1.append(int(item_score))
 
                 list_temp_2.append([list_temp_1[i], list_temp_1[i + 1]])
-                print(list_temp_2)
-                if list_temp_2[1] > 21:
+                if list_temp_2[i][1] > 21:
                     out = True
                 else:
                     out = False
 
-                feature_liste = [score_croupier_premier_round, int(scores[nom]["score"]), out, history[item]["success"]]
-
+                feature_liste = [int(list_temp_2[i][0]), out, history[item]["success"]]
+                print(feature_liste)
 
         # if chance_moyenne >= 50:
         #     return True

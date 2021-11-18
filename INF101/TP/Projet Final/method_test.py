@@ -15,9 +15,11 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Flatten, Dropout
 
+model = Sequential()
+model.add(Dense(16))
+model.add(Dense(128))
+model.add(Dense(32))
+model.add(Dense(8))
+model.add(Dense(1, activation='sigmoid'))
 
-feature_list = [i for i in model_df.columns if i not in
-['dealer_card','Y','lose','correct_action']
-]
-train_X = np.array(model_df[feature_list])
-train_Y = np.array(model_df['correct_action']).reshape(-1,1)
+model.compile(loss='binary_crossentropy', optimizer='sgd')
