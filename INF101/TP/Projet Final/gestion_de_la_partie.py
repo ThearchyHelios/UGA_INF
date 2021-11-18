@@ -4,6 +4,10 @@ import distutils.core
 import initialisation
 
 
+# import keras
+# from keras import datasets
+
+
 def continuer():
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n")
     if continuer_le_jeux == "y":
@@ -52,7 +56,7 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
         return
     print("You have %s scores now " % score)
     print(scores)
-    if bot_decision("history.txt", scores, j):
+    if bot_decision("history.txt", scores, j, score_croupier_premier_round):
         # if not scores[j]["out"] and not scores[j]["give_up"]
 
         liste_pioche = pioche
@@ -79,7 +83,7 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
 
 
 def tourComplet(scores, pioche):
-    score_sroupier_premier_round = croupier_prendre_carte(pioche, 1)
+    score_croupier_premier_round = croupier_prendre_carte(pioche, 1)
     while True:
         count_out = 0
         count_giveup = 0
@@ -94,7 +98,7 @@ def tourComplet(scores, pioche):
 
         if count_giveup == len(scores) - count_out - count_success:
             # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
-            score_croupier = score_sroupier_premier_round
+            score_croupier = score_croupier_premier_round
             # TODO: Croupier condition
             # while True:
             #     score = croupier_prendre_carte(pioche, 1)
@@ -117,7 +121,7 @@ def tourComplet(scores, pioche):
                 if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"] and not \
                         scores[nom][
                             "draw"]:
-                    tourJoueur(nom, scores, pioche, score_sroupier_premier_round)
+                    tourJoueur(nom, scores, pioche, score_croupier_premier_round)
 
 
 def croupier_prendre_carte(pioche, nombre):
@@ -130,7 +134,7 @@ def croupier_prendre_carte(pioche, nombre):
     return score
 
 
-def bot_decision(path, scores, nom):
+def bot_decision(path, scores, nom, score_croupier_premier_round):
     history = {}
     count = 0
     for line in open(path, "r"):
@@ -161,89 +165,31 @@ def bot_decision(path, scores, nom):
     if score < 12:
         return True
     else:
-
         for i in range(1, 21 - score + 1):
             if i > 10:
                 i = 1
-            success = 1
-            defayant = 1
-            # TODO 针对每种情况进行判定，举例：score = 16 那么就剩A,2,3,4,5 5种可能性 这五个可能性的权重和剩下的可能性的权重
-            # stocker les resultats ancient
-            for items in history:
 
-                if history[items]["out"]:  # le resultat il est out
+        for item in history:
 
-                    liste_temp_out = []
-                    for key, item in history[items]["score"].items():
-                        liste_temp_out.append(item)
-                    count = 0
-                    for j in liste_temp_out:
-                        if j == score and count < len(liste_temp_out) - 1:
-                            score_suite = liste_temp_out[count + 1]
-                            # if score_suite > 21:
-                            #     defayant += 2
-                            # else:
-                            #     success += 1
-                            if score_suite - score == i:
-                                defayant += 1
-                        count += 1
-                else:  # le resultat il nest pas out
-                    if history[items]["success"]:
-                        liste_temp_continue = []
-                        for key, item in history[items]["score"].items():
-                            liste_temp_continue.append(item)
-                        count = 0
-                        for j in liste_temp_continue:
-                            if j == score and count < len(liste_temp_continue) - 1:
-                                score_suite = liste_temp_continue[count + 1]
-                                # if score_suite > 21:
-                                #     defayant += 1
-                                # else:
-                                #     success += 2
-                                if score_suite - score == i:
-                                    success += 2
-                    else:
-                        liste_temp_continue = []
-                        for key, item in history[items]["score"].items():
-                            liste_temp_continue.append(item)
-                        count = 0
-                        for j in liste_temp_continue:
-                            if j == score and count < len(liste_temp_continue) - 1:
-                                score_suite = liste_temp_continue[count + 1]
-                                # if score_suite > 21:
-                                #     defayant += 1
-                                # else:
-                                #     success += 2
-                                if score_suite - score == i:
-                                    success += 0.5
-                        # else:
-                        #     liste_temp_continue = []
-                        #     for key, item in history[items]["score"].items():
-                        #         liste_temp_continue.append(item)
-                        #     count = 0
-                        #     for j in liste_temp_continue:
-                        #         if j == score and count < len(liste_temp_continue) - 1:
-                        #             score_suite = liste_temp_continue[count + 1]
-                        #             # if score_suite > 21:
-                        #             #     defayant += 1
-                        #             # else:
-                        #             #     success += 2
-                        #             if score_suite - score == i:
-                        #                 success += 1
-                        count += 1
-            print("%s : %s %s" % (i + score, success, defayant))
-            liste_chance.append(((success / (success + defayant)) * 100))
+            for i in range(int(history[item]["round"]) - 1):
+                list_temp_1 = []
+                list_temp_2 = []
+                for key, item_score in history[item]["score"].items():
+                    list_temp_1.append(int(item_score))
 
-        chance_totale = 0
-        for i in liste_chance:
-            chance_totale += i
+                list_temp_2.append([list_temp_1[i], list_temp_1[i + 1]])
+                print(list_temp_2)
+                if list_temp_2[1] > 21:
+                    out = True
+                else:
+                    out = False
 
-        chance_moyenne = chance_totale / len(liste_chance)
-        print("Chance moyenne: %s" % chance_moyenne)
+                feature_liste = [score_croupier_premier_round, int(scores[nom]["score"]), out, history[item]["success"]]
 
-        if chance_moyenne >= 50:
-            return True
-        else:
-            return False
+
+        # if chance_moyenne >= 50:
+        #     return True
+        # else:
+        #     return False
 
 # def croupier_decision(scores, ):
