@@ -14,6 +14,8 @@ def history_save_to_txt(path, scores):
         out = False
         give_up = False
         history = ""
+        if count_round == 1:
+            continue
         for items in scores[nom]:
             if scores[nom]["success"]:
                 success = True

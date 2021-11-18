@@ -12,8 +12,12 @@
 
 import numpy as np
 
-import matplotlib.pyplot as plt
-import seaborn as sns
+from keras.models import Sequential
+from keras.layers import Dense, LSTM, Flatten, Dropout
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
+
+feature_list = [i for i in model_df.columns if i not in
+['dealer_card','Y','lose','correct_action']
+]
+train_X = np.array(model_df[feature_list])
+train_Y = np.array(model_df['correct_action']).reshape(-1,1)

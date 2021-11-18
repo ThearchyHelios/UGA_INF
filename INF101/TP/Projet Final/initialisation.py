@@ -70,7 +70,8 @@ def valeurCarte(carte):
     temp = str(carte)
     nombre_liste = temp.split(" ")
     if nombre_liste[0] == "A":
-        nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+        # nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+        nombre = 1
     elif nombre_liste[0] == "valet" or nombre_liste[0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
