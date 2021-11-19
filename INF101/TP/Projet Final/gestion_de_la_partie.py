@@ -2,6 +2,7 @@ from operator import truediv
 import random
 import time
 import distutils.core
+import matplotlib
 
 import initialisation
 
