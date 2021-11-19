@@ -1,4 +1,4 @@
 {
     "discord.enabled": true,
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "autopep8"
 }

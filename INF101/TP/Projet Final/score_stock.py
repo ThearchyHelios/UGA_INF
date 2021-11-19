@@ -1,6 +1,5 @@
 # TODO: 修改score列表，使得可以获取历史数据
 # TODO：将历史数据写入表格中
-import numpy as np
 
 
 def history_save_to_txt(path, scores):
