@@ -10,7 +10,7 @@ scores = initialisation.premierTour(liste_joueurs)
 while True:
     liste_pioche = initialisation.initPioche(nombre_de_personne)
     gestion_de_la_partie.tourComplet(scores, liste_pioche)
-    score_stock.history_save_to_txt("E:\GitHub\INF_101\INF101\TP\Projet Final\history.txt", scores)
+    score_stock.history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
     # if continuer == "n":
     #     dict_point = {}

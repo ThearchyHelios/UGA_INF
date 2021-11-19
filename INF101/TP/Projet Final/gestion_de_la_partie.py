@@ -2,10 +2,10 @@ from operator import truediv
 import random
 import time
 import distutils.core
-import matplotlib
-import os.path
-import pyqtgraph as pg
-import numpy as np
+# import matplotlib
+# import os.path
+# import pyqtgraph as pg
+# import numpy as np
 
 import initialisation
 
@@ -66,7 +66,7 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
     print(scores)
     # data_folder = os.path.join("INF101", "TP", "Projet Final")
     # file = os.path.join(data_folder, "database.txt")
-    if bot_decision("E:\GitHub\INF_101\INF101\TP\Projet Final\database.txt", scores, j, score_croupier_premier_round):
+    if bot_decision("INF101/TP/Projet Final/database.txt", scores, j, score_croupier_premier_round):
         liste_pioche = pioche
         liste_carte = initialisation.piocheCarte(liste_pioche, 1)
         for carte in liste_carte:
