@@ -21,3 +21,13 @@
 2,round 1:13,round 2:22,False,True,False
 2,round 1:17,round 2:27,False,True,False
 2,round 1:14,round 2:24,False,True,False
+2,round 1:11,round 2:19,True,False,True
+2,round 1:14,round 2:23,False,True,False
+3,round 1:13,round 2:15,round 3:22,False,True,False
+2,round 1:7,round 2:17,False,False,True
+4,round 1:10,round 2:13,round 3:14,round 4:17,False,False,True
+2,round 1:16,round 2:26,False,True,False
+2,round 1:14,round 2:21,True,False,False
+2,round 1:13,round 2:22,False,True,False
+2,round 1:15,round 2:25,False,True,False
+3,round 1:6,round 2:16,round 3:22,False,True,False

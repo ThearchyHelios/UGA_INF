@@ -3,6 +3,9 @@ import random
 import time
 import distutils.core
 import matplotlib
+import os.path
+import pyqtgraph as pg
+import numpy as np
 
 import initialisation
 
@@ -61,7 +64,9 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
         return
     print("You have %s scores now " % score)
     print(scores)
-    if bot_decision("INF101/TP/Projet Final/database.txt", scores, j, score_croupier_premier_round):
+    # data_folder = os.path.join("INF101", "TP", "Projet Final")
+    # file = os.path.join(data_folder, "database.txt")
+    if bot_decision("E:\GitHub\INF_101\INF101\TP\Projet Final\database.txt", scores, j, score_croupier_premier_round):
         liste_pioche = pioche
         liste_carte = initialisation.piocheCarte(liste_pioche, 1)
         for carte in liste_carte:
@@ -171,6 +176,12 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
     if score < 12:
         return True
     else:
+        length = 21 - score
+        # win_rate = pg.plot()
+        # win_rate.setWindowTitle('Win Rate Bar Graph')
+        # x = np.arange(length)
+        # x = x + score + 1
+
         success_rate_list = []
         success_list = []
         defayant_list = []
@@ -200,11 +211,14 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
                         feature_liste = [
                             int(list_temp_2[k][0]), out, history[item]["success"]]
                         if feature_liste[1]:
-                            defayant_list[i-1] += 1
+                            defayant_list[i - 1] += 1
                         else:
-                            success_list[i-1] += 1
+                            success_list[i - 1] += 1
         for i in range(len(success_list)):
-            success_rate_list.append(success_list[i]/(success_list[i]+ defayant_list[i] + 1))
+            success_rate_list.append(success_list[i] / (success_list[i] + defayant_list[i] + 1))
+
+    # win_rate.plot(x=x, y=success_rate_list, symbolBrush=(255, 0, 0), symbolPen='w')
+    # pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -212,7 +226,7 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         success_rate_final += success_rate_list[j] * poid
     print("Success rate: %s" % success_rate_final)
     time.sleep(0.01)
-    if success_rate_final >= 0.15:
+    if success_rate_final >= 0.20:
         return True
     else:
         return False
