@@ -1,18 +1,15 @@
-colorama==0.4.4
-commonmark==0.9.1
-cycler==0.11.0
-keras==2.7.0
-kiwisolver==1.3.2
-matplotlib==3.4.3
-numpy==1.21.3
-Pillow==8.4.0
-Pygments==2.10.0
-pyparsing==3.0.3
+certifi==2021.5.30
+cycler==0.10.0
+kiwisolver @ file:///Users/ktietz/demo/mc3/conda-bld/kiwisolver_1628942354602/work
+matplotlib @ file:///Users/ktietz/demo/mc3/conda-bld/matplotlib-suite_1629898003929/work
+numpy==1.21.4
+olefile @ file:///Users/ktietz/demo/mc3/conda-bld/olefile_1629805411829/work
+Pillow @ file:///Users/ktietz/demo/mc3/conda-bld/pillow_1628860154764/work
+pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
 PyQt6==6.2.1
 PyQt6-Qt6==6.2.1
 PyQt6-sip==13.1.0
-pyqtgraph==0.12.3
-python-dateutil==2.8.2
-rich==10.12.0
-scipy==1.8.0.dev0+2047.048bac7
-six==1.16.0
+pyqtgraph @ file:///home/conda/feedstock_root/build_artifacts/pyqtgraph_1633968630058/work
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+six @ file:///tmp/build/80754af9/six_1623709665295/work
+tornado @ file:///Users/ktietz/demo/mc3/conda-bld/tornado_1628698929452/work
