@@ -2,10 +2,10 @@ from operator import truediv
 import random
 import time
 import distutils.core
-# import matplotlib
-# import os.path
-# import pyqtgraph as pg
-# import numpy as np
+import matplotlib.pyplot as plt
+import os.path
+import pyqtgraph as pg
+import numpy as np
 
 import initialisation
 
@@ -177,10 +177,10 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         return True
     else:
         length = 21 - score
-        # win_rate = pg.plot()
-        # win_rate.setWindowTitle('Win Rate Bar Graph')
-        # x = np.arange(length)
-        # x = x + score + 1
+        win_rate = pg.plot()
+        win_rate.setWindowTitle('Win Rate Bar Graph')
+        x = np.arange(length)
+        x = x + score + 1
 
         success_rate_list = []
         success_list = []
@@ -217,8 +217,8 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         for i in range(len(success_list)):
             success_rate_list.append(success_list[i] / (success_list[i] + defayant_list[i] + 1))
 
-    # win_rate.plot(x=x, y=success_rate_list, symbolBrush=(255, 0, 0), symbolPen='w')
-    # pg.exec()
+    win_rate.plot(x=x, y=success_rate_list, symbolBrush=(255, 0, 0), symbolPen='w')
+    pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
