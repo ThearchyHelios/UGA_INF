@@ -1,5 +1,5 @@
 {
     "discord.enabled": true,
-    "python.formatting.provider": "autopep8",
+    "python.formatting.provider": "yapf",
     "cSpell.language": "en"
 }

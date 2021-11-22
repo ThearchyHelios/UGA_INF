@@ -72,7 +72,8 @@ def valeurCarte(carte):
     if nombre_liste[0] == "A":
         # nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
         nombre = 1
-    elif nombre_liste[0] == "valet" or nombre_liste[0] == "dame" or nombre_liste[0] == "roi":
+    elif nombre_liste[0] == "valet" or nombre_liste[
+            0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
         nombre = int(nombre_liste[0])
@@ -89,6 +90,7 @@ def initPioche(n):
 
 
 # TODO: bug
+
 
 def piocheCarte(p, x):
     liste_carte = []
@@ -111,8 +113,17 @@ def initJoueurs(n):
 def initScores(joueurs, v):
     dict_joueurs = {}
     for nom in joueurs:
-        dict_joueurs[nom] = {"score": v, "round": 0, "give_up": False, "out": False, "success": False, "draw": False,
-                             "point": 0, "mise": {}, "history": {}}
+        dict_joueurs[nom] = {
+            "score": v,
+            "round": 0,
+            "give_up": False,
+            "out": False,
+            "success": False,
+            "draw": False,
+            "point": 0,
+            "mise": [],
+            "history": {}
+        }
     return dict_joueurs
 
 
@@ -137,7 +148,8 @@ def gagnant(scores, valeur_croupier):
     point_gagnant_plus = 0
     for nom in scores:
         score = scores[nom]["score"]
-        if scores[nom]["give_up"] == True and scores[nom]["out"] == False and scores[nom]["success"] == False:
+        if scores[nom]["give_up"] == True and scores[nom][
+                "out"] == False and scores[nom]["success"] == False:
             if score > valeur_croupier:
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
             elif score == valeur_croupier:
