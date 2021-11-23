@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-18 23:10:12
-LastEditTime: 2021-11-20 19:56:48
+LastEditTime: 2021-11-22 17:31:03
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/method_test.py
@@ -23,7 +23,7 @@ import gym
 import numpy as np
 from collections import defaultdict
 
-from plot_utils import plot_blackjack_values, plot_policy
+# from plot_utils import plot_blackjack_values, plot_policy
 
 
 env = gym.make('Blackjack-v0')

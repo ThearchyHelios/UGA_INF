@@ -1,4 +1,3 @@
-import score_stock
 from operator import truediv
 import random
 import time
@@ -10,6 +9,36 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 from time import perf_counter
+
+
+def history_save_to_txt(path, scores):
+    # liste_histoire = {}
+    # for nom in scores:
+    #     for key, items in scores[nom]["history"].items():
+    #         liste_histoire[nom][key] = items
+    for nom in scores:
+        count_round = len(scores[nom]["history"])
+        success = False
+        out = False
+        give_up = False
+        history = ""
+        if count_round == 1:
+            continue
+        for items in scores[nom]:
+            if scores[nom]["success"]:
+                success = True
+            if scores[nom]["out"]:
+                out = True
+            if scores[nom]["give_up"]:
+                give_up = True
+        for key, items in scores[nom]["history"].items():
+            history = history + str(key) + ":" + str(items) + ","
+
+        string = str(count_round) + "," + history + str(success) + "," + str(
+            out) + "," + str(give_up) + "\n"
+        with open(path, 'a+') as f:
+            f.write(string)
+            f.close()
 
 
 def paquet():
@@ -341,11 +370,11 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
     if score < 12:
         return True
     else:
-        # length = 21 - score -1
-        # win_rate = pg.plot()
-        # win_rate.setWindowTitle('Win Rate Bar Graph')
-        # x = np.arange(length)
-        # x = x + score + 1
+        length = 21 - score - 1
+        win_rate = pg.plot()
+        win_rate.setWindowTitle('Win Rate Bar Graph')
+        x = np.arange(length)
+        x = x + score + 1
 
         success_rate_list = []
         success_list = []
@@ -385,10 +414,10 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
             success_rate_list.append(success_list[i] /
                                      (success_list[i] + defayant_list[i] + 1))
 
-    # win_rate.plot(x=x,
-    #               y=success_rate_list,
-    #               symbolBrush=(255, 0, 0),
-    #               symbolPen='w')
+    win_rate.plot(x=x,
+                  y=success_rate_list,
+                  symbolBrush=(255, 0, 0),
+                  symbolPen='w')
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -396,7 +425,7 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         success_rate_final += success_rate_list[j] * poid
     print("Success rate: %s" % success_rate_final)
     time.sleep(0.01)
-    # pg.exec()
+    pg.exec()
 
     if success_rate_final >= 0.2:
         return True
@@ -412,8 +441,7 @@ scores = premierTour(liste_joueurs)
 while True:
     liste_pioche = initPioche(nombre_de_personne)
     tourComplet(scores, liste_pioche)
-    score_stock.history_save_to_txt("INF101/TP/Projet Final/history.txt",
-                                    scores)
+    history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
     # if continuer == "n":
     #     dict_point = {}
