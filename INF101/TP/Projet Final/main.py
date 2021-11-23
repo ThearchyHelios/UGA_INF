@@ -217,7 +217,8 @@ def continuer():
 
 
 # TODO: 全部将荷答应有关的代码禁用，为了测试
-def tourJoueur(j, scores, pioche, score_croupier_premier_round):
+def tourJoueur(j, scores, score_croupier_premier_round):
+    global liste_pioche
     score = 0
     round = 0
     print(scores)
@@ -261,7 +262,8 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
     # file = os.path.join(data_folder, "database.txt")
     if bot_decision("INF101/TP/Projet Final/database.txt", scores, j,
                     score_croupier_premier_round):
-        liste_pioche = pioche
+        if liste_pioche == []:
+            liste_pioche = initPioche(len(scores))
         liste_carte = piocheCarte(liste_pioche, 1)
         for carte in liste_carte:
             print("You get %s" % carte)
@@ -284,8 +286,11 @@ def tourJoueur(j, scores, pioche, score_croupier_premier_round):
     # time.sleep(2)
 
 
-def tourComplet(scores, pioche):
-    score_croupier_premier_round = croupier_prendre_carte(pioche, 1)
+def tourComplet(scores):
+    global liste_pioche
+    if liste_pioche == []:
+        liste_pioche = initPioche(len(scores))
+    score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
     while True:
         count_out = 0
         count_giveup = 0
@@ -323,12 +328,13 @@ def tourComplet(scores, pioche):
                 if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"] and not \
                         scores[nom][
                             "draw"]:
-                    tourJoueur(nom, scores, pioche,
-                               score_croupier_premier_round)
+                    tourJoueur(nom, scores, score_croupier_premier_round)
 
 
-def croupier_prendre_carte(pioche, nombre):
-    liste_pioche = pioche
+def croupier_prendre_carte(nombre):
+    global liste_pioche
+    if liste_pioche == []:
+        liste_pioche = initPioche(len(scores))
     liste_carte = piocheCarte(liste_pioche, nombre)
     score = 0
     for carte in liste_carte:
@@ -438,8 +444,10 @@ nombre_de_personne = int(input("Il y a combien de joueurs?"))
 liste_joueurs = initJoueurs(nombre_de_personne)
 scores = premierTour(liste_joueurs)
 
+liste_pioche = initPioche(nombre_de_personne)
+
 while True:
-    liste_pioche = initPioche(nombre_de_personne)
+
     tourComplet(scores, liste_pioche)
     history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
