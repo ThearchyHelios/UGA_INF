@@ -131,12 +131,12 @@ def initPioche(n):
 # TODO: bug
 
 
-def piocheCarte(p, x):
+def piocheCarte(x):
+    global liste_pioche
     liste_carte = []
     for i in range(x):
-        liste_carte.append(p[i])
-        p.append(p[i])
-        del p[0]
+        liste_carte.append(liste_pioche[i])
+        del liste_pioche[0]
 
     return liste_carte
 
@@ -172,9 +172,9 @@ def premierTour(scores):
 
     liste_carte_joueurs = []
     for i in range(len(scores)):
-        if liste_pioche == []:
+        if len(liste_pioche) <= 2:
             liste_pioche = initPioche(len(scores))
-        valeur_premier_round = piocheCarte(liste_pioche, 2)
+        valeur_premier_round = piocheCarte(2)
         liste_carte_joueurs.append(valeur_premier_round)
 
     count = 0
@@ -183,7 +183,12 @@ def premierTour(scores):
         for carte in liste_carte_joueur:
             temp = int(valeurCarte(carte))
             if temp == 0:
-                nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+                if scores[nom]["score"] == 0:
+                    print("Cest ton premier tour!")
+                else:
+                    print("T'as %s maintenant." % scores[nom]["score"])
+                nombre = int(
+                    input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
                 if nombre == 1:
                     temp = 1
                 elif nombre == 11:
@@ -266,16 +271,11 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     print("Le croupier a %s." % score_croupier_premier_round)
 
     scores[j]["history"]["round %s" % round] = score
-    if score == 21:
-        print("You win the game!")
-        scores[j]["success"] = True
-        scores[j]["point"] += 1
-        return
     print("You have %s scores now " % score)
     # print(scores)
     # data_folder = os.path.join("INF101", "TP", "Projet Final")
     # file = os.path.join(data_folder, "database.txt")
-    
+
     # for nom in scores:
     #     if round == 1 and scores[nom]["score"] == 21:
     #         print("Black Jack!")
@@ -288,12 +288,13 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     if continuer():
         if liste_pioche == []:
             liste_pioche = initPioche(len(scores))
-        liste_carte = piocheCarte(liste_pioche, 1)
+        liste_carte = piocheCarte(1)
         for carte in liste_carte:
             print("You get %s" % carte)
             temp = int(valeurCarte(carte))
             if temp == 0:
-                nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+                nombre = int(
+                    input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
                 if nombre == 1:
                     temp = 1
                 elif nombre == 11:
@@ -307,7 +308,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             print("You lose the game!")
             scores[j]["out"] = True
             scores[j]["history"]["round %s" % (round + 1)] = score
-            
+
         # elif score == 21:
         #     print("You win the game!")
         #     scores[j]["success"] = True
@@ -350,8 +351,8 @@ def tourComplet(scores):
             print("Croupier have %s " % valeur_croupier)
             nom, score = gagnant(scores, valeur_croupier)
             for nom_gagner_plus_point in nom:
-                for nom_dans_liste in scores:
-                    if nom_dans_liste == nom_gagner_plus_point:
+                for nom in scores:
+                    if nom == nom_gagner_plus_point:
                         scores[nom_gagner_plus_point]["success"] = True
                         scores[nom_gagner_plus_point]["point"] += 1
                         mise_round = scores[nom_gagner_plus_point][
@@ -366,8 +367,7 @@ def tourComplet(scores):
         else:
             for nom in scores:
                 if not scores[nom]["give_up"] and not scores[nom]["success"] and not scores[nom]["out"] and not \
-                        scores[nom][
-                            "draw"]:
+                        scores[nom]["draw"] and scores[nom]["score"] != 21:
                     tourJoueur(nom, scores, score_croupier_premier_round)
 
 
@@ -375,7 +375,7 @@ def croupier_prendre_carte(nombre):
     global liste_pioche
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
-    liste_carte = piocheCarte(liste_pioche, nombre)
+    liste_carte = piocheCarte(nombre)
     score = 0
     for carte in liste_carte:
         print("You get %s" % carte)
@@ -485,8 +485,10 @@ liste_joueurs = initJoueurs(nombre_de_personne)
 liste_pioche = initPioche(nombre_de_personne)
 scores = initScores(liste_joueurs, 0)
 
-
 while True:
+    liste_joueurs = []
+    for nom in scores:
+        liste_joueurs.append(nom)
     dict_point = {}
     dict_mise = {}
     for nom in scores:
@@ -499,17 +501,32 @@ while True:
     for nom in scores:
         scores[nom]["point"] = dict_point[nom]
         scores[nom]["mise"] = dict_mise[nom]
+
+    for nom in list(scores.keys()):
+        if scores[nom]["mise"] <= 0:
+            scores.pop(nom)
+            print("%s is out" % nom)
+    
+    if len(scores) == 1:
+        print("%s win" % list(scores.keys())[0])
+        break
+    
     for nom in scores:
         mise_round = int(input("%s, misez combien?" % nom))
+        while mise_round > scores[nom]["mise"]:
+            mise_round = int(
+                input("Il faut inerieur a ton mise!\n%s, misez combien?" %
+                      nom))
         scores[nom]["mise_round"] = mise_round
         scores[nom]["mise"] -= mise_round
     scores = premierTour(scores)
     for nom in scores:
         if scores[nom]["score"] == 21:
             scores[nom]["success"] = True
+            
             scores[nom]["point"] += 1
             scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
-    print(liste_pioche)
+    print(len(liste_pioche))
     tourComplet(scores)
     history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
