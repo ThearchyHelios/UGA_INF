@@ -161,7 +161,8 @@ def initScores(joueurs, v):
             "success": False,
             "draw": False,
             "point": 0,
-            "mise": [],
+            "mise": 1000,
+            "mise_round": 0,
             "history": {}
         }
     return dict_joueurs
@@ -202,7 +203,7 @@ def gagnant(scores, valeur_croupier):
     for nom in scores:
         if scores[nom]["score"] == point_gagnant_plus:
             nom_gagnant_plus.append(nom)
-    print(scores)
+    # print(scores)
     return nom_gagnant_plus, point_gagnant_plus
 
 
@@ -221,7 +222,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     global liste_pioche
     score = 0
     round = 0
-    print(scores)
+    # print(scores)
     liste_score = []
     for nom in scores:
         if nom == j:
@@ -257,11 +258,19 @@ def tourJoueur(j, scores, score_croupier_premier_round):
         scores[j]["point"] += 1
         return
     print("You have %s scores now " % score)
-    print(scores)
+    # print(scores)
     # data_folder = os.path.join("INF101", "TP", "Projet Final")
     # file = os.path.join(data_folder, "database.txt")
-    if bot_decision("INF101/TP/Projet Final/database.txt", scores, j,
-                    score_croupier_premier_round):
+    for nom in scores:
+        if round == 1 and scores[nom]["score"] == 21:
+            print("Black Jack!")
+            scores[nom]["success"] = True
+            mise_round = scores[nom]["mise_round"]
+            scores[nom]["mise"] += mise_round * 2.5
+
+    # if bot_decision("INF101/TP/Projet Final/database.txt", scores, j,
+    #                 score_croupier_premier_round):
+    if continuer():
         if liste_pioche == []:
             liste_pioche = initPioche(len(scores))
         liste_carte = piocheCarte(liste_pioche, 1)
@@ -274,11 +283,13 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             print("You lose the game!")
             scores[j]["out"] = True
             scores[j]["history"]["round %s" % (round + 1)] = score
-        elif score == 21:
-            print("You win the game!")
-            scores[j]["success"] = True
-            scores[j]["point"] += 1
-            scores[j]["history"]["round %s" % (round + 1)] = score
+            mise_round = scores[j]["mise_round"]
+            scores[j]["mise"] -= mise_round
+        # elif score == 21:
+        #     print("You win the game!")
+        #     scores[j]["success"] = True
+        #     scores[j]["point"] += 1
+        #     scores[j]["history"]["round %s" % (round + 1)] = score
     else:
         scores[j]["give_up"] = True
         print("You have given up")
@@ -290,7 +301,7 @@ def tourComplet(scores):
     global liste_pioche
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
-    score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
+    score_croupier_premier_round = croupier_prendre_carte(1)
     while True:
         count_out = 0
         count_giveup = 0
@@ -318,10 +329,13 @@ def tourComplet(scores):
                     if nom_dans_liste == nom_gagner_plus_point:
                         scores[nom_gagner_plus_point]["success"] = True
                         scores[nom_gagner_plus_point]["point"] += 1
+                        mise_round = scores[nom_gagner_plus_point]["mise_round"]
+                        scores[nom_gagner_plus_point]["mise"] += mise_round * 2
                         print("You have success %s" % nom_gagner_plus_point)
             return
         elif count_out == len(scores):
             # Cest a dire que tous les personnes sont out
+            print("Croupier win")
             return
         else:
             for nom in scores:
@@ -377,10 +391,10 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         return True
     else:
         length = 21 - score - 1
-        win_rate = pg.plot()
-        win_rate.setWindowTitle('Win Rate Bar Graph')
-        x = np.arange(length)
-        x = x + score + 1
+        # win_rate = pg.plot()
+        # win_rate.setWindowTitle('Win Rate Bar Graph')
+        # x = np.arange(length)
+        # x = x + score + 1
 
         success_rate_list = []
         success_list = []
@@ -420,18 +434,18 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
             success_rate_list.append(success_list[i] /
                                      (success_list[i] + defayant_list[i] + 1))
 
-    win_rate.plot(x=x,
-                  y=success_rate_list,
-                  symbolBrush=(255, 0, 0),
-                  symbolPen='w')
+    # win_rate.plot(x=x,
+    #               y=success_rate_list,
+    #               symbolBrush=(255, 0, 0),
+    #               symbolPen='w')
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
         poid = 1 / (2 * (j + 1))
         success_rate_final += success_rate_list[j] * poid
     print("Success rate: %s" % success_rate_final)
-    time.sleep(0.01)
-    pg.exec()
+    # time.sleep(0.01)
+    # pg.exec()
 
     if success_rate_final >= 0.2:
         return True
@@ -447,8 +461,24 @@ scores = premierTour(liste_joueurs)
 liste_pioche = initPioche(nombre_de_personne)
 
 while True:
-
-    tourComplet(scores, liste_pioche)
+    dict_point = {}
+    dict_mise = {}
+    for nom in scores:
+        dict_point[nom] = scores[nom]["point"]
+        dict_mise[nom] = scores[nom]["mise"]
+    print(dict_point)
+    print(dict_mise)
+    scores = premierTour(liste_joueurs)
+    for nom in scores:
+        scores[nom]["point"] = dict_point[nom]
+        scores[nom]["mise"] = dict_mise[nom]
+    input("Press Enter to continue...")
+    for nom in scores:
+        mise_round = int(input("%s, misez combien?" % nom))
+        scores[nom]["mise_round"] = mise_round
+        scores[nom]["mise"] -= mise_round
+    print(liste_pioche)
+    tourComplet(scores)
     history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
     # if continuer == "n":
@@ -466,12 +496,6 @@ while True:
     #     scores = initialisation.premierTour(liste_joueurs)
     #     for nom in scores:
     #         scores[nom]["point"] = dict_point[nom]
-    dict_point = {}
-    for nom in scores:
-        dict_point[nom] = scores[nom]["point"]
-    print(dict_point)
-    scores = premierTour(liste_joueurs)
-    for nom in scores:
-        scores[nom]["point"] = dict_point[nom]
+
 
 # gestion_de_la_partie.bot_decision("history.txt", scores, "a")
