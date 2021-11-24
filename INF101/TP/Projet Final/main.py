@@ -506,11 +506,11 @@ while True:
         if scores[nom]["mise"] <= 0:
             scores.pop(nom)
             print("%s is out" % nom)
-    
+
     if len(scores) == 1:
         print("%s win" % list(scores.keys())[0])
         break
-    
+
     for nom in scores:
         mise_round = int(input("%s, misez combien?" % nom))
         while mise_round > scores[nom]["mise"]:
@@ -523,7 +523,7 @@ while True:
     for nom in scores:
         if scores[nom]["score"] == 21:
             scores[nom]["success"] = True
-            
+
             scores[nom]["point"] += 1
             scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
     print(len(liste_pioche))
