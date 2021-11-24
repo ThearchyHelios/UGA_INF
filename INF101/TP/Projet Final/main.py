@@ -110,8 +110,7 @@ def valeurCarte(carte):
     temp = str(carte)
     nombre_liste = temp.split(" ")
     if nombre_liste[0] == "A":
-        # nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
-        nombre = 1
+        nombre = 0
     elif nombre_liste[0] == "valet" or nombre_liste[
             0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
@@ -168,18 +167,32 @@ def initScores(joueurs, v):
     return dict_joueurs
 
 
-def premierTour(joueurs):
-    liste_carte_joueurs = []
-    dict_joueurs = initScores(joueurs, 0)
-    for i in range(len(joueurs)):
-        liste_carte_joueurs.append(piocheCarte(initPioche(len(joueurs)), 2))
-    count = 0
+def premierTour(scores):
+    global liste_pioche
 
-    for liste_carte_joueur in liste_carte_joueurs:
+    liste_carte_joueurs = []
+    for i in range(len(scores)):
+        if liste_pioche == []:
+            liste_pioche = initPioche(len(scores))
+        valeur_premier_round = piocheCarte(liste_pioche, 2)
+        liste_carte_joueurs.append(valeur_premier_round)
+
+    count = 0
+    for nom in scores:
+        liste_carte_joueur = liste_carte_joueurs[count]
         for carte in liste_carte_joueur:
-            dict_joueurs[joueurs[count]]["score"] += int(valeurCarte(carte))
+            temp = int(valeurCarte(carte))
+            if temp == 0:
+                nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+                if nombre == 1:
+                    temp = 1
+                elif nombre == 11:
+                    temp = 11
+                else:
+                    temp = 1
+            scores[nom]["score"] += temp
         count += 1
-    return dict_joueurs
+    return scores
 
 
 # TODO: changer le fonction pour ajouter un Croupier et comparer les scores avec Croupier
@@ -195,8 +208,9 @@ def gagnant(scores, valeur_croupier):
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
             elif score == valeur_croupier:
                 print("add points here")
+                mise_round = scores[nom]["mise_round"]
+                scores[nom]["mise"] += mise_round
                 scores[nom]["draw"] = True
-                # TODO: add point here
             else:
                 print("You have loss the game! %s" % nom)
 
@@ -261,12 +275,13 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     # print(scores)
     # data_folder = os.path.join("INF101", "TP", "Projet Final")
     # file = os.path.join(data_folder, "database.txt")
-    for nom in scores:
-        if round == 1 and scores[nom]["score"] == 21:
-            print("Black Jack!")
-            scores[nom]["success"] = True
-            mise_round = scores[nom]["mise_round"]
-            scores[nom]["mise"] += mise_round * 2.5
+    
+    # for nom in scores:
+    #     if round == 1 and scores[nom]["score"] == 21:
+    #         print("Black Jack!")
+    #         scores[nom]["success"] = True
+    #         mise_round = scores[nom]["mise_round"]
+    #         scores[nom]["mise"] += mise_round * 2.5
 
     # if bot_decision("INF101/TP/Projet Final/database.txt", scores, j,
     #                 score_croupier_premier_round):
@@ -276,15 +291,23 @@ def tourJoueur(j, scores, score_croupier_premier_round):
         liste_carte = piocheCarte(liste_pioche, 1)
         for carte in liste_carte:
             print("You get %s" % carte)
-            score += valeurCarte(carte)
+            temp = int(valeurCarte(carte))
+            if temp == 0:
+                nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+                if nombre == 1:
+                    temp = 1
+                elif nombre == 11:
+                    temp = 11
+                else:
+                    temp = 1
+            score += temp
         print("score: %s" % score)
         scores[j]["score"] = score
         if score > 21:
             print("You lose the game!")
             scores[j]["out"] = True
             scores[j]["history"]["round %s" % (round + 1)] = score
-            mise_round = scores[j]["mise_round"]
-            scores[j]["mise"] -= mise_round
+            
         # elif score == 21:
         #     print("You win the game!")
         #     scores[j]["success"] = True
@@ -323,13 +346,16 @@ def tourComplet(scores):
             #     print("Croupier a prendre %s" % score)
             #     score_croupier += score
 
-            nom, score = gagnant(scores, random.randint(16, 21))
+            valeur_croupier = random.randint(16, 21)
+            print("Croupier have %s " % valeur_croupier)
+            nom, score = gagnant(scores, valeur_croupier)
             for nom_gagner_plus_point in nom:
                 for nom_dans_liste in scores:
                     if nom_dans_liste == nom_gagner_plus_point:
                         scores[nom_gagner_plus_point]["success"] = True
                         scores[nom_gagner_plus_point]["point"] += 1
-                        mise_round = scores[nom_gagner_plus_point]["mise_round"]
+                        mise_round = scores[nom_gagner_plus_point][
+                            "mise_round"]
                         scores[nom_gagner_plus_point]["mise"] += mise_round * 2
                         print("You have success %s" % nom_gagner_plus_point)
             return
@@ -456,9 +482,9 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
 nombre_de_personne = int(input("Il y a combien de joueurs?"))
 
 liste_joueurs = initJoueurs(nombre_de_personne)
-scores = premierTour(liste_joueurs)
-
 liste_pioche = initPioche(nombre_de_personne)
+scores = initScores(liste_joueurs, 0)
+
 
 while True:
     dict_point = {}
@@ -468,15 +494,21 @@ while True:
         dict_mise[nom] = scores[nom]["mise"]
     print(dict_point)
     print(dict_mise)
-    scores = premierTour(liste_joueurs)
+    input("Press Enter to continue...")
+    scores = initScores(liste_joueurs, 0)
     for nom in scores:
         scores[nom]["point"] = dict_point[nom]
         scores[nom]["mise"] = dict_mise[nom]
-    input("Press Enter to continue...")
     for nom in scores:
         mise_round = int(input("%s, misez combien?" % nom))
         scores[nom]["mise_round"] = mise_round
         scores[nom]["mise"] -= mise_round
+    scores = premierTour(scores)
+    for nom in scores:
+        if scores[nom]["score"] == 21:
+            scores[nom]["success"] = True
+            scores[nom]["point"] += 1
+            scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
     print(liste_pioche)
     tourComplet(scores)
     history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
@@ -496,6 +528,5 @@ while True:
     #     scores = initialisation.premierTour(liste_joueurs)
     #     for nom in scores:
     #         scores[nom]["point"] = dict_point[nom]
-
 
 # gestion_de_la_partie.bot_decision("history.txt", scores, "a")
