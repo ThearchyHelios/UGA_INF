@@ -70,8 +70,10 @@ def valeurCarte(carte):
     temp = str(carte)
     nombre_liste = temp.split(" ")
     if nombre_liste[0] == "A":
-        nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
-    elif nombre_liste[0] == "valet" or nombre_liste[0] == "dame" or nombre_liste[0] == "roi":
+        # nombre = int(input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
+        nombre = 1
+    elif nombre_liste[0] == "valet" or nombre_liste[
+            0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
         nombre = int(nombre_liste[0])
@@ -86,7 +88,9 @@ def initPioche(n):
             liste_carte_remplacer.append(j)
     return liste_carte_remplacer
 
-#TODO: bug
+
+# TODO: bug
+
 
 def piocheCarte(p, x):
     liste_carte = []
@@ -109,7 +113,17 @@ def initJoueurs(n):
 def initScores(joueurs, v):
     dict_joueurs = {}
     for nom in joueurs:
-        dict_joueurs[nom] = {"score": v, "round": 0, "give_up": False, "out": False, "success": False, "point": 0, "history": {}}
+        dict_joueurs[nom] = {
+            "score": v,
+            "round": 0,
+            "give_up": False,
+            "out": False,
+            "success": False,
+            "draw": False,
+            "point": 0,
+            "mise": [],
+            "history": {}
+        }
     return dict_joueurs
 
 
@@ -127,17 +141,24 @@ def premierTour(joueurs):
     return dict_joueurs
 
 
-def gagnant(scores):
+# TODO: changer le fonction pour ajouter un Croupier et comparer les scores avec Croupier
+def gagnant(scores, valeur_croupier):
     # list_score = []
     nom_gagnant_plus = []
     point_gagnant_plus = 0
     for nom in scores:
-        for nom_item, item in scores[nom].items():
-            if nom_item == "score" and scores[nom]["give_up"] == True:
-                #TODO: 改善算法
-                if item > point_gagnant_plus and item <= 21:
-                    # nom_gagnant_plus = nom
-                    point_gagnant_plus = item
+        score = scores[nom]["score"]
+        if scores[nom]["give_up"] == True and scores[nom][
+                "out"] == False and scores[nom]["success"] == False:
+            if score > valeur_croupier:
+                point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
+            elif score == valeur_croupier:
+                print("add points here")
+                scores[nom]["draw"] = True
+                # TODO: add point here
+            else:
+                print("You have loss the game! %s" % nom)
+
     for nom in scores:
         if scores[nom]["score"] == point_gagnant_plus:
             nom_gagnant_plus.append(nom)
