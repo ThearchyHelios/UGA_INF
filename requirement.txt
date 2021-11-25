@@ -1,0 +1,15 @@
+certifi==2021.5.30
+cycler==0.10.0
+kiwisolver @ file:///Users/ktietz/demo/mc3/conda-bld/kiwisolver_1628942354602/work
+matplotlib @ file:///Users/ktietz/demo/mc3/conda-bld/matplotlib-suite_1629898003929/work
+numpy==1.21.4
+olefile @ file:///Users/ktietz/demo/mc3/conda-bld/olefile_1629805411829/work
+Pillow @ file:///Users/ktietz/demo/mc3/conda-bld/pillow_1628860154764/work
+pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
+PyQt6==6.2.1
+PyQt6-Qt6==6.2.1
+PyQt6-sip==13.1.0
+pyqtgraph @ file:///home/conda/feedstock_root/build_artifacts/pyqtgraph_1633968630058/work
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+six @ file:///tmp/build/80754af9/six_1623709665295/work
+tornado @ file:///Users/ktietz/demo/mc3/conda-bld/tornado_1628698929452/work
