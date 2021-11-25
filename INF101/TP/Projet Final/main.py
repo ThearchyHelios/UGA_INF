@@ -159,6 +159,7 @@ def initScores(joueurs, v):
             "out": False,
             "success": False,
             "draw": False,
+            "blackjack": False,
             "point": 0,
             "mise": 1000,
             "mise_round": 0,
@@ -212,7 +213,7 @@ def gagnant(scores, valeur_croupier):
             if score > valeur_croupier:
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
             elif score == valeur_croupier:
-                print("add points here")
+                print("Draw %s" % nom)
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
                 scores[nom]["draw"] = True
@@ -326,6 +327,16 @@ def tourComplet(scores):
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
     score_croupier_premier_round = croupier_prendre_carte(1)
+    if score_croupier_premier_round == 0:
+        score_croupier_premier_round = 11
+    count_blackjack = 0
+    for nom in scores:
+        if scores[nom]["blackjack"] == True:
+            print("%s Black Jack!" % nom)
+            count_blackjack += 1
+    if count_blackjack > 0:
+        return
+
     while True:
         count_out = 0
         count_giveup = 0
@@ -378,7 +389,7 @@ def croupier_prendre_carte(nombre):
     liste_carte = piocheCarte(nombre)
     score = 0
     for carte in liste_carte:
-        print("You get %s" % carte)
+        print("Croupier get %s" % carte)
         score += valeurCarte(carte)
     return score
 
@@ -523,7 +534,7 @@ while True:
     for nom in scores:
         if scores[nom]["score"] == 21:
             scores[nom]["success"] = True
-
+            scores[nom]["blackjack"] = True
             scores[nom]["point"] += 1
             scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
     print(len(liste_pioche))
