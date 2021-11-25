@@ -539,7 +539,8 @@ while True:
             scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
     print(len(liste_pioche))
     tourComplet(scores)
-    history_save_to_txt("INF101/TP/Projet Final/history.txt", scores)
+    path = os.path.join("INF101", "TP", "Projet Final", "history.txt")
+    history_save_to_txt(path, scores)
     # continuer = input("Est-ce que vous voulais rejouer? y ou n")
     # if continuer == "n":
     #     dict_point = {}
