@@ -490,72 +490,76 @@ def bot_decision(path, scores, nom, score_croupier_premier_round):
         return False
 
 
-nombre_de_personne = int(input("Il y a combien de joueurs?"))
+if __name__ == "__main__":
+    for number in range(2, 11):
+        
+    
+    nombre_de_personne = int(input("Il y a combien de joueurs?"))
 
-liste_joueurs = initJoueurs(nombre_de_personne)
-liste_pioche = initPioche(nombre_de_personne)
-scores = initScores(liste_joueurs, 0)
-
-while True:
-    liste_joueurs = []
-    for nom in scores:
-        liste_joueurs.append(nom)
-    dict_point = {}
-    dict_mise = {}
-    for nom in scores:
-        dict_point[nom] = scores[nom]["point"]
-        dict_mise[nom] = scores[nom]["mise"]
-    print(dict_point)
-    print(dict_mise)
-    input("Press Enter to continue...")
+    liste_joueurs = initJoueurs(nombre_de_personne)
+    liste_pioche = initPioche(nombre_de_personne)
     scores = initScores(liste_joueurs, 0)
-    for nom in scores:
-        scores[nom]["point"] = dict_point[nom]
-        scores[nom]["mise"] = dict_mise[nom]
 
-    for nom in list(scores.keys()):
-        if scores[nom]["mise"] <= 0:
-            scores.pop(nom)
-            print("%s is out" % nom)
+    while True:
+        liste_joueurs = []
+        for nom in scores:
+            liste_joueurs.append(nom)
+        dict_point = {}
+        dict_mise = {}
+        for nom in scores:
+            dict_point[nom] = scores[nom]["point"]
+            dict_mise[nom] = scores[nom]["mise"]
+        print(dict_point)
+        print(dict_mise)
+        input("Press Enter to continue...")
+        scores = initScores(liste_joueurs, 0)
+        for nom in scores:
+            scores[nom]["point"] = dict_point[nom]
+            scores[nom]["mise"] = dict_mise[nom]
 
-    if len(scores) == 1:
-        print("%s win" % list(scores.keys())[0])
-        break
+        for nom in list(scores.keys()):
+            if scores[nom]["mise"] <= 0:
+                scores.pop(nom)
+                print("%s is out" % nom)
 
-    for nom in scores:
-        mise_round = int(input("%s, misez combien?" % nom))
-        while mise_round > scores[nom]["mise"]:
-            mise_round = int(
-                input("Il faut inerieur a ton mise!\n%s, misez combien?" %
-                      nom))
-        scores[nom]["mise_round"] = mise_round
-        scores[nom]["mise"] -= mise_round
-    scores = premierTour(scores)
-    for nom in scores:
-        if scores[nom]["score"] == 21:
-            scores[nom]["success"] = True
-            scores[nom]["blackjack"] = True
-            scores[nom]["point"] += 1
-            scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
-    print(len(liste_pioche))
-    tourComplet(scores)
-    path = os.path.join("INF101", "TP", "Projet Final", "history.txt")
-    history_save_to_txt(path, scores)
-    # continuer = input("Est-ce que vous voulais rejouer? y ou n")
-    # if continuer == "n":
-    #     dict_point = {}
-    #     for nom in scores:
-    #         dict_point[nom] = scores[nom]["point"]
-    #     print(dict_point)
-    #     exit()
-    # else:
-    #     # scores = gestion_de_la_partie.rejouer(scores)
-    #     dict_point = {}
-    #     for nom in scores:
-    #         dict_point[nom] = scores[nom]["point"]
-    #     print(dict_point)
-    #     scores = initialisation.premierTour(liste_joueurs)
-    #     for nom in scores:
-    #         scores[nom]["point"] = dict_point[nom]
+        if len(scores) == 1:
+            print("%s win" % list(scores.keys())[0])
+            break
+
+        for nom in scores:
+            mise_round = int(input("%s, misez combien?" % nom))
+            while mise_round > scores[nom]["mise"]:
+                mise_round = int(
+                    input("Il faut inerieur a ton mise!\n%s, misez combien?" %
+                          nom))
+            scores[nom]["mise_round"] = mise_round
+            scores[nom]["mise"] -= mise_round
+        scores = premierTour(scores)
+        for nom in scores:
+            if scores[nom]["score"] == 21:
+                scores[nom]["success"] = True
+                scores[nom]["blackjack"] = True
+                scores[nom]["point"] += 1
+                scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
+        print(len(liste_pioche))
+        tourComplet(scores)
+        path = os.path.join("INF101", "TP", "Projet Final", "history.txt")
+        history_save_to_txt(path, scores)
+        # continuer = input("Est-ce que vous voulais rejouer? y ou n")
+        # if continuer == "n":
+        #     dict_point = {}
+        #     for nom in scores:
+        #         dict_point[nom] = scores[nom]["point"]
+        #     print(dict_point)
+        #     exit()
+        # else:
+        #     # scores = gestion_de_la_partie.rejouer(scores)
+        #     dict_point = {}
+        #     for nom in scores:
+        #         dict_point[nom] = scores[nom]["point"]
+        #     print(dict_point)
+        #     scores = initialisation.premierTour(liste_joueurs)
+        #     for nom in scores:
+        #         scores[nom]["point"] = dict_point[nom]
 
 # gestion_de_la_partie.bot_decision("history.txt", scores, "a")
