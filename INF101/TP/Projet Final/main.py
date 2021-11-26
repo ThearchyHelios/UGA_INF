@@ -313,7 +313,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             scores[j]["history"]["round %s" % (round + 1)] = score
         if score == 21:
             scores[j]["give_up"] = True
-
+            scores[j]["history"]["round %s" % (round + 1)] = score
         # elif score == 21:
         #     print("You win the game!")
         #     scores[j]["success"] = True
@@ -429,6 +429,8 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
             i = 0  # Cas A
         if valeurCarte(carte_pioche) == i:
             count += 1
+    if carte_total == 0:
+        carte_total = 1
     probabilite = (count / carte_total)
     for item in database:
         list_temp_2 = []
