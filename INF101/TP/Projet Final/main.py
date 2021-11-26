@@ -410,6 +410,7 @@ def croupier_prendre_carte(nombre):
 
 
 def bot_decision(scores, nom, score_croupier_premier_round):
+    global liste_pioche
     database = read_database("INF101/TP/Projet Final/database.txt")
     # print(history)
     # new_dict = {}
@@ -425,7 +426,7 @@ def bot_decision(scores, nom, score_croupier_premier_round):
     if score < 12:
         return True
     else:
-        poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
+        # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
         length = 21 - score - 1
         # win_rate = pg.plot()
@@ -436,13 +437,23 @@ def bot_decision(scores, nom, score_croupier_premier_round):
         success_rate_list = []
         success_list = []
         defayant_list = []
+        probabilite_list = []
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
             success_list.append(0)
             defayant_list.append(0)
-
             carte = score + i
+            
+            # find carte in piochelist
+            carte_total = len(liste_pioche)
+            count = 0 # count combien de carte dans la pioche
+            for carte_pioche in liste_pioche:
+                if i == 1:
+                    i = 0 # Cas A
+                if valeurCarte(carte_pioche) == i:
+                    count += 1
+            probabilite_list.append(count / carte_total)
             for item in database:
                 list_temp_2 = []
                 for j in range(int(database[item]["round"]) - 1):
@@ -468,8 +479,7 @@ def bot_decision(scores, nom, score_croupier_premier_round):
                         else:
                             success_list[i - 1] += 1
         for i in range(len(success_list)):
-            success_rate_list.append(success_list[i] /
-                                     (success_list[i] + defayant_list[i] + 1))
+            success_rate_list.append(success_list[i] / (success_list[i] + defayant_list[i] + 1))
 
     # win_rate.plot(x=x,
     #               y=success_rate_list,
@@ -479,8 +489,7 @@ def bot_decision(scores, nom, score_croupier_premier_round):
     success_rate_final = 0
     for j in range(len(success_rate_list)):
         poid = 1 / (2 * (j + 1))
-        success_rate_final += success_rate_list[j] * poid * (
-            1 + poursentage_de_mise)
+        success_rate_final += success_rate_list[j] * (probabilite_list[j] + 1) * poid
     print("Success rate: %s" % success_rate_final)
     # time.sleep(0.01)
     # pg.exec()
@@ -539,30 +548,30 @@ def read_history(path):
 
 if __name__ == "__main__":
     history = read_history("INF101/TP/Projet Final/history.txt")
-    # win_rate = pg.plot()
-    # win_rate.setWindowTitle('Win Rate Bar Graph')
-    # x = np.arange(17)
-    # x += 4
-    # success_rate_list_point = []
-    # for number in range(4, 21):
-    #     success = 0
-    #     defayant = 0
-    #     for item in history:
-    #         temp_list_1 = []
-    #         for key, item_score in history[item]["score"].items():
-    #             temp_list_1.append(int(item_score))
-    #         if number in temp_list_1:
-    #             if history[item]["success"]:
-    #                 success += 1
-    #             else:
-    #                 defayant += 1
-    #     success_rate_list_point.append(success / (success + defayant + 1))
-    # bargraph = pg.BarGraphItem(x=x,
-    #                            height=success_rate_list_point,
-    #                            width=1,
-    #                            brush='b')
-    # win_rate.addItem(bargraph)
-    # pg.exec()
+    win_rate = pg.plot()
+    win_rate.setWindowTitle('Win Rate Bar Graph')
+    x = np.arange(17)
+    x += 4
+    success_rate_list_point = []
+    for number in range(4, 21):
+        success = 0
+        defayant = 0
+        for item in history:
+            temp_list_1 = []
+            for key, item_score in history[item]["score"].items():
+                temp_list_1.append(int(item_score))
+            if number in temp_list_1:
+                if history[item]["success"]:
+                    success += 1
+                else:
+                    defayant += 1
+        success_rate_list_point.append(success / (success + defayant + 1))
+    bargraph = pg.BarGraphItem(x=x,
+                               height=success_rate_list_point,
+                               width=1,
+                               brush='b')
+    win_rate.addItem(bargraph)
+    pg.exec()
     nombre_de_personne = int(input("Il y a combien de joueurs?"))
 
     liste_joueurs = initJoueurs(nombre_de_personne)
