@@ -1,7 +1,9 @@
 from operator import truediv
 import random
+from sqlite3 import paramstyle
 import time
 import distutils.core
+from unittest import result
 import matplotlib.pyplot as plt
 import os.path
 from pandas import period_range
@@ -9,6 +11,7 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 from time import perf_counter
+import multiprocessing as mp
 
 
 def history_save_to_txt(path, data):
@@ -393,7 +396,7 @@ def tourComplet(scores):
             for nom in scores:
                 if not scores[nom]["give_up"] and not scores[nom][
                         "success"] and not scores[nom]["out"] and not scores[
-                            nom]["draw"] :
+                            nom]["draw"]:
                     tourJoueur(nom, scores, score_croupier_premier_round)
 
 
@@ -407,6 +410,50 @@ def croupier_prendre_carte(nombre):
         print("Croupier get %s" % carte)
         score += valeurCarte(carte)
     return score
+
+
+def bot_decision_multitask(database, liste_pioche, scores, nom, i):
+    # i 是下张什么牌
+    score = scores[nom]["score"]
+    length = 21 - score - 1
+
+    success = 0
+    defayant = 0
+    carte = score + i
+
+    # find carte in piochelist
+    carte_total = len(liste_pioche)
+    count = 0  # count combien de carte dans la pioche
+    for carte_pioche in liste_pioche:
+        if i == 1:
+            i = 0  # Cas A
+        if valeurCarte(carte_pioche) == i:
+            count += 1
+    probabilite = (count / carte_total)
+    for item in database:
+        list_temp_2 = []
+        for j in range(int(database[item]["round"]) - 1):
+            list_temp_1 = []
+
+            for key, item_score in database[item]["score"].items():
+                list_temp_1.append(int(item_score))
+
+            list_temp_2.append([list_temp_1[j], list_temp_1[j + 1]])
+        for k in range(len(list_temp_2)):
+            if list_temp_2[k][0] == carte:
+                if list_temp_2[k][1] > 21:
+                    out = True
+                else:
+                    out = False
+
+                feature_liste = [
+                    int(list_temp_2[k][0]), out, database[item]["success"]
+                ]
+                if feature_liste[1]:
+                    defayant += 1
+                else:
+                    success += 1
+    return success, defayant, probabilite
 
 
 def bot_decision(scores, nom, score_croupier_premier_round):
@@ -438,48 +485,33 @@ def bot_decision(scores, nom, score_croupier_premier_round):
         success_list = []
         defayant_list = []
         probabilite_list = []
+        param_dict = {}
+
+        num_cores = int(mp.cpu_count())
+        pool = mp.Pool(processes=num_cores)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
-            success_list.append(0)
-            defayant_list.append(0)
-            carte = score + i
-            
-            # find carte in piochelist
-            carte_total = len(liste_pioche)
-            count = 0 # count combien de carte dans la pioche
-            for carte_pioche in liste_pioche:
-                if i == 1:
-                    i = 0 # Cas A
-                if valeurCarte(carte_pioche) == i:
-                    count += 1
-            probabilite_list.append(count / carte_total)
-            for item in database:
-                list_temp_2 = []
-                for j in range(int(database[item]["round"]) - 1):
-                    list_temp_1 = []
 
-                    for key, item_score in database[item]["score"].items():
-                        list_temp_1.append(int(item_score))
+            param_dict[i] = [scores, nom, i]
+            # if feature_liste[1]:
+            #     defayant_list[i - 1] += 1
+            # else:
+            #     success_list[i - 1] += 1
+        results = [
+            pool.apply_async(bot_decision_multitask,
+                             args=(database, liste_pioche, scores, nom, i))
+            for i in range(1, 21 - score)
+        ]
+        results = [p.get() for p in results]
+        for result in results:
+            success_list.append(result[0])
+            defayant_list.append(result[1])
+            probabilite_list.append(result[2])
 
-                    list_temp_2.append([list_temp_1[j], list_temp_1[j + 1]])
-                for k in range(len(list_temp_2)):
-                    if list_temp_2[k][0] == carte:
-                        if list_temp_2[k][1] > 21:
-                            out = True
-                        else:
-                            out = False
-
-                        feature_liste = [
-                            int(list_temp_2[k][0]), out,
-                            database[item]["success"]
-                        ]
-                        if feature_liste[1]:
-                            defayant_list[i - 1] += 1
-                        else:
-                            success_list[i - 1] += 1
         for i in range(len(success_list)):
-            success_rate_list.append(success_list[i] / (success_list[i] + defayant_list[i] + 1))
+            success_rate_list.append(success_list[i] /
+                                     (success_list[i] + defayant_list[i] + 1))
 
     # win_rate.plot(x=x,
     #               y=success_rate_list,
@@ -489,7 +521,8 @@ def bot_decision(scores, nom, score_croupier_premier_round):
     success_rate_final = 0
     for j in range(len(success_rate_list)):
         poid = 1 / (2 * (j + 1))
-        success_rate_final += success_rate_list[j] * (probabilite_list[j] + 1) * poid
+        success_rate_final += success_rate_list[j] * (probabilite_list[j] +
+                                                      1) * poid
     print("Success rate: %s" % success_rate_final)
     # time.sleep(0.01)
     # pg.exec()
