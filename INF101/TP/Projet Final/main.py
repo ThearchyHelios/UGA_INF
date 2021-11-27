@@ -23,6 +23,7 @@ def history_save_to_txt(path, data):
     success = False
     out = False
     give_up = False
+    draw = False
     history = ""
     croupier_premier_round = str(data["croupier_premier_round"])
     croupier_value_final = str(data["croupier_value_final"])
@@ -34,13 +35,16 @@ def history_save_to_txt(path, data):
                 out = True
             if data["give_up"]:
                 give_up = True
+            if data["draw"]:
+                draw = True
         for key, items in data["history"].items():
             history = history + str(key) + ":" + str(items) + ","
 
         string = str(
             count_round
         ) + "," + croupier_premier_round + "," + croupier_value_final + "," + history + str(
-            success) + "," + str(out) + "," + str(give_up) + "\n"
+            success) + "," + str(out) + "," + str(give_up) + "," + str(
+                draw) + "\n"
         with open(path, 'a+') as f:
             f.write(string)
             f.close()
@@ -359,22 +363,61 @@ def tourComplet(scores):
         if count_giveup == len(scores) - count_out - count_success:
             # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
             score_croupier = score_croupier_premier_round
-            # TODO: Croupier condition
+
             # while True:
             #     score = croupier_prendre_carte(pioche, 1)
             #     print("Croupier a prendre %s" % score)
             #     score_croupier += score
 
-            valeur_croupier = random.randint(16, 21)
-            print("Croupier have %s " % valeur_croupier)
-            for nom in scores:
-                scores[nom]["croupier_value_final"] = valeur_croupier
-            if valeur_croupier > 21:
+            #TODO: Croupier condition
+            while score_croupier < 17:
+                score = croupier_prendre_carte(1)
+                print("Croupier a prendre %s" % score)
+                score_croupier += score
+                mise_round_total = 0
+            print("Croupier a %s" % score_croupier)
+            if score_croupier > 21:
                 for nom in scores:
-                    mise_round = scores[nom]["mise_round"]
-                    scores[nom]["mise"] += mise_round
-                    return
+                    if scores[nom]["out"] == False:
+                        scores[nom]["success"] = True
+                        mise_round = scores[nom]["mise_round"]
+                        scores[nom]["mise"] += mise_round
+                    scores[nom]["croupier_value_final"] = score_croupier
+                return
             else:
+                for nom in scores:
+                    mise_round_total += scores[nom]["mise_round"]
+                list_pourcentage_mise = []
+                for nom in scores:
+                    if scores[nom]["out"] == False:
+                        list_pourcentage_mise.append(scores[nom]["mise_round"] /
+                                                    (mise_round_total + 1))
+                list_pourcentage_mise_total = 0
+                for pourcentage in list_pourcentage_mise:
+                    list_pourcentage_mise_total += pourcentage
+                temp = 21 - score_croupier
+                liste_pioche_pourcentage = []
+                for i in range(1, temp + 1):
+                    count = 0
+                    for carte in liste_pioche:
+                        if valeurCarte(carte) == i + score_croupier:
+                            count += 1
+                    pourcentage_mise_joueur = 0
+                    for nom in scores:
+                        if scores[nom]["score"] == score_croupier + i:
+                            pourcentage_mise_joueur += scores[nom]["mise_round"]/(mise_round_total + 1)
+                    liste_pioche_pourcentage.append((count/len(liste_pioche)) * (1 + pourcentage_mise_joueur))
+                success_rate_pioche = 0
+                for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
+                    success_rate_pioche += liste_pioche_pourcentage_element
+                if success_rate_pioche > 0.2:
+                    score = croupier_prendre_carte(1)
+                    print("Croupier a prendre %s" % score)
+                    score_croupier += score
+                valeur_croupier = score_croupier
+                print("Croupier have %s " % valeur_croupier)
+                for nom in scores:
+                    scores[nom]["croupier_value_final"] = valeur_croupier
                 nom, score = gagnant(scores, valeur_croupier)
                 for nom_gagner_plus_point in nom:
                     for nom in scores:
@@ -386,7 +429,7 @@ def tourComplet(scores):
                             scores[nom_gagner_plus_point][
                                 "mise"] += mise_round * 2
                             print("You have success %s" %
-                                  nom_gagner_plus_point)
+                                    nom_gagner_plus_point)
                 return
         elif count_out == len(scores):
             # Cest a dire que tous les personnes sont out
@@ -569,22 +612,23 @@ def read_history(path):
         history[count]["croupier_premier_round"] = int(item_list[1])
         history[count]["croupier_value_final"] = int(item_list[2])
         history[count]["score"] = {}
-        for score in item_list[3:-3]:
+        for score in item_list[3:-4]:
             list_temp = score.split(":")
             history[count]["score"][list_temp[0]] = int(list_temp[1])
         history[count]["success"] = bool(
-            distutils.util.strtobool(item_list[-3]))
-        history[count]["out"] = bool(distutils.util.strtobool(item_list[-2]))
+            distutils.util.strtobool(item_list[-4]))
+        history[count]["out"] = bool(distutils.util.strtobool(item_list[-3]))
         history[count]["give_up"] = bool(
-            distutils.util.strtobool(item_list[-1]))
+            distutils.util.strtobool(item_list[-2]))
+        history[count]["draw"] = bool(distutils.util.strtobool(item_list[-1]))
         count += 1
     return history
 
 
-if __name__ == "__main__":
+def show_history():
+    global win_rate
+    win_rate.clear()
     history = read_history("INF101/TP/Projet Final/history.txt")
-    win_rate = pg.plot()
-    win_rate.setWindowTitle('Win Rate Bar Graph')
     x = np.arange(17)
     x += 4
     success_rate_list_point = []
@@ -606,6 +650,15 @@ if __name__ == "__main__":
                                width=1,
                                brush='b')
     win_rate.addItem(bargraph)
+
+
+if __name__ == "__main__":
+    history = read_history("INF101/TP/Projet Final/history.txt")
+    win_rate = pg.plot()
+    win_rate.setWindowTitle('Win Rate Bar Graph')
+    timer = pg.QtCore.QTimer()
+    timer.timeout.connect(show_history)
+    timer.start(1000)
     pg.exec()
     nombre_de_personne = int(input("Il y a combien de joueurs?"))
 
