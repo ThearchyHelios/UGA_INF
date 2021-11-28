@@ -382,6 +382,7 @@ def tourComplet(scores):
                         scores[nom]["success"] = True
                         mise_round = scores[nom]["mise_round"]
                         scores[nom]["mise"] += mise_round
+                        scores[nom]["point"] += 1
                     scores[nom]["croupier_value_final"] = score_croupier
                 return
             else:
@@ -424,6 +425,7 @@ def tourComplet(scores):
                             scores[nom]["success"] = True
                             mise_round = scores[nom]["mise_round"]
                             scores[nom]["mise"] += mise_round
+                            scores[nom]["point"] += 1
                         scores[nom]["croupier_value_final"] = score_croupier
                     return
                 else:
@@ -512,7 +514,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
 
 def bot_decision(scores, nom, score_croupier_premier_round):
     global liste_pioche
-    database = read_database("INF101/TP/Projet Final/database.txt")
+    database = read_history("INF101/TP/Projet Final/history.txt")
     # print(history)
     # new_dict = {}
     # count = 0
@@ -542,7 +544,7 @@ def bot_decision(scores, nom, score_croupier_premier_round):
         param_dict = {}
 
         num_cores = int(mp.cpu_count())
-        pool = mp.Pool(processes=num_cores)
+        pool = mp.Pool(processes=num_cores - 2)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
