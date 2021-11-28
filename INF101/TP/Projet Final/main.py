@@ -1,3 +1,11 @@
+'''
+Author: JIANG Yilun
+Date: 2021-11-28 20:44:31
+LastEditTime: 2021-11-28 21:08:59
+LastEditors: JIANG Yilun
+Description: 
+FilePath: /INF_101/INF101/TP/Projet Final/main.py
+'''
 from operator import truediv
 import random
 from sqlite3 import paramstyle
@@ -15,10 +23,12 @@ import multiprocessing as mp
 
 
 def history_save_to_txt(path, data):
-    # liste_histoire = {}
-    # for nom in scores:
-    #     for key, items in scores[nom]["history"].items():
-    #         liste_histoire[nom][key] = items
+    """ Cette fonction permet de sauvegarder l'historique dans un fichier txt.
+
+    Args:
+        path (str): Fichiers TXT correspondants
+        data (dict): Donnees à déposer dans le fichier
+    """
     count_round = len(data["history"])
     success = False
     out = False
@@ -51,6 +61,11 @@ def history_save_to_txt(path, data):
 
 
 def paquet():
+    """ Cette fonction est utilisée pour générer un jeu de 52 cartes mélangées.
+
+    Returns:
+        list: Une liste avec 52 cartes mélangées
+    """
     liste_carte = []
     #     Ajouter des cartes carreau dans la liste
     for i in range(1, 14):
@@ -116,6 +131,14 @@ def paquet():
 
 
 def valeurCarte(carte):
+    """ Cette fonction est utilisée pour obtenir la valeur de la carte
+
+    Args:
+        carte (str): Cartes saisies. Ex: "As de carreau"
+
+    Returns:
+        int: Retourne la valeur de cette carte. Si le retour est 0, alors la carte d'entrée est un As.
+    """
     temp = str(carte)
     nombre_liste = temp.split(" ")
     if nombre_liste[0] == "A":
@@ -129,6 +152,15 @@ def valeurCarte(carte):
 
 
 def initPioche(n):
+    """ Cette fonction est utilisée pour générer la taille de la pioche, qui correspond au nombre de joueurs dans le jeu.
+        Si le nombre de participants est de 3, alors la taille du jeu est de 3*52=156, si le nombre de participants est de 6, alors la taille du jeu est de 6*52=312.
+
+    Args:
+        n (int): Nombre de participants au jeu
+
+    Returns:
+        list: Ponts liés au nombre de participants
+    """
     liste_carte_remplacer = []
     for i in range(n):
         liste_paquet = paquet()
@@ -137,10 +169,15 @@ def initPioche(n):
     return liste_carte_remplacer
 
 
-# TODO: bug
-
-
 def piocheCarte(x):
+    """ Cette fonction renvoie le nombre x de cartes de la pioche.
+
+    Args:
+        x (int): Nombre de cartes à retourner
+
+    Returns:
+        list: Cartes retournées avec le nombre x.
+    """
     global liste_pioche
     liste_carte = []
     for i in range(x):
