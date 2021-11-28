@@ -391,8 +391,8 @@ def tourComplet(scores):
                 list_pourcentage_mise = []
                 for nom in scores:
                     if scores[nom]["out"] == False:
-                        list_pourcentage_mise.append(scores[nom]["mise_round"] /
-                                                    (mise_round_total + 1))
+                        list_pourcentage_mise.append(
+                            scores[nom]["mise_round"] / (mise_round_total + 1))
                 list_pourcentage_mise_total = 0
                 for pourcentage in list_pourcentage_mise:
                     list_pourcentage_mise_total += pourcentage
@@ -406,8 +406,11 @@ def tourComplet(scores):
                     pourcentage_mise_joueur = 0
                     for nom in scores:
                         if scores[nom]["score"] == score_croupier + i:
-                            pourcentage_mise_joueur += scores[nom]["mise_round"]/(mise_round_total + 1)
-                    liste_pioche_pourcentage.append((count/(len(liste_pioche) + 1)) * (1 + pourcentage_mise_joueur))
+                            pourcentage_mise_joueur += scores[nom][
+                                "mise_round"] / (mise_round_total + 1)
+                    liste_pioche_pourcentage.append(
+                        (count / (len(liste_pioche) + 1)) *
+                        (1 + pourcentage_mise_joueur))
                 success_rate_pioche = 0
                 for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
                     success_rate_pioche += liste_pioche_pourcentage_element
@@ -440,7 +443,7 @@ def tourComplet(scores):
                                 scores[nom_gagner_plus_point][
                                     "mise"] += mise_round * 2
                                 print("You have success %s" %
-                                        nom_gagner_plus_point)
+                                      nom_gagner_plus_point)
                     return
         elif count_out == len(scores):
             # Cest a dire que tous les personnes sont out
@@ -544,7 +547,8 @@ def bot_decision(scores, nom, score_croupier_premier_round):
         param_dict = {}
 
         num_cores = int(mp.cpu_count())
-        pool = mp.Pool(processes=num_cores - 2)
+        # pool = mp.Pool(processes=num_cores - 2)
+        pool = mp.Pool(4)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
