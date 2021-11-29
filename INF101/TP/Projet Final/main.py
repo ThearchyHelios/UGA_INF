@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-11-28 21:08:59
+LastEditTime: 2021-11-29 08:11:16
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -188,6 +188,14 @@ def piocheCarte(x):
 
 
 def initJoueurs(n):
+    """ Cette méthode est utilisée pour demander à l'utilisateur les noms des participants au jeu et renvoie une liste avec les noms de tous les joueurs.
+
+    Args:
+        n (int): Nombre de participants au jeu。
+
+    Returns:
+        dict: Une liste avec les noms de tous les joueurs.
+    """
     liste_joueurs = []
     for i in range(n):
         nom = input("Quel est le nom du joueur?")
@@ -196,6 +204,15 @@ def initJoueurs(n):
 
 
 def initScores(joueurs, v):
+    """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents statuts.
+
+    Args:
+        joueurs (dict): Une dictionnaire avec tous les information (score, statut, etc.) des joueurs.
+        v (int): Attribuer un score spécifique à tous les joueurs (utilisé par défaut au tour 1, où le tour 2 le tour 3 ne s'applique pas, par défaut à 0)
+
+    Returns:
+        dict: Retourne le dictionnaire initialisé.
+    """
     dict_joueurs = {}
     for nom in joueurs:
         dict_joueurs[nom] = {
