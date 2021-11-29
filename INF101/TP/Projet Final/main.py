@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-11-29 08:11:16
+LastEditTime: 2021-11-29 09:11:42
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -9,6 +9,7 @@ FilePath: /INF_101/INF101/TP/Projet Final/main.py
 from operator import truediv
 import random
 from sqlite3 import paramstyle
+from sre_constants import SUCCESS
 import time
 import distutils.core
 from unittest import result
@@ -199,27 +200,56 @@ def initJoueurs(n):
     liste_joueurs = []
     for i in range(n):
         nom = input("Quel est le nom du joueur?")
+        while "Ordi" in nom:
+            print("Le mot 'ordi' ne peut pas contient dans le nom du joueur.")
+            nom = input("Quel est le nom du joueur?")
         liste_joueurs.append(nom)
     return liste_joueurs
 
 
-def initScores(joueurs, v):
+def initOrdi(n):
+    liste_ordi = []
+    for i in range(n):
+        liste_ordi.append("Ordi " + str(i+1))
+    return liste_ordi
+
+
+def initScores(liste_joueurs,liste_ordi, v):
+    #TODO: 完成注释
     """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents statuts.
 
     Args:
-        joueurs (dict): Une dictionnaire avec tous les information (score, statut, etc.) des joueurs.
+        liste_joueurs (dict): Une dictionnaire avec tous les information (score, statut, etc.) des joueurs.
         v (int): Attribuer un score spécifique à tous les joueurs (utilisé par défaut au tour 1, où le tour 2 le tour 3 ne s'applique pas, par défaut à 0)
 
     Returns:
         dict: Retourne le dictionnaire initialisé.
     """
     dict_joueurs = {}
-    for nom in joueurs:
+    for nom in liste_joueurs:
         dict_joueurs[nom] = {
             "score": v,
             "round": 0,
             "croupier_premier_round": 0,
             "croupier_value_final": 0,
+            "ordi": False,
+            "give_up": False,
+            "out": False,
+            "success": False,
+            "draw": False,
+            "blackjack": False,
+            "point": 0,
+            "mise": 1000,
+            "mise_round": 0,
+            "history": {}
+        }
+    for nom in liste_ordi:
+        dict_joueurs[nom] = {
+            "score": v,
+            "round": 0,
+            "croupier_premier_round": 0,
+            "croupier_value_final": 0,
+            "ordi": True,
             "give_up": False,
             "out": False,
             "success": False,
@@ -293,7 +323,7 @@ def gagnant(scores, valeur_croupier):
 
 
 def continuer():
-    continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n")
+    continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n ")
     if continuer_le_jeux == "y":
         return True
     else:
@@ -302,7 +332,6 @@ def continuer():
     # if history["score"][""]
 
 
-# TODO: 全部将荷答应有关的代码禁用，为了测试
 def tourJoueur(j, scores, score_croupier_premier_round):
     global liste_pioche
     score = 0
@@ -349,39 +378,72 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     #         mise_round = scores[nom]["mise_round"]
     #         scores[nom]["mise"] += mise_round * 2.5
 
-    if bot_decision(scores, j, score_croupier_premier_round):
-        # if continuer():
-        if liste_pioche == []:
-            liste_pioche = initPioche(len(scores))
-        liste_carte = piocheCarte(1)
-        for carte in liste_carte:
-            print("You get %s" % carte)
-            temp = int(valeurCarte(carte))
-            if temp == 0:
-                if scores[j]["score"] < 12:
-                    temp = 11
-                else:
-                    temp = 1
-            score += temp
-        print("score: %s" % score)
-        scores[j]["score"] = score
-        if score > 21:
-            print("You lose the game!")
-            scores[j]["out"] = True
-            scores[j]["history"]["round %s" % (round + 1)] = score
-        if score == 21:
+    if scores[j]["ordi"] == False:
+        if continuer():
+            if liste_pioche == []:
+                liste_pioche = initPioche(len(scores))
+            liste_carte = piocheCarte(1)
+            for carte in liste_carte:
+                print("You get %s" % carte)
+                temp = int(valeurCarte(carte))
+                if temp == 0:
+                    if scores[j]["score"] < 12:
+                        temp = 11
+                    else:
+                        temp = 1
+                score += temp
+            print("score: %s" % score)
+            scores[j]["score"] = score
+            if score > 21:
+                print("You lose the game!")
+                scores[j]["out"] = True
+                scores[j]["history"]["round %s" % (round + 1)] = score
+            if score == 21:
+                scores[j]["give_up"] = True
+                scores[j]["history"]["round %s" % (round + 1)] = score
+            # elif score == 21:
+            #     print("You win the game!")
+            #     scores[j]["success"] = True
+            #     scores[j]["point"] += 1
+            #     scores[j]["history"]["round %s" % (round + 1)] = score
+        else:
             scores[j]["give_up"] = True
-            scores[j]["history"]["round %s" % (round + 1)] = score
-        # elif score == 21:
-        #     print("You win the game!")
-        #     scores[j]["success"] = True
-        #     scores[j]["point"] += 1
-        #     scores[j]["history"]["round %s" % (round + 1)] = score
-    else:
-        scores[j]["give_up"] = True
-        print("You have given up")
-    #
-    # time.sleep(2)
+            print("You have given up")
+        time.sleep(2)
+    
+    elif scores[j]["ordi"] == True:
+        if bot_decision(scores, j, score_croupier_premier_round):
+            if liste_pioche == []:
+                liste_pioche = initPioche(len(scores))
+            liste_carte = piocheCarte(1)
+            for carte in liste_carte:
+                print("You get %s" % carte)
+                temp = int(valeurCarte(carte))
+                if temp == 0:
+                    if scores[j]["score"] < 12:
+                        temp = 11
+                    else:
+                        temp = 1
+                score += temp
+            print("score: %s" % score)
+            scores[j]["score"] = score
+            if score > 21:
+                print("You lose the game!")
+                scores[j]["out"] = True
+                scores[j]["history"]["round %s" % (round + 1)] = score
+            if score == 21:
+                scores[j]["give_up"] = True
+                scores[j]["history"]["round %s" % (round + 1)] = score
+            # elif score == 21:
+            #     print("You win the game!")
+            #     scores[j]["success"] = True
+            #     scores[j]["point"] += 1
+            #     scores[j]["history"]["round %s" % (round + 1)] = score
+        else:
+            scores[j]["give_up"] = True
+            print("You have given up")
+        #
+        time.sleep(2)
 
 
 def tourComplet(scores):
@@ -694,46 +756,48 @@ def read_history(path):
     return history
 
 
-def show_history():
-    global win_rate
-    win_rate.clear()
-    history = read_history("INF101/TP/Projet Final/history.txt")
-    x = np.arange(17)
-    x += 4
-    success_rate_list_point = []
-    for number in range(4, 21):
-        success = 0
-        defayant = 0
-        for item in history:
-            temp_list_1 = []
-            for key, item_score in history[item]["score"].items():
-                temp_list_1.append(int(item_score))
-            if number in temp_list_1:
-                if history[item]["success"]:
-                    success += 1
-                else:
-                    defayant += 1
-        success_rate_list_point.append(success / (success + defayant + 1))
-    bargraph = pg.BarGraphItem(x=x,
-                               height=success_rate_list_point,
-                               width=1,
-                               brush='b')
-    win_rate.addItem(bargraph)
+# def show_history():
+#     global win_rate
+#     win_rate.clear()
+#     history = read_history("INF101/TP/Projet Final/history.txt")
+#     x = np.arange(17)
+#     x += 4
+#     success_rate_list_point = []
+#     for number in range(4, 21):
+#         success = 0
+#         defayant = 0
+#         for item in history:
+#             temp_list_1 = []
+#             for key, item_score in history[item]["score"].items():
+#                 temp_list_1.append(int(item_score))
+#             if number in temp_list_1:
+#                 if history[item]["success"]:
+#                     success += 1
+#                 else:
+#                     defayant += 1
+#         success_rate_list_point.append(success / (success + defayant + 1))
+#     bargraph = pg.BarGraphItem(x=x,
+#                                height=success_rate_list_point,
+#                                width=1,
+#                                brush='b')
+#     win_rate.addItem(bargraph)
 
 
 if __name__ == "__main__":
     history = read_history("INF101/TP/Projet Final/history.txt")
-    win_rate = pg.plot()
-    win_rate.setWindowTitle('Win Rate Bar Graph')
-    timer = pg.QtCore.QTimer()
-    timer.timeout.connect(show_history)
-    timer.start(1000)
-    pg.exec()
+    # win_rate = pg.plot()
+    # win_rate.setWindowTitle('Win Rate Bar Graph')
+    # timer = pg.QtCore.QTimer()
+    # timer.timeout.connect(show_history)
+    # timer.start(1000)
+    # pg.exec()
     nombre_de_personne = int(input("Il y a combien de joueurs?"))
+    nombre_de_ordi = int(input("Il y a combien d'ordi?"))
 
     liste_joueurs = initJoueurs(nombre_de_personne)
+    liste_ordi = initOrdi(nombre_de_ordi)
     liste_pioche = initPioche(nombre_de_personne)
-    scores = initScores(liste_joueurs, 0)
+    scores = initScores(liste_joueurs,liste_ordi, 0)
 
     while True:
         liste_joueurs = []
@@ -746,8 +810,8 @@ if __name__ == "__main__":
             dict_mise[nom] = scores[nom]["mise"]
         print(dict_point)
         print(dict_mise)
-        # input("Press Enter to continue...")
-        scores = initScores(liste_joueurs, 0)
+        input("Press Enter to continue...")
+        scores = initScores(liste_joueurs,liste_ordi, 0)
         for nom in scores:
             scores[nom]["point"] = dict_point[nom]
             scores[nom]["mise"] = dict_mise[nom]
@@ -764,16 +828,37 @@ if __name__ == "__main__":
         scores = premierTour(scores)
 
         for nom in scores:
-            # print("%s: T'as %s maintenant." % (nom, scores[nom]["score"]))
-            # mise_round = int(input("%s, misez combien?" % nom))
-            # while mise_round > scores[nom]["mise"]:
-            #     mise_round = int(
-            #         input("Il faut inerieur a ton mise!\n%s, misez combien?" %
-            #               nom))
-            # scores[nom]["mise_round"] = mise_round
-            # scores[nom]["mise"] -= mise_round
-            scores[nom]["mise_round"] = 0
-
+            if scores[nom]["ordi"]== False:
+                print("%s: T'as %s scores maintenant, et %s mises dans le banque." % (nom, scores[nom]["score"], scores[nom]["mise"]))
+                mise_round = int(input("%s, misez combien?" % nom))
+                while mise_round > scores[nom]["mise"]:
+                    mise_round = int(
+                        input("Il faut inferieur a ton mise!\n%s, misez combien?" %
+                            nom))
+                scores[nom]["mise_round"] = mise_round
+                scores[nom]["mise"] -= mise_round
+            else:
+                history = read_history("INF101/TP/Projet Final/history.txt")
+                success = 0
+                defayant = 0
+                number = scores[nom]["score"]
+                for item in history:
+                    temp_list_1 = []
+                    for key, item_score in history[item]["score"].items():
+                        temp_list_1.append(int(item_score))
+                    if number in temp_list_1:
+                        if history[item]["success"]:
+                            success += 1
+                        else:
+                            defayant += 1
+                winrate = success / (success + defayant + 1)
+                if scores[nom]["mise"] < 2:
+                    mise_round = 2
+                else:
+                    mise_round = int(winrate * scores[nom]["mise"])
+                scores[nom]["mise_round"] = mise_round
+                scores[nom]["mise"] -= mise_round
+                print("%s mise %s" %(nom, mise_round))
         for nom in scores:
             if scores[nom]["score"] == 21:
                 scores[nom]["success"] = True
