@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-11-29 09:11:42
+LastEditTime: 2021-11-29 21:47:47
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -210,21 +210,24 @@ def initJoueurs(n):
 def initOrdi(n):
     liste_ordi = []
     for i in range(n):
-        liste_ordi.append("Ordi " + str(i+1))
+        liste_ordi.append("Ordi " + str(i + 1))
     return liste_ordi
 
 
-def initScores(liste_joueurs,liste_ordi, v):
+def initScores(liste_joueurs, liste_ordi, v):
     #TODO: 完成注释
-    """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents statuts.
+    """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents
+    statuts. Renvoie également ["ordi"] = Vrai s'il s'agit d'un joueur informatique, et ["ordi"] = Faux s'il s'agit d'un joueur humain.
 
     Args:
-        liste_joueurs (dict): Une dictionnaire avec tous les information (score, statut, etc.) des joueurs.
+        liste_joueurs (list): Une liste avec les noms de tous les joueurs humains.
+        liste_ordi (list): Une liste avec les noms de tous les joueurs ordinateurs.
         v (int): Attribuer un score spécifique à tous les joueurs (utilisé par défaut au tour 1, où le tour 2 le tour 3 ne s'applique pas, par défaut à 0)
 
     Returns:
         dict: Retourne le dictionnaire initialisé.
     """
+
     dict_joueurs = {}
     for nom in liste_joueurs:
         dict_joueurs[nom] = {
@@ -279,20 +282,23 @@ def premierTour(scores):
         for carte in liste_carte_joueur:
             temp = int(valeurCarte(carte))
             if temp == 0:
-                # if scores[nom]["score"] == 0:
-                #     print("Cest ton premier tour!")
-                # else:
-                #     print("T'as %s maintenant." % scores[nom]["score"])
-                # nombre = int(
-                #     input("Cest A: Quel valeur vous voulais choisi? 1 ou 11?"))
-                # if nombre == 1:
-                #     temp = 1
-                # elif nombre == 11:
-                #     temp = 11
-                # else:
-                #     temp = 1
-                temp = 11
-                #TODO: 此处仅为测试，用了11，应该是上面的注释掉的
+                if scores[nom]["ordi"] == False:
+                    if scores[nom]["score"] == 0:
+                        print("Cest ton premier tour!")
+                    else:
+                        print("T'as %s maintenant." % scores[nom]["score"])
+                    nombre = int(
+                        input(
+                            "Cest A: Quel valeur vous voulais choisi? 1 ou 11?"
+                        ))
+                    if nombre == 1:
+                        temp = 1
+                    elif nombre == 11:
+                        temp = 11
+                    else:
+                        temp = 1
+                else:
+                    temp = 11
             scores[nom]["score"] += temp
         count += 1
     return scores
@@ -410,9 +416,9 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             scores[j]["give_up"] = True
             print("You have given up")
         time.sleep(2)
-    
+
     elif scores[j]["ordi"] == True:
-        if bot_decision(scores, j, score_croupier_premier_round):
+        if bot_decision(scores, j):
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
             liste_carte = piocheCarte(1)
@@ -631,7 +637,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
     return success, defayant, probabilite
 
 
-def bot_decision(scores, nom, score_croupier_premier_round):
+def bot_decision(scores, nom):
     global liste_pioche
     database = read_history("INF101/TP/Projet Final/history.txt")
     # print(history)
@@ -782,7 +788,6 @@ def read_history(path):
 #                                brush='b')
 #     win_rate.addItem(bargraph)
 
-
 if __name__ == "__main__":
     history = read_history("INF101/TP/Projet Final/history.txt")
     # win_rate = pg.plot()
@@ -797,7 +802,7 @@ if __name__ == "__main__":
     liste_joueurs = initJoueurs(nombre_de_personne)
     liste_ordi = initOrdi(nombre_de_ordi)
     liste_pioche = initPioche(nombre_de_personne)
-    scores = initScores(liste_joueurs,liste_ordi, 0)
+    scores = initScores(liste_joueurs, liste_ordi, 0)
 
     while True:
         liste_joueurs = []
@@ -811,7 +816,7 @@ if __name__ == "__main__":
         print(dict_point)
         print(dict_mise)
         input("Press Enter to continue...")
-        scores = initScores(liste_joueurs,liste_ordi, 0)
+        scores = initScores(liste_joueurs, liste_ordi, 0)
         for nom in scores:
             scores[nom]["point"] = dict_point[nom]
             scores[nom]["mise"] = dict_mise[nom]
@@ -825,40 +830,28 @@ if __name__ == "__main__":
             print("%s win" % list(scores.keys())[0])
             break
 
-        scores = premierTour(scores)
-
         for nom in scores:
-            if scores[nom]["ordi"]== False:
-                print("%s: T'as %s scores maintenant, et %s mises dans le banque." % (nom, scores[nom]["score"], scores[nom]["mise"]))
+            if scores[nom]["ordi"] == False:
+                print(
+                    "%s: T'as %s mises dans le banque." % (nom, scores[nom]["mise"]))
                 mise_round = int(input("%s, misez combien?" % nom))
                 while mise_round > scores[nom]["mise"]:
                     mise_round = int(
-                        input("Il faut inferieur a ton mise!\n%s, misez combien?" %
-                            nom))
+                        input(
+                            "Il faut inferieur a ton mise!\n%s, misez combien?"
+                            % nom))
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
             else:
-                history = read_history("INF101/TP/Projet Final/history.txt")
-                success = 0
-                defayant = 0
-                number = scores[nom]["score"]
-                for item in history:
-                    temp_list_1 = []
-                    for key, item_score in history[item]["score"].items():
-                        temp_list_1.append(int(item_score))
-                    if number in temp_list_1:
-                        if history[item]["success"]:
-                            success += 1
-                        else:
-                            defayant += 1
-                winrate = success / (success + defayant + 1)
-                if scores[nom]["mise"] < 2:
-                    mise_round = 2
+                mise = scores[nom]["mise"]
+                if mise > 10:
+                    mise_round = random.randint(1, int(mise/2))
                 else:
-                    mise_round = int(winrate * scores[nom]["mise"])
+                    mise_round = mise
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
-                print("%s mise %s" %(nom, mise_round))
+                print("%s mise %s" % (nom, mise_round))
+        scores = premierTour(scores)
         for nom in scores:
             if scores[nom]["score"] == 21:
                 scores[nom]["success"] = True

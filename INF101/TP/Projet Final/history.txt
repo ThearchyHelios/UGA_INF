@@ -60015,3 +60015,21 @@
 3,5,26,round 1:9,round 2:12,round 3:20,True,False,True,False
 2,5,26,round 1:12,round 2:19,True,False,True,False
 2,5,26,round 1:15,round 2:17,True,False,True,False
+2,2,22,round 1:14,round 2:17,True,False,True,False
+2,2,22,round 1:13,round 2:20,True,False,True,False
+2,2,22,round 1:12,round 2:18,True,False,True,False
+3,11,25,round 1:12,round 2:15,round 3:19,True,False,True,False
+3,11,25,round 1:6,round 2:15,round 3:17,True,False,True,False
+2,11,25,round 1:15,round 2:21,True,False,True,False
+2,10,18,round 1:9,round 2:19,True,False,True,False
+2,10,18,round 1:11,round 2:21,True,False,True,False
+1,10,18,round 1:18,False,False,True,True
+2,10,20,round 1:14,round 2:22,False,True,False,False
+2,10,20,round 1:16,round 2:26,False,True,False,False
+1,10,20,round 1:20,False,False,True,True
+3,10,20,round 1:7,round 2:16,round 3:18,False,False,True,False
+2,10,20,round 1:8,round 2:18,False,False,True,False
+2,10,20,round 1:16,round 2:17,False,False,True,False
+2,9,23,round 1:14,round 2:24,False,True,False,False
+2,9,23,round 1:12,round 2:22,False,True,False,False
+1,9,23,round 1:17,True,False,True,False
