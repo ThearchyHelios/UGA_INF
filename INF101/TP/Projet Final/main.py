@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-11-29 21:47:47
+LastEditTime: 2021-11-30 19:24:37
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -267,6 +267,14 @@ def initScores(liste_joueurs, liste_ordi, v):
 
 
 def premierTour(scores):
+    """[summary]
+
+    Args:
+        scores ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     global liste_pioche
 
     liste_carte_joueurs = []
@@ -864,20 +872,22 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
-        # continuer = input("Est-ce que vous voulais rejouer? y ou n")
-        # if continuer == "n":
-        #     dict_point = {}
-        #     for nom in scores:
-        #         dict_point[nom] = scores[nom]["point"]
-        #     print(dict_point)
-        #     exit()
+        continuer = input("Est-ce que vous voulais rejouer? y ou n")
+        if continuer == "n":
+            dict_point = {}
+            dict_mise = {}
+            for nom in scores:
+                dict_point[nom] = scores[nom]["point"]
+                dict_mise[nom] = scores[nom]["mise"]
+            print(dict_point)
+            exit()
         # else:
         #     # scores = gestion_de_la_partie.rejouer(scores)
         #     dict_point = {}
         #     for nom in scores:
         #         dict_point[nom] = scores[nom]["point"]
         #     print(dict_point)
-        #     scores = initialisation.premierTour(liste_joueurs)
+        #     scores = premierTour(liste_joueurs)
         #     for nom in scores:
         #         scores[nom]["point"] = dict_point[nom]
 
