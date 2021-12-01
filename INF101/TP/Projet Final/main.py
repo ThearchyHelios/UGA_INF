@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-11-30 19:24:37
+LastEditTime: 2021-12-01 14:39:06
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -215,7 +215,6 @@ def initOrdi(n):
 
 
 def initScores(liste_joueurs, liste_ordi, v):
-    #TODO: 完成注释
     """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents
     statuts. Renvoie également ["ordi"] = Vrai s'il s'agit d'un joueur informatique, et ["ordi"] = Faux s'il s'agit d'un joueur humain.
 
@@ -267,13 +266,13 @@ def initScores(liste_joueurs, liste_ordi, v):
 
 
 def premierTour(scores):
-    """[summary]
+    """ Cette équation est utilisée pour initialiser le score du joueur et permet de tirer deux cartes pour le premier tour.
 
     Args:
-        scores ([type]): [description]
+        scores (dict): Scores des joueurs
 
     Returns:
-        [type]: [description]
+        dict: Scores des joueurs
     """
     global liste_pioche
 
@@ -312,9 +311,16 @@ def premierTour(scores):
     return scores
 
 
-# TODO: changer le fonction pour ajouter un Croupier et comparer les scores avec Croupier
 def gagnant(scores, valeur_croupier):
-    # list_score = []
+    """ Cette méthode est utilisée pour comparer les scores de tous les joueurs vivants avec les scores des loteries, s'il y a plus de joueurs vivants que de loteries, alors elle retourne les noms de tous les joueurs vivants.
+
+    Args:
+        scores (dict): Scores des joueurs
+        valeur_croupier (int): Valeur du croupier
+
+    Returns:
+        list: Liste des noms des joueurs vivants
+    """
     nom_gagnant_plus = []
     point_gagnant_plus = 0
     for nom in scores:
@@ -337,6 +343,11 @@ def gagnant(scores, valeur_croupier):
 
 
 def continuer():
+    """ Cette méthode est utilisée pour demander au joueur s'il veut abandonner.
+
+    Returns:
+        bool: Retourne True si le joueur veut abandonner, False sinon.
+    """
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n ")
     if continuer_le_jeux == "y":
         return True
@@ -347,6 +358,13 @@ def continuer():
 
 
 def tourJoueur(j, scores, score_croupier_premier_round):
+    """ Cette méthode lance un tour de jeu et peut afficher le nombre de tours, les scores de tous les joueurs et le fen shu des joueurs actuels.
+
+    Args:
+        j (str): Nom du joueur
+        scores (dict): Scores des joueurs
+        score_croupier_premier_round (int): Valeur du croupier au premier tour
+    """
     global liste_pioche
     score = 0
     round = 0
@@ -381,16 +399,6 @@ def tourJoueur(j, scores, score_croupier_premier_round):
 
     scores[j]["history"]["round %s" % round] = score
     print("You have %s scores now " % score)
-    # print(scores)
-    # data_folder = os.path.join("INF101", "TP", "Projet Final")
-    # file = os.path.join(data_folder, "database.txt")
-
-    # for nom in scores:
-    #     if round == 1 and scores[nom]["score"] == 21:
-    #         print("Black Jack!")
-    #         scores[nom]["success"] = True
-    #         mise_round = scores[nom]["mise_round"]
-    #         scores[nom]["mise"] += mise_round * 2.5
 
     if scores[j]["ordi"] == False:
         if continuer():
@@ -415,11 +423,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             if score == 21:
                 scores[j]["give_up"] = True
                 scores[j]["history"]["round %s" % (round + 1)] = score
-            # elif score == 21:
-            #     print("You win the game!")
-            #     scores[j]["success"] = True
-            #     scores[j]["point"] += 1
-            #     scores[j]["history"]["round %s" % (round + 1)] = score
+
         else:
             scores[j]["give_up"] = True
             print("You have given up")
@@ -448,15 +452,11 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             if score == 21:
                 scores[j]["give_up"] = True
                 scores[j]["history"]["round %s" % (round + 1)] = score
-            # elif score == 21:
-            #     print("You win the game!")
-            #     scores[j]["success"] = True
-            #     scores[j]["point"] += 1
-            #     scores[j]["history"]["round %s" % (round + 1)] = score
+
         else:
             scores[j]["give_up"] = True
             print("You have given up")
-        #
+
         time.sleep(2)
 
 
