@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-02 13:51:07
+LastEditTime: 2021-12-02 14:01:34
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -12,14 +12,7 @@ from sqlite3 import paramstyle
 from sre_constants import SUCCESS
 import time
 import distutils.core
-from unittest import result
-import matplotlib.pyplot as plt
 import os.path
-from pandas import period_range
-import pyqtgraph as pg
-from pyqtgraph.Qt import QtCore, QtGui
-import numpy as np
-from time import perf_counter
 import multiprocessing as mp
 
 
