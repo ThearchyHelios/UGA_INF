@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-27 14:37:13
-LastEditTime: 2021-12-01 15:55:53
+LastEditTime: 2021-12-01 22:33:39
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/show_graph.py
@@ -44,7 +44,7 @@ def read_history(path):
 def show_history():
     global win_rate
     win_rate.clear()
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("INF101/TP/Projet Final/history_5mille.txt")
     x = np.arange(17)
     x += 4
     success_rate_list_point = []
@@ -71,9 +71,9 @@ def show_history():
 
 
 if __name__ == "__main__":
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("INF101/TP/Projet Final/history_5mille.txt")
     win_rate = pg.plot()
-    win_rate.setWindowTitle('Win Rate Bar Graph')
+    win_rate.setWindowTitle('Win Rate Bar Graph 5 mille')
     timer = pg.QtCore.QTimer()
     timer.timeout.connect(show_history)
     timer.start(1000)
