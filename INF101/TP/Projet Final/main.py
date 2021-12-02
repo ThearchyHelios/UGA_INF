@@ -15,6 +15,7 @@ import distutils.core
 import os.path
 import multiprocessing as mp
 
+# je suis sokem
 
 def history_save_to_txt(path, data):
     """ Cette fonction permet de sauvegarder l'historique dans un fichier txt.
