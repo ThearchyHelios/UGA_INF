@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-01 14:39:06
+LastEditTime: 2021-12-02 13:51:07
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -69,56 +69,20 @@ def paquet():
     """
     liste_carte = []
     #     Ajouter des cartes carreau dans la liste
-    for i in range(1, 14):
-        if i == 1:
-            i = "A"
-        elif i == 11:
-            i = "valet"
-        elif i == 12:
-            i = "dame"
-        elif i == 13:
-            i = "roi"
-        temp = str(i) + " de carreau"
-        liste_carte.append(temp)
+    list_temp = [" de carreau", " de pique", " de trefle", " de coeur"]
+    for temp in list_temp:
+        for i in range(1, 14):
+            if i == 1:
+                i = "A"
+            elif i == 11:
+                i = "valet"
+            elif i == 12:
+                i = "dame"
+            elif i == 13:
+                i = "roi"
+            mot = str(i) + temp
+            liste_carte.append(mot)
 
-    #     Ajouter des cartes pique dans la liste
-    for i in range(1, 14):
-        if i == 1:
-            i = "A"
-        elif i == 11:
-            i = "valet"
-        elif i == 12:
-            i = "dame"
-        elif i == 13:
-            i = "roi"
-        temp = str(i) + " de pique"
-        liste_carte.append(temp)
-
-    #     Ajouter des cartes trefle dans la liste
-    for i in range(1, 14):
-        if i == 1:
-            i = "A"
-        elif i == 11:
-            i = "valet"
-        elif i == 12:
-            i = "dame"
-        elif i == 13:
-            i = "roi"
-        temp = str(i) + " de trefle"
-        liste_carte.append(temp)
-
-    #     Ajouter des cartes coeur dans la liste
-    for i in range(1, 14):
-        if i == 1:
-            i = "A"
-        elif i == 11:
-            i = "valet"
-        elif i == 12:
-            i = "dame"
-        elif i == 13:
-            i = "roi"
-        temp = str(i) + " de coeur"
-        liste_carte.append(temp)
 
     liste_ramplacer = []
     for i in range(len(liste_carte)):
