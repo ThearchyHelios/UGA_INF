@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-02 14:01:34
+LastEditTime: 2021-12-02 14:29:42
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -305,14 +305,13 @@ def continuer():
     Returns:
         bool: Retourne True si le joueur veut abandonner, False sinon.
     """
+    print("continuer")
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n ")
     if continuer_le_jeux == "y":
         return True
     else:
         return False
-
-    # if history["score"][""]
-
+    
 
 def tourJoueur(j, scores, score_croupier_premier_round):
     """ Cette méthode lance un tour de jeu et peut afficher le nombre de tours, les scores de tous les joueurs et le fen shu des joueurs actuels.
