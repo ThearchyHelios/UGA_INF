@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-03 12:37:26
+LastEditTime: 2021-12-03 14:26:04
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -561,6 +561,9 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
 
     success = 0
     defayant = 0
+    success_prochain = 0
+    defayant_prochain = 0
+    
     carte = score + i
 
     # find carte in piochelist
@@ -576,6 +579,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
     probabilite = (count / carte_total)
     for item in database:
         list_temp_2 = []
+        success_bool = database[item]["success"]
         for j in range(int(database[item]["round"]) - 1):
             list_temp_1 = []
 
@@ -583,6 +587,11 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
                 list_temp_1.append(int(item_score))
 
             list_temp_2.append([list_temp_1[j], list_temp_1[j + 1]])
+            if carte in list_temp_1:
+                if success_bool:
+                    success_prochain += 1
+                else:
+                    defayant_prochain += 1
         for k in range(len(list_temp_2)):
             if list_temp_2[k][0] == carte:
                 if list_temp_2[k][1] > 21:
@@ -597,7 +606,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
                     defayant += 1
                 else:
                     success += 1
-    return success, defayant, probabilite
+    return success, defayant,success_prochain,defayant_prochain, probabilite
 
 
 def bot_decision(liste_pioche, scores, nom):
@@ -625,8 +634,11 @@ def bot_decision(liste_pioche, scores, nom):
         x = x + score + 1
 
         success_rate_list = []
-        success_list = []
-        defayant_list = []
+        success_rate_list_prochaine = []
+        success_list_out = []
+        defayant_list_out = []
+        success_list_prochain = []
+        defayant_list_prochaine = []
         probabilite_list = []
         param_dict = {}
 
@@ -649,16 +661,22 @@ def bot_decision(liste_pioche, scores, nom):
         ]
         results = [p.get() for p in results]
         for result in results:
-            success_list.append(result[0])
-            defayant_list.append(result[1])
-            probabilite_list.append(result[2])
+            success_list_out.append(result[0])
+            defayant_list_out.append(result[1])
+            success_list_prochain.append(result[2])
+            defayant_list_prochaine.append(result[3])
+            probabilite_list.append(result[4])
 
-        for i in range(len(success_list)):
-            success_rate_list.append(success_list[i] /
-                                     (success_list[i] + defayant_list[i] + 1))
+        for i in range(len(success_list_out)):
+            success_rate_list.append(success_list_out[i] /
+                                     (success_list_out[i] + defayant_list_out[i] + 1))
 
+        for i in range(len(success_list_prochain)):
+            success_rate_list_prochaine.append(success_list_prochain[i] /
+                                     (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
+            
         win_rate.plot(x=x,
-                    y=success_rate_list,
+                    y=success_rate_list_prochaine,
                     symbolBrush=(255, 0, 0),
                     symbolPen='w')
         pg.exec()
