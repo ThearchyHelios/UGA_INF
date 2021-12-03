@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-02 14:29:42
+LastEditTime: 2021-12-03 08:31:29
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
@@ -300,19 +300,19 @@ def gagnant(scores, valeur_croupier):
     return nom_gagnant_plus, point_gagnant_plus
 
 
-def continuer():
+def joueur_continuer()->bool:
+    #TODO: BUG
     """ Cette méthode est utilisée pour demander au joueur s'il veut abandonner.
 
     Returns:
         bool: Retourne True si le joueur veut abandonner, False sinon.
     """
-    print("continuer")
     continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n ")
     if continuer_le_jeux == "y":
         return True
     else:
         return False
-    
+
 
 def tourJoueur(j, scores, score_croupier_premier_round):
     """ Cette méthode lance un tour de jeu et peut afficher le nombre de tours, les scores de tous les joueurs et le fen shu des joueurs actuels.
@@ -358,7 +358,8 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     print("You have %s scores now " % score)
 
     if scores[j]["ordi"] == False:
-        if continuer():
+        print("debug")
+        if joueur_continuer() == True:
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
             liste_carte = piocheCarte(1)
@@ -384,7 +385,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
         else:
             scores[j]["give_up"] = True
             print("You have given up")
-        time.sleep(2)
+        # time.sleep(2)
 
     elif scores[j]["ordi"] == True:
         if bot_decision(scores, j):
@@ -414,7 +415,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             scores[j]["give_up"] = True
             print("You have given up")
 
-        time.sleep(2)
+        # time.sleep(2)
 
 
 def tourComplet(scores):
@@ -455,8 +456,7 @@ def tourComplet(scores):
             #     score = croupier_prendre_carte(pioche, 1)
             #     print("Croupier a prendre %s" % score)
             #     score_croupier += score
-
-            #TODO: Croupier condition
+            
             while score_croupier < 17:
                 score = croupier_prendre_carte(1)
                 print("Croupier a prendre %s" % score)
