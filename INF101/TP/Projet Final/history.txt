@@ -60151,3 +60151,12 @@
 2,8,22,round 1:13,round 2:20,True,False,True,False
 2,8,22,round 1:13,round 2:20,True,False,True,False
 2,8,22,round 1:16,round 2:20,True,False,True,False
+2,3,22,round 1:16,round 2:23,False,True,False,False
+2,3,22,round 1:12,round 2:22,False,True,False,False
+3,3,22,round 1:12,round 2:15,round 3:25,False,True,False,False
+1,5,18,round 1:19,True,False,True,False
+4,5,18,round 1:10,round 2:12,round 3:16,round 4:26,False,True,False,False
+2,5,18,round 1:12,round 2:19,True,False,True,False
+4,9,19,round 1:7,round 2:14,round 3:16,round 4:21,True,False,True,False
+2,9,19,round 1:13,round 2:18,False,False,True,False
+2,9,19,round 1:13,round 2:19,False,False,True,True
