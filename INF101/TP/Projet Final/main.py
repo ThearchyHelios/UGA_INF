@@ -1,11 +1,12 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-02 14:01:34
+LastEditTime: 2021-12-05 20:06:24
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
 '''
+import sys
 from operator import truediv
 import random
 from sqlite3 import paramstyle
@@ -14,8 +15,18 @@ import time
 import distutils.core
 import os.path
 import multiprocessing as mp
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialogButtonBox
+from PyQt6.QtWidgets import QFormLayout
+from PyQt6.QtWidgets import QLineEdit
+from PyQt6.QtWidgets import QVBoxLayout
+from PyQt6.QtWidgets import QWidget
+import pyqtgraph as pg
+import numpy as np
 
 # je suis sokem
+
 
 def history_save_to_txt(path, data):
     """ Cette fonction permet de sauvegarder l'historique dans un fichier txt.
@@ -77,7 +88,6 @@ def paquet():
             mot = str(i) + temp
             liste_carte.append(mot)
 
-
     liste_ramplacer = []
     for i in range(len(liste_carte)):
         temp_random = random.randint(0, len(liste_carte) - 1)
@@ -128,7 +138,7 @@ def initPioche(n):
     return liste_carte_remplacer
 
 
-def piocheCarte(x):
+def piocheCarte(liste_pioche, x):
     """ Cette fonction renvoie le nombre x de cartes de la pioche.
 
     Args:
@@ -137,7 +147,6 @@ def piocheCarte(x):
     Returns:
         list: Cartes retournées avec le nombre x.
     """
-    global liste_pioche
     liste_carte = []
     for i in range(x):
         liste_carte.append(liste_pioche[i])
@@ -223,7 +232,7 @@ def initScores(liste_joueurs, liste_ordi, v):
     return dict_joueurs
 
 
-def premierTour(scores):
+def premierTour(liste_pioche, scores):
     """ Cette équation est utilisée pour initialiser le score du joueur et permet de tirer deux cartes pour le premier tour.
 
     Args:
@@ -232,13 +241,12 @@ def premierTour(scores):
     Returns:
         dict: Scores des joueurs
     """
-    global liste_pioche
 
     liste_carte_joueurs = []
     for i in range(len(scores)):
         if len(liste_pioche) <= 2:
             liste_pioche = initPioche(len(scores))
-        valeur_premier_round = piocheCarte(2)
+        valeur_premier_round = piocheCarte(liste_pioche, 2)
         liste_carte_joueurs.append(valeur_premier_round)
 
     count = 0
@@ -300,7 +308,8 @@ def gagnant(scores, valeur_croupier):
     return nom_gagnant_plus, point_gagnant_plus
 
 
-def continuer():
+def joueur_continuer() -> bool:
+    #TODO: BUG
     """ Cette méthode est utilisée pour demander au joueur s'il veut abandonner.
 
     Returns:
@@ -312,10 +321,8 @@ def continuer():
     else:
         return False
 
-    # if history["score"][""]
 
-
-def tourJoueur(j, scores, score_croupier_premier_round):
+def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     """ Cette méthode lance un tour de jeu et peut afficher le nombre de tours, les scores de tous les joueurs et le fen shu des joueurs actuels.
 
     Args:
@@ -323,7 +330,6 @@ def tourJoueur(j, scores, score_croupier_premier_round):
         scores (dict): Scores des joueurs
         score_croupier_premier_round (int): Valeur du croupier au premier tour
     """
-    global liste_pioche
     score = 0
     round = 0
     # print(scores)
@@ -359,10 +365,11 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     print("You have %s scores now " % score)
 
     if scores[j]["ordi"] == False:
-        if continuer():
+        print("debug")
+        if joueur_continuer() == True:
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
-            liste_carte = piocheCarte(1)
+            liste_carte = piocheCarte(liste_pioche, 1)
             for carte in liste_carte:
                 print("You get %s" % carte)
                 temp = int(valeurCarte(carte))
@@ -385,13 +392,13 @@ def tourJoueur(j, scores, score_croupier_premier_round):
         else:
             scores[j]["give_up"] = True
             print("You have given up")
-        time.sleep(2)
+        # time.sleep(2)
 
     elif scores[j]["ordi"] == True:
-        if bot_decision(scores, j):
+        if bot_decision(liste_pioche, scores, j):
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
-            liste_carte = piocheCarte(1)
+            liste_carte = piocheCarte(liste_pioche, 1)
             for carte in liste_carte:
                 print("You get %s" % carte)
                 temp = int(valeurCarte(carte))
@@ -415,14 +422,19 @@ def tourJoueur(j, scores, score_croupier_premier_round):
             scores[j]["give_up"] = True
             print("You have given up")
 
-        time.sleep(2)
+        # time.sleep(2)
 
 
-def tourComplet(scores):
-    global liste_pioche
+def tourComplet(liste_pioche, scores):
+    """ Cette méthode comprend l'ensemble du jeu et des règles
+
+    Args:
+        liste_pioche (list): Pile de cartes
+        scores (dict): Scores des joueurs
+    """
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
-    score_croupier_premier_round = croupier_prendre_carte(1)
+    score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
     if score_croupier_premier_round == 0:
         score_croupier_premier_round = 11
     for nom in scores:
@@ -457,9 +469,8 @@ def tourComplet(scores):
             #     print("Croupier a prendre %s" % score)
             #     score_croupier += score
 
-            #TODO: Croupier condition
             while score_croupier < 17:
-                score = croupier_prendre_carte(1)
+                score = croupier_prendre_carte(liste_pioche, 1)
                 print("Croupier a prendre %s" % score)
                 score_croupier += score
                 mise_round_total = 0
@@ -503,7 +514,7 @@ def tourComplet(scores):
                 for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
                     success_rate_pioche += liste_pioche_pourcentage_element
                 if success_rate_pioche > 0.6:
-                    score = croupier_prendre_carte(1)
+                    score = croupier_prendre_carte(liste_pioche, 1)
                     print("Croupier a prendre %s" % score)
                     score_croupier += score
                 valeur_croupier = score_croupier
@@ -542,14 +553,23 @@ def tourComplet(scores):
                 if not scores[nom]["give_up"] and not scores[nom][
                         "success"] and not scores[nom]["out"] and not scores[
                             nom]["draw"]:
-                    tourJoueur(nom, scores, score_croupier_premier_round)
+                    tourJoueur(liste_pioche, nom, scores,
+                               score_croupier_premier_round)
 
 
-def croupier_prendre_carte(nombre):
-    global liste_pioche
+def croupier_prendre_carte(liste_pioche, nombre):
+    """ Cette méthode permet au croupier de tirer une carte, d'imprimer le numéro de la carte et de renvoyer ce numéro.
+
+    Args:
+        liste_pioche (list): Liste de carte
+        nombre (int): Nombre de cartes à tirer
+
+    Returns:
+        int: Valeur de la carte tirer
+    """
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
-    liste_carte = piocheCarte(nombre)
+    liste_carte = piocheCarte(liste_pioche, nombre)
     score = 0
     for carte in liste_carte:
         print("Croupier get %s" % carte)
@@ -558,12 +578,31 @@ def croupier_prendre_carte(nombre):
 
 
 def bot_decision_multitask(database, liste_pioche, scores, nom, i):
+    """ Cette approche consiste à attribuer des tâches différentes à chaque cœur afin d'améliorer l'efficacité du calcul de l'IA.
+
+    Args:
+        database (dict): Résultats historiques des excursions précédentes
+        liste_pioche (list): Liste de carte
+        scores (dict): Dictionnaire des scores
+        nom (str): Nom du joueur
+        i (int): Numéro du tour
+
+    Returns:
+        int: Chances de gagner
+        int: Chances de perdre
+        int: Chances de gagner pour tirer une carte avec une valeur i
+        int: Chances de perdre pour tirer une carte avec une valeur i
+        float: Chances de tirer cette carte
+    """
     # i 是下张什么牌
     score = scores[nom]["score"]
     length = 21 - score - 1
 
     success = 0
     defayant = 0
+    success_prochain = 0
+    defayant_prochain = 0
+
     carte = score + i
 
     # find carte in piochelist
@@ -579,6 +618,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
     probabilite = (count / carte_total)
     for item in database:
         list_temp_2 = []
+        success_bool = database[item]["success"]
         for j in range(int(database[item]["round"]) - 1):
             list_temp_1 = []
 
@@ -586,6 +626,11 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
                 list_temp_1.append(int(item_score))
 
             list_temp_2.append([list_temp_1[j], list_temp_1[j + 1]])
+            if carte in list_temp_1:
+                if success_bool:
+                    success_prochain += 1
+                else:
+                    defayant_prochain += 1
         for k in range(len(list_temp_2)):
             if list_temp_2[k][0] == carte:
                 if list_temp_2[k][1] > 21:
@@ -600,11 +645,10 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
                     defayant += 1
                 else:
                     success += 1
-    return success, defayant, probabilite
+    return success, defayant, success_prochain, defayant_prochain, probabilite
 
 
-def bot_decision(scores, nom):
-    global liste_pioche
+def bot_decision(liste_pioche, scores, nom):
     database = read_history("INF101/TP/Projet Final/history.txt")
     # print(history)
     # new_dict = {}
@@ -623,14 +667,17 @@ def bot_decision(scores, nom):
         # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
         length = 21 - score - 1
-        # win_rate = pg.plot()
-        # win_rate.setWindowTitle('Win Rate Bar Graph')
-        # x = np.arange(length)
-        # x = x + score + 1
+        win_rate = pg.plot()
+        win_rate.setWindowTitle('Win Rate Bar Graph')
+        x = np.arange(length)
+        x = x + score + 1
 
         success_rate_list = []
-        success_list = []
-        defayant_list = []
+        success_rate_list_prochaine = []
+        success_list_out = []
+        defayant_list_out = []
+        success_list_prochain = []
+        defayant_list_prochaine = []
         probabilite_list = []
         param_dict = {}
 
@@ -653,18 +700,27 @@ def bot_decision(scores, nom):
         ]
         results = [p.get() for p in results]
         for result in results:
-            success_list.append(result[0])
-            defayant_list.append(result[1])
-            probabilite_list.append(result[2])
+            success_list_out.append(result[0])
+            defayant_list_out.append(result[1])
+            success_list_prochain.append(result[2])
+            defayant_list_prochaine.append(result[3])
+            probabilite_list.append(result[4])
 
-        for i in range(len(success_list)):
-            success_rate_list.append(success_list[i] /
-                                     (success_list[i] + defayant_list[i] + 1))
+        for i in range(len(success_list_out)):
+            success_rate_list.append(
+                success_list_out[i] /
+                (success_list_out[i] + defayant_list_out[i] + 1))
 
-    # win_rate.plot(x=x,
-    #               y=success_rate_list,
-    #               symbolBrush=(255, 0, 0),
-    #               symbolPen='w')
+        for i in range(len(success_list_prochain)):
+            success_rate_list_prochaine.append(
+                success_list_prochain[i] /
+                (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
+
+        win_rate.plot(x=x,
+                      y=success_rate_list_prochaine,
+                      symbolBrush=(255, 0, 0),
+                      symbolPen='w')
+        pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -673,7 +729,6 @@ def bot_decision(scores, nom):
                                                       1) * poid
     print("Success rate: %s" % success_rate_final)
     # time.sleep(0.01)
-    # pg.exec()
 
     if success_rate_final >= 0.2:
         return True
@@ -682,6 +737,14 @@ def bot_decision(scores, nom):
 
 
 def read_database(path):
+    """ Cette méthode est utilisée pour lire la base de données locale
+
+    Args:
+        path (str): Le chemin correspondant au fichier
+
+    Returns:
+        dict: Retourner la base de données convertie
+    """
     database = {}
     count = 0
     for line in open(path, "r"):
@@ -704,6 +767,14 @@ def read_database(path):
 
 
 def read_history(path):
+    """ Cette méthode est utilisée pour lire la histoire locale
+
+    Args:
+        path (str): Le chemin correspondant au fichier
+
+    Returns:
+        dict: Retourner la histoire convertie
+    """
     history = {}
     count = 0
     for line in open(path, "r"):
@@ -762,6 +833,19 @@ if __name__ == "__main__":
     # timer.timeout.connect(show_history)
     # timer.start(1000)
     # pg.exec()
+
+    app = QApplication(sys.argv)
+    window = QWidget()
+    window.setWindowTitle('Application')
+    layout = QFormLayout()
+    layout.addRow("Nombre du joueurs", QLineEdit())
+    layout.addRow("Nombre de ordi", QLineEdit())
+    btns = QDialogButtonBox()
+    btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+
+    window.setLayout(layout)
+    window.show()
+
     nombre_de_personne = int(input("Il y a combien de joueurs?"))
     nombre_de_ordi = int(input("Il y a combien d'ordi?"))
 
@@ -798,8 +882,8 @@ if __name__ == "__main__":
 
         for nom in scores:
             if scores[nom]["ordi"] == False:
-                print(
-                    "%s: T'as %s mises dans le banque." % (nom, scores[nom]["mise"]))
+                print("%s: T'as %s mises dans le banque." %
+                      (nom, scores[nom]["mise"]))
                 mise_round = int(input("%s, misez combien?" % nom))
                 while mise_round > scores[nom]["mise"]:
                     mise_round = int(
@@ -811,13 +895,13 @@ if __name__ == "__main__":
             else:
                 mise = scores[nom]["mise"]
                 if mise > 10:
-                    mise_round = random.randint(1, int(mise/2))
+                    mise_round = random.randint(1, int(mise / 2))
                 else:
                     mise_round = mise
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
                 print("%s mise %s" % (nom, mise_round))
-        scores = premierTour(scores)
+        scores = premierTour(liste_pioche, scores)
         for nom in scores:
             if scores[nom]["score"] == 21:
                 scores[nom]["success"] = True
@@ -825,7 +909,7 @@ if __name__ == "__main__":
                 scores[nom]["point"] += 1
                 scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
         print(len(liste_pioche))
-        tourComplet(scores)
+        tourComplet(liste_pioche, scores)
         path = os.path.join("INF101", "TP", "Projet Final", "history.txt")
         for nom in scores:
             if scores[nom]["history"] != []:
