@@ -1,11 +1,12 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-03 14:26:04
+LastEditTime: 2021-12-05 20:06:24
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /INF_101/INF101/TP/Projet Final/main.py
 '''
+import sys
 from operator import truediv
 import random
 from sqlite3 import paramstyle
@@ -14,6 +15,13 @@ import time
 import distutils.core
 import os.path
 import multiprocessing as mp
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialogButtonBox
+from PyQt6.QtWidgets import QFormLayout
+from PyQt6.QtWidgets import QLineEdit
+from PyQt6.QtWidgets import QVBoxLayout
+from PyQt6.QtWidgets import QWidget
 import pyqtgraph as pg
 import numpy as np
 
@@ -418,9 +426,15 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
 
 
 def tourComplet(liste_pioche, scores):
+    """ Cette méthode comprend l'ensemble du jeu et des règles
+
+    Args:
+        liste_pioche (list): Pile de cartes
+        scores (dict): Scores des joueurs
+    """
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
-    score_croupier_premier_round = croupier_prendre_carte(liste_pioche,1)
+    score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
     if score_croupier_premier_round == 0:
         score_croupier_premier_round = 11
     for nom in scores:
@@ -500,7 +514,7 @@ def tourComplet(liste_pioche, scores):
                 for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
                     success_rate_pioche += liste_pioche_pourcentage_element
                 if success_rate_pioche > 0.6:
-                    score = croupier_prendre_carte(liste_pioche,1)
+                    score = croupier_prendre_carte(liste_pioche, 1)
                     print("Croupier a prendre %s" % score)
                     score_croupier += score
                 valeur_croupier = score_croupier
@@ -544,6 +558,15 @@ def tourComplet(liste_pioche, scores):
 
 
 def croupier_prendre_carte(liste_pioche, nombre):
+    """ Cette méthode permet au croupier de tirer une carte, d'imprimer le numéro de la carte et de renvoyer ce numéro.
+
+    Args:
+        liste_pioche (list): Liste de carte
+        nombre (int): Nombre de cartes à tirer
+
+    Returns:
+        int: Valeur de la carte tirer
+    """
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
     liste_carte = piocheCarte(liste_pioche, nombre)
@@ -555,6 +578,22 @@ def croupier_prendre_carte(liste_pioche, nombre):
 
 
 def bot_decision_multitask(database, liste_pioche, scores, nom, i):
+    """ Cette approche consiste à attribuer des tâches différentes à chaque cœur afin d'améliorer l'efficacité du calcul de l'IA.
+
+    Args:
+        database (dict): Résultats historiques des excursions précédentes
+        liste_pioche (list): Liste de carte
+        scores (dict): Dictionnaire des scores
+        nom (str): Nom du joueur
+        i (int): Numéro du tour
+
+    Returns:
+        int: Chances de gagner
+        int: Chances de perdre
+        int: Chances de gagner pour tirer une carte avec une valeur i
+        int: Chances de perdre pour tirer une carte avec une valeur i
+        float: Chances de tirer cette carte
+    """
     # i 是下张什么牌
     score = scores[nom]["score"]
     length = 21 - score - 1
@@ -563,7 +602,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
     defayant = 0
     success_prochain = 0
     defayant_prochain = 0
-    
+
     carte = score + i
 
     # find carte in piochelist
@@ -606,7 +645,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
                     defayant += 1
                 else:
                     success += 1
-    return success, defayant,success_prochain,defayant_prochain, probabilite
+    return success, defayant, success_prochain, defayant_prochain, probabilite
 
 
 def bot_decision(liste_pioche, scores, nom):
@@ -668,17 +707,19 @@ def bot_decision(liste_pioche, scores, nom):
             probabilite_list.append(result[4])
 
         for i in range(len(success_list_out)):
-            success_rate_list.append(success_list_out[i] /
-                                     (success_list_out[i] + defayant_list_out[i] + 1))
+            success_rate_list.append(
+                success_list_out[i] /
+                (success_list_out[i] + defayant_list_out[i] + 1))
 
         for i in range(len(success_list_prochain)):
-            success_rate_list_prochaine.append(success_list_prochain[i] /
-                                     (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
-            
+            success_rate_list_prochaine.append(
+                success_list_prochain[i] /
+                (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
+
         win_rate.plot(x=x,
-                    y=success_rate_list_prochaine,
-                    symbolBrush=(255, 0, 0),
-                    symbolPen='w')
+                      y=success_rate_list_prochaine,
+                      symbolBrush=(255, 0, 0),
+                      symbolPen='w')
         pg.exec()
 
     success_rate_final = 0
@@ -688,7 +729,6 @@ def bot_decision(liste_pioche, scores, nom):
                                                       1) * poid
     print("Success rate: %s" % success_rate_final)
     # time.sleep(0.01)
-    
 
     if success_rate_final >= 0.2:
         return True
@@ -697,6 +737,14 @@ def bot_decision(liste_pioche, scores, nom):
 
 
 def read_database(path):
+    """ Cette méthode est utilisée pour lire la base de données locale
+
+    Args:
+        path (str): Le chemin correspondant au fichier
+
+    Returns:
+        dict: Retourner la base de données convertie
+    """
     database = {}
     count = 0
     for line in open(path, "r"):
@@ -719,6 +767,14 @@ def read_database(path):
 
 
 def read_history(path):
+    """ Cette méthode est utilisée pour lire la histoire locale
+
+    Args:
+        path (str): Le chemin correspondant au fichier
+
+    Returns:
+        dict: Retourner la histoire convertie
+    """
     history = {}
     count = 0
     for line in open(path, "r"):
@@ -777,6 +833,19 @@ if __name__ == "__main__":
     # timer.timeout.connect(show_history)
     # timer.start(1000)
     # pg.exec()
+
+    app = QApplication(sys.argv)
+    window = QWidget()
+    window.setWindowTitle('Application')
+    layout = QFormLayout()
+    layout.addRow("Nombre du joueurs", QLineEdit())
+    layout.addRow("Nombre de ordi", QLineEdit())
+    btns = QDialogButtonBox()
+    btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+
+    window.setLayout(layout)
+    window.show()
+
     nombre_de_personne = int(input("Il y a combien de joueurs?"))
     nombre_de_ordi = int(input("Il y a combien d'ordi?"))
 
