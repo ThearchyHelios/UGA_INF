@@ -60082,3 +60082,17 @@
 2,7,17,round 1:11,round 2:17,False,False,True,True
 2,7,17,round 1:12,round 2:22,False,True,False,False
 2,7,17,round 1:13,round 2:23,False,True,False,False
+1,3,23,round 1:18,True,False,True,False
+2,3,23,round 1:11,round 2:21,True,False,True,False
+1,10,20,round 1:13,False,False,True,False
+1,10,20,round 1:17,False,False,True,False
+1,9,18,round 1:18,False,False,True,True
+1,9,18,round 1:19,True,False,True,False
+3,5,18,round 1:9,round 2:16,round 3:26,False,True,False,False
+1,5,18,round 1:7,False,False,True,False
+1,8,24,round 1:17,True,False,True,False
+1,8,24,round 1:18,True,False,True,False
+2,9,17,round 1:7,round 2:17,False,False,True,True
+2,9,17,round 1:14,round 2:18,True,False,True,False
+1,3,21,round 1:18,False,False,True,False
+2,3,21,round 1:11,round 2:18,False,False,True,False

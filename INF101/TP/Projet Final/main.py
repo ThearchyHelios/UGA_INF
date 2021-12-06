@@ -15,7 +15,6 @@ import distutils.core
 import os.path
 import multiprocessing as mp
 
-# je suis sokem
 
 def history_save_to_txt(path, data):
     """ Cette fonction permet de sauvegarder l'historique dans un fichier txt.
@@ -96,7 +95,7 @@ def valeurCarte(carte):
         carte (str): Cartes saisies. Ex: "As de carreau"
 
     Returns:
-        int: Retourne la valeur de cette carte. Si le retour est 0, alors la carte d'entrée est un As.
+        int: Retourne la valeur de cette carte. Si la fonction retourne 0, alors la carte d'entrée est un As.
     """
     temp = str(carte)
     nombre_liste = temp.split(" ")
@@ -111,14 +110,14 @@ def valeurCarte(carte):
 
 
 def initPioche(n):
-    """ Cette fonction est utilisée pour générer la taille de la pioche, qui correspond au nombre de joueurs dans le jeu.
+    """ Cette fonction est utilisée pour générer une pioche de taille correspondante au nombre de joueurs en jeu.
         Si le nombre de participants est de 3, alors la taille du jeu est de 3*52=156, si le nombre de participants est de 6, alors la taille du jeu est de 6*52=312.
 
     Args:
         n (int): Nombre de participants au jeu
 
     Returns:
-        list: Ponts liés au nombre de participants
+        list: Nombre de cartes en fonction du nombre de participants
     """
     liste_carte_remplacer = []
     for i in range(n):
@@ -147,10 +146,10 @@ def piocheCarte(x):
 
 
 def initJoueurs(n):
-    """ Cette méthode est utilisée pour demander à l'utilisateur les noms des participants au jeu et renvoie une liste avec les noms de tous les joueurs.
+    """ Cette fonction est utilisée pour demander à l'utilisateur les noms des joueurs et renvoyer une liste avec les noms de chacun d'entre eux.
 
     Args:
-        n (int): Nombre de participants au jeu。
+        n (int): Nombre de participants au jeu
 
     Returns:
         dict: Une liste avec les noms de tous les joueurs.
@@ -159,7 +158,7 @@ def initJoueurs(n):
     for i in range(n):
         nom = input("Quel est le nom du joueur?")
         while "Ordi" in nom:
-            print("Le mot 'ordi' ne peut pas contient dans le nom du joueur.")
+            print("Votre nom ne peu pas contenir le mot 'ordi'.")
             nom = input("Quel est le nom du joueur?")
         liste_joueurs.append(nom)
     return liste_joueurs
@@ -173,13 +172,14 @@ def initOrdi(n):
 
 
 def initScores(liste_joueurs, liste_ordi, v):
-    """ Initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents
+    """ Fonction permettant d'initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents
     statuts. Renvoie également ["ordi"] = Vrai s'il s'agit d'un joueur informatique, et ["ordi"] = Faux s'il s'agit d'un joueur humain.
 
     Args:
         liste_joueurs (list): Une liste avec les noms de tous les joueurs humains.
         liste_ordi (list): Une liste avec les noms de tous les joueurs ordinateurs.
         v (int): Attribuer un score spécifique à tous les joueurs (utilisé par défaut au tour 1, où le tour 2 le tour 3 ne s'applique pas, par défaut à 0)
+    sokem : args v pas compris
 
     Returns:
         dict: Retourne le dictionnaire initialisé.
@@ -224,7 +224,7 @@ def initScores(liste_joueurs, liste_ordi, v):
 
 
 def premierTour(scores):
-    """ Cette équation est utilisée pour initialiser le score du joueur et permet de tirer deux cartes pour le premier tour.
+    """ Cette fonction est utilisée pour initialiser le score du joueur et permet de tirer deux cartes pour le premier tour.
 
     Args:
         scores (dict): Scores des joueurs
@@ -251,10 +251,10 @@ def premierTour(scores):
                     if scores[nom]["score"] == 0:
                         print("Cest ton premier tour!")
                     else:
-                        print("T'as %s maintenant." % scores[nom]["score"])
+                        print("Tu as %s maintenant." % scores[nom]["score"])
                     nombre = int(
                         input(
-                            "Cest A: Quel valeur vous voulais choisi? 1 ou 11?"
+                            "Vous avez obtenu un as! Quel valeur voulez-vous choisir? (1 ou 11)"
                         ))
                     if nombre == 1:
                         temp = 1
@@ -270,14 +270,15 @@ def premierTour(scores):
 
 
 def gagnant(scores, valeur_croupier):
-    """ Cette méthode est utilisée pour comparer les scores de tous les joueurs vivants avec les scores des loteries, s'il y a plus de joueurs vivants que de loteries, alors elle retourne les noms de tous les joueurs vivants.
+    """ Cette fonction est utilisée pour comparer les scores de tous les joueurs encore en jeu avec ceux de la banque. Si il y a plus de joueurs vivants que de loteries, alors elle retourne les noms de tous les joueurs vivants.
+    sokem : pas compris
 
     Args:
         scores (dict): Scores des joueurs
         valeur_croupier (int): Valeur du croupier
 
     Returns:
-        list: Liste des noms des joueurs vivants
+        list: Liste des noms des joueurs encore en jeu.
     """
     nom_gagnant_plus = []
     point_gagnant_plus = 0
@@ -289,24 +290,24 @@ def gagnant(scores, valeur_croupier):
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
                 nom_gagnant_plus.append(nom)
             elif score == valeur_croupier:
-                print("Draw %s" % nom)
+                print("%s, vous etes à égalité avec le croupier !" % nom)
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
                 scores[nom]["draw"] = True
             else:
-                print("You have loss the game! %s" % nom)
+                print("Vous avez perdu! %s" % nom)
 
     # print(scores)
     return nom_gagnant_plus, point_gagnant_plus
 
 
 def continuer():
-    """ Cette méthode est utilisée pour demander au joueur s'il veut abandonner.
+    """ Cette fonction est utilisée pour demander au joueur s'il veut abandonner.
 
     Returns:
         bool: Retourne True si le joueur veut abandonner, False sinon.
     """
-    continuer_le_jeux = input("Est-ce que vous voulais continuer? y ou n ")
+    continuer_le_jeux = input("Voulez-vous piocher? y ou n ")
     if continuer_le_jeux == "y":
         return True
     else:
@@ -316,12 +317,12 @@ def continuer():
 
 
 def tourJoueur(j, scores, score_croupier_premier_round):
-    """ Cette méthode lance un tour de jeu et peut afficher le nombre de tours, les scores de tous les joueurs et le fen shu des joueurs actuels.
-
+    """ Cette fonction lance un nouveau tour de jeu et peut afficher le nombre de tours passés, le scores de tous les joueurs, et celui de ceux encore en jeu.
+    sokem : revoir tt la fonction
     Args:
         j (str): Nom du joueur
         scores (dict): Scores des joueurs
-        score_croupier_premier_round (int): Valeur du croupier au premier tour
+        score_croupier_premier_round (int): Score du croupier au premier tour
     """
     global liste_pioche
     score = 0
@@ -342,21 +343,22 @@ def tourJoueur(j, scores, score_croupier_premier_round):
     round += 1
     scores[j]["round"] = round
     print("--------------------")
-    print("The %s round " % round)
-    print("Name of the player: %s" % j)
+    print("Tour %s" % round)
+    print("%s, a vous de jouer." % j)
     for i in range(len(liste_score)):
         if i == 0:
-            print("There are %s players, they have %s " %
+            # sokem probleme avec le print
+            print("Il y a %s joueurs qui on %s " %
                   (len(liste_score), liste_score[i]),
                   end="")
         elif i == len(liste_score) - 1:
             print("%s points." % liste_score[i])
         else:
             print("%s " % liste_score[i], end="")
-    print("Le croupier a %s." % score_croupier_premier_round)
+    print("Le croupier a %s points." % score_croupier_premier_round)
 
     scores[j]["history"]["round %s" % round] = score
-    print("You have %s scores now " % score)
+    print("Votres score est de %s. " % score)
 
     if scores[j]["ordi"] == False:
         if continuer():
@@ -364,7 +366,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
                 liste_pioche = initPioche(len(scores))
             liste_carte = piocheCarte(1)
             for carte in liste_carte:
-                print("You get %s" % carte)
+                print("Voici la carte que vous avez pioché : %s" % carte)
                 temp = int(valeurCarte(carte))
                 if temp == 0:
                     if scores[j]["score"] < 12:
@@ -372,10 +374,10 @@ def tourJoueur(j, scores, score_croupier_premier_round):
                     else:
                         temp = 1
                 score += temp
-            print("score: %s" % score)
+            print("Votre score est de %s points." % score)
             scores[j]["score"] = score
             if score > 21:
-                print("You lose the game!")
+                print("Vous avez perdu!")
                 scores[j]["out"] = True
                 scores[j]["history"]["round %s" % (round + 1)] = score
             if score == 21:
@@ -384,7 +386,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
 
         else:
             scores[j]["give_up"] = True
-            print("You have given up")
+            print("Votre tour est términé.")
         time.sleep(2)
 
     elif scores[j]["ordi"] == True:
@@ -393,7 +395,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
                 liste_pioche = initPioche(len(scores))
             liste_carte = piocheCarte(1)
             for carte in liste_carte:
-                print("You get %s" % carte)
+                print("Voici la carte que vous avez pioché : %s" % carte)
                 temp = int(valeurCarte(carte))
                 if temp == 0:
                     if scores[j]["score"] < 12:
@@ -401,10 +403,10 @@ def tourJoueur(j, scores, score_croupier_premier_round):
                     else:
                         temp = 1
                 score += temp
-            print("score: %s" % score)
+            print("Votre score est de %s points." % score)
             scores[j]["score"] = score
             if score > 21:
-                print("You lose the game!")
+                print("Vous avez perdu!")
                 scores[j]["out"] = True
                 scores[j]["history"]["round %s" % (round + 1)] = score
             if score == 21:
@@ -413,7 +415,7 @@ def tourJoueur(j, scores, score_croupier_premier_round):
 
         else:
             scores[j]["give_up"] = True
-            print("You have given up")
+            print("Votre tour est términé.")
 
         time.sleep(2)
 
@@ -460,10 +462,10 @@ def tourComplet(scores):
             #TODO: Croupier condition
             while score_croupier < 17:
                 score = croupier_prendre_carte(1)
-                print("Croupier a prendre %s" % score)
+                print("Le score du croupier est maintenant de %s points." % score)
                 score_croupier += score
                 mise_round_total = 0
-            print("Croupier a %s" % score_croupier)
+            print("Le croupier a un score de %s points." % score_croupier)
             if score_croupier > 21:
                 for nom in scores:
                     if scores[nom]["out"] == False:
@@ -504,10 +506,10 @@ def tourComplet(scores):
                     success_rate_pioche += liste_pioche_pourcentage_element
                 if success_rate_pioche > 0.6:
                     score = croupier_prendre_carte(1)
-                    print("Croupier a prendre %s" % score)
+                    print("Son score est maintenant de %s points." % score)
                     score_croupier += score
                 valeur_croupier = score_croupier
-                print("Croupier have %s " % valeur_croupier)
+                print("Le croupier a un score de %s points." % valeur_croupier)
                 for nom in scores:
                     scores[nom]["croupier_value_final"] = valeur_croupier
                 if score_croupier > 21:
@@ -530,12 +532,12 @@ def tourComplet(scores):
                                     "mise_round"]
                                 scores[nom_gagner_plus_point][
                                     "mise"] += mise_round * 2
-                                print("You have success %s" %
+                                print("%s, vous avez gagné!" %
                                       nom_gagner_plus_point)
                     return
         elif count_out == len(scores):
             # Cest a dire que tous les personnes sont out
-            print("Croupier win")
+            print("Le croupier a gagné!")
             return
         else:
             for nom in scores:
@@ -552,7 +554,7 @@ def croupier_prendre_carte(nombre):
     liste_carte = piocheCarte(nombre)
     score = 0
     for carte in liste_carte:
-        print("Croupier get %s" % carte)
+        print("Le croupier a pioché : %s" % carte)
         score += valeurCarte(carte)
     return score
 
@@ -762,8 +764,8 @@ if __name__ == "__main__":
     # timer.timeout.connect(show_history)
     # timer.start(1000)
     # pg.exec()
-    nombre_de_personne = int(input("Il y a combien de joueurs?"))
-    nombre_de_ordi = int(input("Il y a combien d'ordi?"))
+    nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
+    nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
 
     liste_joueurs = initJoueurs(nombre_de_personne)
     liste_ordi = initOrdi(nombre_de_ordi)
@@ -799,12 +801,12 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["ordi"] == False:
                 print(
-                    "%s: T'as %s mises dans le banque." % (nom, scores[nom]["mise"]))
-                mise_round = int(input("%s, misez combien?" % nom))
+                    "%s: Vous avez actuellement %s $." % (nom, scores[nom]["mise"]))
+                mise_round = int(input("%s, Combien voulez-vous miser?" % nom))
                 while mise_round > scores[nom]["mise"]:
                     mise_round = int(
                         input(
-                            "Il faut inferieur a ton mise!\n%s, misez combien?"
+                            "Vous n'avez pas cette somme.\n%s, Combien voulez-vous miser?"
                             % nom))
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
@@ -830,7 +832,7 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
-        continuer = input("Est-ce que vous voulais rejouer? y ou n")
+        continuer = input("Voulez-vous rejouer? y ou n")
         if continuer == "n":
             dict_point = {}
             dict_mise = {}
