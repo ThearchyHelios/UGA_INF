@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-06 09:40:45
+LastEditTime: 2021-12-07 15:47:53
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -43,7 +43,7 @@ def history_save_to_txt(path, data):
     croupier_premier_round = str(data["croupier_premier_round"])
     croupier_value_final = str(data["croupier_value_final"])
     if count_round >= 1:
-        for items in scores[nom]:
+        for items in data:
             if data["success"]:
                 success = True
             if data["out"]:
@@ -650,6 +650,16 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
 
 
 def bot_decision(liste_pioche, scores, nom):
+    """ Cette fonction est une fonction qui permet à l'ordinateur de déterminer si une carte a été tirée.
+
+    Args:
+        liste_pioche (list): liste de carte
+        scores (dict): dictionnaire des scores
+        nom (str): nom du joueur
+
+    Returns:
+        bool: prendre carte ou pas
+    """
     database = read_history("INF101/TP/Projet Final/history.txt")
     # print(history)
     # new_dict = {}
@@ -683,8 +693,8 @@ def bot_decision(liste_pioche, scores, nom):
         param_dict = {}
 
         num_cores = int(mp.cpu_count())
-        # pool = mp.Pool(processes=num_cores - 2)
-        pool = mp.Pool(4)
+        pool = mp.Pool(processes=num_cores - 2)
+        # pool = mp.Pool(4)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
@@ -835,17 +845,17 @@ if __name__ == "__main__":
     # timer.start(1000)
     # pg.exec()
 
-    app = QApplication(sys.argv)
-    window = QWidget()
-    window.setWindowTitle('Application')
-    layout = QFormLayout()
-    layout.addRow("Nombre du joueurs", QLineEdit())
-    layout.addRow("Nombre de ordi", QLineEdit())
-    btns = QDialogButtonBox()
-    btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    # app = QApplication(sys.argv)
+    # window = QWidget()
+    # window.setWindowTitle('Application')
+    # layout = QFormLayout()
+    # layout.addRow("Nombre du joueurs", QLineEdit())
+    # layout.addRow("Nombre de ordi", QLineEdit())
+    # btns = QDialogButtonBox()
+    # btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
-    window.setLayout(layout)
-    window.show()
+    # window.setLayout(layout)
+    # window.show()
     
     nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))

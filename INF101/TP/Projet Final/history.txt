@@ -60160,3 +60160,9 @@
 4,9,19,round 1:7,round 2:14,round 3:16,round 4:21,True,False,True,False
 2,9,19,round 1:13,round 2:18,False,False,True,False
 2,9,19,round 1:13,round 2:19,False,False,True,True
+1,9,18,round 1:18,False,False,True,True
+1,9,18,round 1:18,False,False,True,True
+1,9,18,round 1:17,False,False,True,False
+2,10,20,round 1:10,round 2:20,False,False,True,True
+3,10,20,round 1:14,round 2:15,round 3:25,False,True,False,False
+1,10,20,round 1:20,False,False,True,True
