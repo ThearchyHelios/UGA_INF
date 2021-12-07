@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-07 15:47:53
+LastEditTime: 2021-12-07 15:57:04
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -472,8 +472,8 @@ def tourComplet(liste_pioche, scores):
 
             while score_croupier < 17:
                 score = croupier_prendre_carte(liste_pioche, 1)
-                print("Le score du croupier est maintenant de %s points." % score)
                 score_croupier += score
+                print("Le score du croupier est maintenant de %s points." % score_croupier)
                 mise_round_total = 0
             print("Le croupier a un score de %s points." % score_croupier)
             if score_croupier > 21:
@@ -677,11 +677,11 @@ def bot_decision(liste_pioche, scores, nom):
     else:
         # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
-        length = 21 - score - 1
-        win_rate = pg.plot()
-        win_rate.setWindowTitle('Win Rate Bar Graph')
-        x = np.arange(length)
-        x = x + score + 1
+        # length = 21 - score - 1
+        # win_rate = pg.plot()
+        # win_rate.setWindowTitle('Win Rate Bar Graph')
+        # x = np.arange(length)
+        # x = x + score + 1
 
         success_rate_list = []
         success_rate_list_prochaine = []
@@ -727,11 +727,11 @@ def bot_decision(liste_pioche, scores, nom):
                 success_list_prochain[i] /
                 (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
 
-        win_rate.plot(x=x,
-                      y=success_rate_list_prochaine,
-                      symbolBrush=(255, 0, 0),
-                      symbolPen='w')
-        pg.exec()
+        # win_rate.plot(x=x,
+        #               y=success_rate_list_prochaine,
+        #               symbolBrush=(255, 0, 0),
+        #               symbolPen='w')
+        # pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):

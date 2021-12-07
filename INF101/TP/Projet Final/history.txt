@@ -60166,3 +60166,13 @@
 2,10,20,round 1:10,round 2:20,False,False,True,True
 3,10,20,round 1:14,round 2:15,round 3:25,False,True,False,False
 1,10,20,round 1:20,False,False,True,True
+2,5,23,round 1:14,round 2:24,False,True,False,False
+1,5,23,round 1:19,True,False,True,False
+1,5,23,round 1:19,True,False,True,False
+2,5,23,round 1:15,round 2:19,True,False,True,False
+3,5,23,round 1:13,round 2:16,round 3:22,False,True,False,False
+2,5,23,round 1:10,round 2:19,True,False,True,False
+4,5,23,round 1:4,round 2:15,round 3:16,round 4:25,False,True,False,False
+2,5,23,round 1:11,round 2:18,True,False,True,False
+1,5,23,round 1:19,True,False,True,False
+2,5,23,round 1:16,round 2:23,False,True,False,False
