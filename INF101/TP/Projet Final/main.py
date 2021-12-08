@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-08 13:48:11
+LastEditTime: 2021-12-08 15:07:50
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -433,6 +433,7 @@ def tourComplet(liste_pioche, scores):
         liste_pioche (list): Pile de cartes
         scores (dict): Scores des joueurs
     """
+    global difficulty
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
     score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
@@ -470,81 +471,16 @@ def tourComplet(liste_pioche, scores):
             #     print("Croupier a prendre %s" % score)
             #     score_croupier += score
 
-            while score_croupier < 17:
-                score = croupier_prendre_carte(liste_pioche, 1)
-                score_croupier += score
-                print("Le score du croupier est maintenant de %s points." % score_croupier)
-                mise_round_total = 0
-            print("Le croupier a un score de %s points." % score_croupier)
-            if score_croupier > 21:
-                for nom in scores:
-                    if scores[nom]["out"] == False:
-                        scores[nom]["success"] = True
-                        mise_round = scores[nom]["mise_round"]
-                        scores[nom]["mise"] += mise_round
-                        scores[nom]["point"] += 1
-                    scores[nom]["croupier_value_final"] = score_croupier
+            if difficulty == 3:
+                croupier_hard(score_croupier, scores)
                 return
-            else:
-                for nom in scores:
-                    mise_round_total += scores[nom]["mise_round"]
-                list_pourcentage_mise = []
-                for nom in scores:
-                    if scores[nom]["out"] == False:
-                        list_pourcentage_mise.append(
-                            scores[nom]["mise_round"] / (mise_round_total + 1))
-                list_pourcentage_mise_total = 0
-                for pourcentage in list_pourcentage_mise:
-                    list_pourcentage_mise_total += pourcentage
-                temp = 21 - score_croupier
-                liste_pioche_pourcentage = []
-                for i in range(1, temp + 1):
-                    count = 0
-                    for carte in liste_pioche:
-                        if valeurCarte(carte) == i + score_croupier:
-                            count += 1
-                    pourcentage_mise_joueur = 0
-                    for nom in scores:
-                        if scores[nom]["score"] == score_croupier + i:
-                            pourcentage_mise_joueur += scores[nom][
-                                "mise_round"] / (mise_round_total + 1)
-                    liste_pioche_pourcentage.append(
-                        (count / (len(liste_pioche) + 1)) *
-                        (1 + pourcentage_mise_joueur))
-                success_rate_pioche = 0
-                for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
-                    success_rate_pioche += liste_pioche_pourcentage_element
-                if success_rate_pioche > 0.6:
-                    score = croupier_prendre_carte(liste_pioche, 1)
-                    print("Son score est maintenant de %s points." % score)
-                    score_croupier += score
-                valeur_croupier = score_croupier
-                print("Le croupier a un score de %s points." % valeur_croupier)
-                for nom in scores:
-                    scores[nom]["croupier_value_final"] = valeur_croupier
-                if score_croupier > 21:
-                    for nom in scores:
-                        if scores[nom]["out"] == False:
-                            scores[nom]["success"] = True
-                            mise_round = scores[nom]["mise_round"]
-                            scores[nom]["mise"] += mise_round
-                            scores[nom]["point"] += 1
-                        scores[nom]["croupier_value_final"] = score_croupier
-                    return
-                else:
-                    nom, score = gagnant(scores, valeur_croupier)
-                    for nom_gagner_plus_point in nom:
-                        for nom in scores:
-                            if nom == nom_gagner_plus_point:
-                                scores[nom_gagner_plus_point]["success"] = True
-                                scores[nom_gagner_plus_point]["point"] += 1
-                                mise_round = scores[nom_gagner_plus_point][
-                                    "mise_round"]
-                                scores[nom_gagner_plus_point][
-                                    "mise"] += mise_round * 2
-                                print("%s, vous avez gagné!" %
-                                      nom_gagner_plus_point)
-                    return
+            elif difficulty == 2:
+                croupier_normal(score_croupier, scores)
+                return
+            elif difficulty == 1:
+                croupier_easy(score_croupier, scores)
+                return
+
         elif count_out == len(scores):
             # Cest a dire que tous les personnes sont out
             print("Le croupier a gagné!")
@@ -556,6 +492,152 @@ def tourComplet(liste_pioche, scores):
                             nom]["draw"]:
                     tourJoueur(liste_pioche, nom, scores,
                                score_croupier_premier_round)
+
+def croupier_easy(score_croupier, scores):
+    while True:
+        score = croupier_prendre_carte(liste_pioche, 1)
+        score_croupier += score
+        print("Le score du croupier est maintenant de %s points." % score_croupier)
+        if score_croupier > 21:
+            for nom in scores:
+                if scores[nom]["out"] == False:
+                    scores[nom]["success"] = True
+                    mise_round = scores[nom]["mise_round"]
+                    scores[nom]["mise"] += mise_round
+                    scores[nom]["point"] += 1
+                scores[nom]["croupier_value_final"] = score_croupier
+            return
+
+
+def croupier_normal(score_croupier, scores):
+    while score_croupier < 17:
+        score = croupier_prendre_carte(liste_pioche, 1)
+        score_croupier += score
+        print("Le score du croupier est maintenant de %s points." % score_croupier)
+        mise_round_total = 0
+    print("Le croupier a un score de %s points." % score_croupier)
+    if score_croupier > 21:
+        for nom in scores:
+            if scores[nom]["out"] == False:
+                scores[nom]["success"] = True
+                mise_round = scores[nom]["mise_round"]
+                scores[nom]["mise"] += mise_round
+                scores[nom]["point"] += 1
+            scores[nom]["croupier_value_final"] = score_croupier
+        return
+    else:
+        prendre_pioche = random.randint(0, 1)
+        if prendre_pioche == 1:
+            score = croupier_prendre_carte(liste_pioche, 1)
+            print("Son score est maintenant de %s points." % score)
+            score_croupier += score
+        valeur_croupier = score_croupier
+        print("Le croupier a un score de %s points." % valeur_croupier)
+        for nom in scores:
+            scores[nom]["croupier_value_final"] = valeur_croupier
+        if score_croupier > 21:
+            for nom in scores:
+                if scores[nom]["out"] == False:
+                    scores[nom]["success"] = True
+                    mise_round = scores[nom]["mise_round"]
+                    scores[nom]["mise"] += mise_round
+                    scores[nom]["point"] += 1
+                scores[nom]["croupier_value_final"] = score_croupier
+            return
+        else:
+            nom, score = gagnant(scores, valeur_croupier)
+            for nom_gagner_plus_point in nom:
+                for nom in scores:
+                    if nom == nom_gagner_plus_point:
+                        scores[nom_gagner_plus_point]["success"] = True
+                        scores[nom_gagner_plus_point]["point"] += 1
+                        mise_round = scores[nom_gagner_plus_point][
+                            "mise_round"]
+                        scores[nom_gagner_plus_point][
+                            "mise"] += mise_round * 2
+                        print("%s, vous avez gagné!" %
+                                nom_gagner_plus_point)
+            return
+
+
+
+
+def croupier_hard(score_croupier, scores):
+    while score_croupier < 17:
+        score = croupier_prendre_carte(liste_pioche, 1)
+        score_croupier += score
+        print("Le score du croupier est maintenant de %s points." % score_croupier)
+        mise_round_total = 0
+    print("Le croupier a un score de %s points." % score_croupier)
+    if score_croupier > 21:
+        for nom in scores:
+            if scores[nom]["out"] == False:
+                scores[nom]["success"] = True
+                mise_round = scores[nom]["mise_round"]
+                scores[nom]["mise"] += mise_round
+                scores[nom]["point"] += 1
+            scores[nom]["croupier_value_final"] = score_croupier
+        return
+    else:
+        for nom in scores:
+            mise_round_total += scores[nom]["mise_round"]
+        list_pourcentage_mise = []
+        for nom in scores:
+            if scores[nom]["out"] == False:
+                list_pourcentage_mise.append(
+                    scores[nom]["mise_round"] / (mise_round_total + 1))
+        list_pourcentage_mise_total = 0
+        for pourcentage in list_pourcentage_mise:
+            list_pourcentage_mise_total += pourcentage
+        temp = 21 - score_croupier
+        liste_pioche_pourcentage = []
+        for i in range(1, temp + 1):
+            count = 0
+            for carte in liste_pioche:
+                if valeurCarte(carte) == i + score_croupier:
+                    count += 1
+            pourcentage_mise_joueur = 0
+            for nom in scores:
+                if scores[nom]["score"] == score_croupier + i:
+                    pourcentage_mise_joueur += scores[nom][
+                        "mise_round"] / (mise_round_total + 1)
+            liste_pioche_pourcentage.append(
+                (count / (len(liste_pioche) + 1)) *
+                (1 + pourcentage_mise_joueur))
+        success_rate_pioche = 0
+        for liste_pioche_pourcentage_element in liste_pioche_pourcentage:
+            success_rate_pioche += liste_pioche_pourcentage_element
+        if success_rate_pioche > 0.6:
+            score = croupier_prendre_carte(liste_pioche, 1)
+            print("Son score est maintenant de %s points." % score)
+            score_croupier += score
+        valeur_croupier = score_croupier
+        print("Le croupier a un score de %s points." % valeur_croupier)
+        for nom in scores:
+            scores[nom]["croupier_value_final"] = valeur_croupier
+        if score_croupier > 21:
+            for nom in scores:
+                if scores[nom]["out"] == False:
+                    scores[nom]["success"] = True
+                    mise_round = scores[nom]["mise_round"]
+                    scores[nom]["mise"] += mise_round
+                    scores[nom]["point"] += 1
+                scores[nom]["croupier_value_final"] = score_croupier
+            return
+        else:
+            nom, score = gagnant(scores, valeur_croupier)
+            for nom_gagner_plus_point in nom:
+                for nom in scores:
+                    if nom == nom_gagner_plus_point:
+                        scores[nom_gagner_plus_point]["success"] = True
+                        scores[nom_gagner_plus_point]["point"] += 1
+                        mise_round = scores[nom_gagner_plus_point][
+                            "mise_round"]
+                        scores[nom_gagner_plus_point][
+                            "mise"] += mise_round * 2
+                        print("%s, vous avez gagné!" %
+                                nom_gagner_plus_point)
+            return
 
 
 def croupier_prendre_carte(liste_pioche, nombre):
@@ -857,6 +939,7 @@ if __name__ == "__main__":
     # window.setLayout(layout)
     # window.show()
     
+    difficulty = int(input("Difficulté: (1, 2, 3)"))
     nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
 
