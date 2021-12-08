@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-06 09:40:45
+LastEditTime: 2021-12-08 12:33:10
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -43,7 +43,7 @@ def history_save_to_txt(path, data):
     croupier_premier_round = str(data["croupier_premier_round"])
     croupier_value_final = str(data["croupier_value_final"])
     if count_round >= 1:
-        for items in scores[nom]:
+        for items in data:
             if data["success"]:
                 success = True
             if data["out"]:
@@ -472,8 +472,8 @@ def tourComplet(liste_pioche, scores):
 
             while score_croupier < 17:
                 score = croupier_prendre_carte(liste_pioche, 1)
-                print("Le score du croupier est maintenant de %s points." % score)
                 score_croupier += score
+                print("Le score du croupier est maintenant de %s points." % score_croupier)
                 mise_round_total = 0
             print("Le croupier a un score de %s points." % score_croupier)
             if score_croupier > 21:
@@ -650,6 +650,16 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
 
 
 def bot_decision(liste_pioche, scores, nom):
+    """ Cette fonction est une fonction qui permet à l'ordinateur de déterminer si une carte a été tirée.
+
+    Args:
+        liste_pioche (list): liste de carte
+        scores (dict): dictionnaire des scores
+        nom (str): nom du joueur
+
+    Returns:
+        bool: prendre carte ou pas
+    """
     database = read_history("INF101/TP/Projet Final/history.txt")
     # print(history)
     # new_dict = {}
@@ -667,11 +677,11 @@ def bot_decision(liste_pioche, scores, nom):
     else:
         # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
-        length = 21 - score - 1
-        win_rate = pg.plot()
-        win_rate.setWindowTitle('Win Rate Bar Graph')
-        x = np.arange(length)
-        x = x + score + 1
+        # length = 21 - score - 1
+        # win_rate = pg.plot()
+        # win_rate.setWindowTitle('Win Rate Bar Graph')
+        # x = np.arange(length)
+        # x = x + score + 1
 
         success_rate_list = []
         success_rate_list_prochaine = []
@@ -683,8 +693,8 @@ def bot_decision(liste_pioche, scores, nom):
         param_dict = {}
 
         num_cores = int(mp.cpu_count())
-        # pool = mp.Pool(processes=num_cores - 2)
-        pool = mp.Pool(4)
+        pool = mp.Pool(processes=num_cores - 2)
+        # pool = mp.Pool(4)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
@@ -717,11 +727,11 @@ def bot_decision(liste_pioche, scores, nom):
                 success_list_prochain[i] /
                 (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
 
-        win_rate.plot(x=x,
-                      y=success_rate_list_prochaine,
-                      symbolBrush=(255, 0, 0),
-                      symbolPen='w')
-        pg.exec()
+        # win_rate.plot(x=x,
+        #               y=success_rate_list_prochaine,
+        #               symbolBrush=(255, 0, 0),
+        #               symbolPen='w')
+        # pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -836,17 +846,17 @@ if __name__ == "__main__":
     # pg.exec()
 <<<<<<< Updated upstream
 
-    app = QApplication(sys.argv)
-    window = QWidget()
-    window.setWindowTitle('Application')
-    layout = QFormLayout()
-    layout.addRow("Nombre du joueurs", QLineEdit())
-    layout.addRow("Nombre de ordi", QLineEdit())
-    btns = QDialogButtonBox()
-    btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    # app = QApplication(sys.argv)
+    # window = QWidget()
+    # window.setWindowTitle('Application')
+    # layout = QFormLayout()
+    # layout.addRow("Nombre du joueurs", QLineEdit())
+    # layout.addRow("Nombre de ordi", QLineEdit())
+    # btns = QDialogButtonBox()
+    # btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
-    window.setLayout(layout)
-    window.show()
+    # window.setLayout(layout)
+    # window.show()
     
     nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
@@ -863,8 +873,12 @@ if __name__ == "__main__":
 
     while True:
         liste_joueurs = []
+        liste_ordi = []
         for nom in scores:
-            liste_joueurs.append(nom)
+            if scores[nom]["ordi"] == False:
+                liste_joueurs.append(nom)
+            else:
+                liste_ordi.append(nom)
         dict_point = {}
         dict_mise = {}
         for nom in scores:
