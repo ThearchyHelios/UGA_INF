@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-08 12:33:10
+LastEditTime: 2021-12-08 13:48:11
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -677,11 +677,11 @@ def bot_decision(liste_pioche, scores, nom):
     else:
         # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
-        # length = 21 - score - 1
-        # win_rate = pg.plot()
-        # win_rate.setWindowTitle('Win Rate Bar Graph')
-        # x = np.arange(length)
-        # x = x + score + 1
+        length = 21 - score - 1
+        win_rate = pg.plot()
+        win_rate.setWindowTitle('Win Rate Bar Graph')
+        x = np.arange(length)
+        x = x + score + 1
 
         success_rate_list = []
         success_rate_list_prochaine = []
@@ -727,11 +727,11 @@ def bot_decision(liste_pioche, scores, nom):
                 success_list_prochain[i] /
                 (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
 
-        # win_rate.plot(x=x,
-        #               y=success_rate_list_prochaine,
-        #               symbolBrush=(255, 0, 0),
-        #               symbolPen='w')
-        # pg.exec()
+        win_rate.plot(x=x,
+                      y=success_rate_list_prochaine,
+                      symbolBrush=(255, 0, 0),
+                      symbolPen='w')
+        pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -739,7 +739,7 @@ def bot_decision(liste_pioche, scores, nom):
         success_rate_final += success_rate_list[j] * (probabilite_list[j] +
                                                       1) * poid
     print("Success rate: %s" % success_rate_final)
-    # time.sleep(0.01)
+    time.sleep(2)
 
     if success_rate_final >= 0.2:
         return True
