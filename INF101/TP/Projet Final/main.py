@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-07 15:57:04
+LastEditTime: 2021-12-08 12:33:10
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -868,8 +868,12 @@ if __name__ == "__main__":
 
     while True:
         liste_joueurs = []
+        liste_ordi = []
         for nom in scores:
-            liste_joueurs.append(nom)
+            if scores[nom]["ordi"] == False:
+                liste_joueurs.append(nom)
+            else:
+                liste_ordi.append(nom)
         dict_point = {}
         dict_mise = {}
         for nom in scores:
