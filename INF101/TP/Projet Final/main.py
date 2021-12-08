@@ -844,7 +844,6 @@ if __name__ == "__main__":
     # timer.timeout.connect(show_history)
     # timer.start(1000)
     # pg.exec()
-<<<<<<< Updated upstream
 
     # app = QApplication(sys.argv)
     # window = QWidget()
@@ -858,12 +857,9 @@ if __name__ == "__main__":
     # window.setLayout(layout)
     # window.show()
     
-    nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
-    nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
-=======
     nombre_de_personne = int(input("Combien y-a-t il de joueurs? "))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi? "))
->>>>>>> Stashed changes
+
 
 
     liste_joueurs = initJoueurs(nombre_de_personne)
