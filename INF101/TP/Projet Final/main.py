@@ -165,10 +165,10 @@ def initJoueurs(n):
     """
     liste_joueurs = []
     for i in range(n):
-        nom = input("Quel est le nom du joueur?")
+        nom = input("Quel est le nom du joueur? ")
         while "Ordi" in nom:
             print("Votre nom ne peu pas contenir le mot 'ordi'.")
-            nom = input("Quel est le nom du joueur?")
+            nom = input("Quel est le nom du joueur? ")
         liste_joueurs.append(nom)
     return liste_joueurs
 
@@ -262,7 +262,7 @@ def premierTour(liste_pioche, scores):
                         print("Tu as %s maintenant." % scores[nom]["score"])
                     nombre = int(
                         input(
-                            "Vous avez obtenu un as! Quel valeur voulez-vous choisir? (1 ou 11)"
+                            "Vous avez obtenu un as! Quel valeur voulez-vous choisir? (1 ou 11) "
                         ))
                     if nombre == 1:
                         temp = 1
@@ -353,7 +353,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     for i in range(len(liste_score)):
         if i == 0:
             # sokem probleme avec le print
-            print("Il y a %s joueurs qui on %s " %
+            print("Il y a %s joueurs qui on respectivement %s " %
                   (len(liste_score), liste_score[i]),
                   end="")
         elif i == len(liste_score) - 1:
@@ -363,7 +363,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     print("Le croupier a %s points." % score_croupier_premier_round)
 
     scores[j]["history"]["round %s" % round] = score
-    print("Votres score est de %s. " % score)
+    print("Votres score est de %s points. " % score)
 
     if scores[j]["ordi"] == False:
         print("debug")
@@ -857,8 +857,9 @@ if __name__ == "__main__":
     # window.setLayout(layout)
     # window.show()
     
-    nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
-    nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
+    nombre_de_personne = int(input("Combien y-a-t il de joueurs? "))
+    nombre_de_ordi = int(input("Combien y-a-t il d'ordi? "))
+
 
 
     liste_joueurs = initJoueurs(nombre_de_personne)
@@ -899,12 +900,12 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["ordi"] == False:
                 print(
-                    "%s: Vous avez actuellement %s $." % (nom, scores[nom]["mise"]))
-                mise_round = int(input("%s, Combien voulez-vous miser?" % nom))
+                    "%s, Vous avez actuellement %s $." % (nom, scores[nom]["mise"]))
+                mise_round = int(input("%s, Combien voulez-vous miser? " % nom))
                 while mise_round > scores[nom]["mise"]:
                     mise_round = int(
                         input(
-                            "Vous n'avez pas cette somme.\n%s, Combien voulez-vous miser?"
+                            "Vous n'avez pas cette somme.\n%s, Combien voulez-vous miser? "
                             % nom))
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
@@ -930,7 +931,7 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
-        continuer = input("Voulez-vous rejouer? y ou n")
+        continuer = input("Voulez-vous rejouer? (y ou n) ")
         if continuer == "n":
             dict_point = {}
             dict_mise = {}
