@@ -60,7 +60,7 @@ def history_save_to_txt(path, data):
             count_round
         ) + "," + difficulty + "," + croupier_premier_round + "," + croupier_value_final + "," + history + str(
             success) + "," + str(out) + "," + str(give_up) + "," + str(
-                draw) + "\n"
+            draw) + "\n"
         with open(path, 'a+') as f:
             f.write(string)
             f.close()
@@ -113,7 +113,7 @@ def valeurCarte(carte):
     if nombre_liste[0] == "A":
         nombre = 0
     elif nombre_liste[0] == "valet" or nombre_liste[
-            0] == "dame" or nombre_liste[0] == "roi":
+        0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
         nombre = int(nombre_liste[0])
@@ -296,7 +296,7 @@ def gagnant(scores, valeur_croupier):
     for nom in scores:
         score = scores[nom]["score"]
         if scores[nom]["give_up"] == True and scores[nom][
-                "out"] == False and scores[nom]["success"] == False:
+            "out"] == False and scores[nom]["success"] == False:
             if score > valeur_croupier:
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
                 nom_gagnant_plus.append(nom)
@@ -485,8 +485,8 @@ def tourComplet(liste_pioche, scores):
         else:
             for nom in scores:
                 if not scores[nom]["give_up"] and not scores[nom][
-                        "success"] and not scores[nom]["out"] and not scores[
-                            nom]["draw"]:
+                    "success"] and not scores[nom]["out"] and not scores[
+                    nom]["draw"]:
                     tourJoueur(liste_pioche, nom, scores,
                                score_croupier_premier_round)
 
@@ -498,7 +498,7 @@ def croupier_easy(score_croupier, scores):
     Args:
         score_croupier (int): score du croupier
         scores (dict): scores des joueurs
-    """    
+    """
     while True:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -618,7 +618,7 @@ def croupier_hard(score_croupier, scores):
             for nom in scores:
                 if scores[nom]["score"] == score_croupier + i:
                     pourcentage_mise_joueur += scores[nom]["mise_round"] / (
-                        mise_round_total + 1)
+                            mise_round_total + 1)
             liste_pioche_pourcentage.append((count / (len(liste_pioche) + 1)) *
                                             (1 + pourcentage_mise_joueur))
         success_rate_pioche = 0
@@ -996,6 +996,7 @@ if __name__ == "__main__":
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
             else:
+
                 mise = scores[nom]["mise"]
                 if mise > 10:
                     mise_round = random.randint(1, int(mise / 2))
