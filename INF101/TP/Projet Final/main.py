@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-08 22:58:19
+LastEditTime: 2021-12-08 23:20:27
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -194,11 +194,11 @@ def initScores(liste_joueurs, liste_ordi, v):
     Returns:
         dict: Retourne le dictionnaire initialisé.
     """
-
+    global difficulty
     dict_joueurs = {}
     for nom in liste_joueurs:
         dict_joueurs[nom] = {
-            "difficulty": 0,
+            "difficulty": difficulty,
             "score": v,
             "round": 0,
             "croupier_premier_round": 0,
@@ -216,7 +216,7 @@ def initScores(liste_joueurs, liste_ordi, v):
         }
     for nom in liste_ordi:
         dict_joueurs[nom] = {
-            "difficulty": 0,
+            "difficulty": difficulty,
             "score": v,
             "round": 0,
             "croupier_premier_round": 0,
@@ -467,11 +467,6 @@ def tourComplet(liste_pioche, scores):
         if count_giveup == len(scores) - count_out - count_success:
             # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
             score_croupier = score_croupier_premier_round
-
-            # while True:
-            #     score = croupier_prendre_carte(pioche, 1)
-            #     print("Croupier a prendre %s" % score)
-            #     score_croupier += score
 
             if difficulty == 3:
                 croupier_hard(score_croupier, scores)
@@ -744,13 +739,6 @@ def bot_decision(liste_pioche, scores, nom):
     history = read_history("INF101/TP/Projet Final/history.txt")
     if len(history) < 5000:
         history = read_database("INF101/TP/Projet Final/database.txt")
-    # print(history)
-    # new_dict = {}
-    # count = 0
-    # for key, items in history.items():
-    #     if int(history[key]["round"]) != 1:
-    #         new_dict[count] = items
-    #         count += 1
 
     score = scores[nom]["score"]
     liste_chance = []
@@ -760,11 +748,11 @@ def bot_decision(liste_pioche, scores, nom):
     else:
         # poursentage_de_mise = scores[nom]["mise_round"] / scores[nom]["mise"]
 
-        length = 21 - score - 1
-        win_rate = pg.plot()
-        win_rate.setWindowTitle('Win Rate Bar Graph')
-        x = np.arange(length)
-        x = x + score + 1
+        # length = 21 - score - 1
+        # win_rate = pg.plot()
+        # win_rate.setWindowTitle('Win Rate Bar Graph')
+        # x = np.arange(length)
+        # x = x + score + 1
 
         success_rate_list = []
         success_rate_list_prochaine = []
@@ -777,16 +765,11 @@ def bot_decision(liste_pioche, scores, nom):
 
         num_cores = int(mp.cpu_count())
         pool = mp.Pool(processes=num_cores - 2)
-        # pool = mp.Pool(4)
         for i in range(1, 21 - score):
             if i > 10:
                 i = 1
 
             param_dict[i] = [scores, nom, i]
-            # if feature_liste[1]:
-            #     defayant_list[i - 1] += 1
-            # else:
-            #     success_list[i - 1] += 1
         results = [
             pool.apply_async(bot_decision_multitask,
                              args=(history, liste_pioche, scores, nom, i))
@@ -810,11 +793,11 @@ def bot_decision(liste_pioche, scores, nom):
                 success_list_prochain[i] /
                 (success_list_prochain[i] + defayant_list_prochaine[i] + 1))
 
-        win_rate.plot(x=x,
-                      y=success_rate_list_prochaine,
-                      symbolBrush=(255, 0, 0),
-                      symbolPen='w')
-        pg.exec()
+        # win_rate.plot(x=x,
+        #               y=success_rate_list_prochaine,
+        #               symbolBrush=(255, 0, 0),
+        #               symbolPen='w')
+        # pg.exec()
 
     success_rate_final = 0
     for j in range(len(success_rate_list)):
@@ -1022,14 +1005,3 @@ if __name__ == "__main__":
                 dict_mise[nom] = scores[nom]["mise"]
             print(dict_point)
             exit()
-        # else:
-        #     # scores = gestion_de_la_partie.rejouer(scores)
-        #     dict_point = {}
-        #     for nom in scores:
-        #         dict_point[nom] = scores[nom]["point"]
-        #     print(dict_point)
-        #     scores = premierTour(liste_joueurs)
-        #     for nom in scores:
-        #         scores[nom]["point"] = dict_point[nom]
-
-# gestion_de_la_partie.bot_decision("history.txt", scores, "a")
