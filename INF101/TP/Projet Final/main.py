@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-09 07:24:41
+LastEditTime: 2021-12-09 12:08:07
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -492,6 +492,13 @@ def tourComplet(liste_pioche, scores):
 
 
 def croupier_easy(score_croupier, scores):
+    """ Cette méthode permet de faire jouer le croupier en mode facile.
+    Le croupier va toujours prendre le carte jusqu'a il defayant.
+
+    Args:
+        score_croupier (int): score du croupier
+        scores (dict): scores des joueurs
+    """    
     while True:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -509,6 +516,13 @@ def croupier_easy(score_croupier, scores):
 
 
 def croupier_normal(score_croupier, scores):
+    """ Cette méthode permet de faire jouer le croupier en mode normal
+    Les cartes seront tirées au hasard par le croupier, indépendamment d'autres facteurs.
+
+    Args:
+        score_croupier (int): scrore du croupier
+        scores (dict): scores des joueurs
+    """
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -559,6 +573,13 @@ def croupier_normal(score_croupier, scores):
 
 
 def croupier_hard(score_croupier, scores):
+    """ Cette méthode permet de faire jouer le croupier en mode difficile.
+    Le croupier tient compte des mises placées par chaque joueur dans le champ et décide de tirer une carte en conjonction avec les cartes restantes dans le champ.
+
+    Args:
+        score_croupier (int): score du croupier
+        scores (dict): scores des joueurs
+    """
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
