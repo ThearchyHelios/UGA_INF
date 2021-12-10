@@ -259,7 +259,7 @@ def premierTour(liste_pioche, scores):
             temp = int(valeurCarte(carte))
             if temp == 0:
                 if scores[nom]["ordi"] == False:
-                    if scores[nom]["score"] == 0:
+                    if scores[nom]["scoraldre"] == 0:
                         print("Cest ton premier tour!")
                     else:
                         print("Tu as %s maintenant." % scores[nom]["score"])
@@ -333,6 +333,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
         scores (dict): Scores des joueurs
         score_croupier_premier_round (int): Score du croupier au premier tour
     """
+
     score = 0
     round = 0
     # print(scores)
@@ -368,8 +369,8 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     scores[j]["history"]["round %s" % round] = score
     print("Votres score est de %s points. " % score)
 
-    if scores[j]["ordi"] == False:
-        if joueur_continuer() == True:
+    if not scores[j]["ordi"]:
+        if joueur_continuer():
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
             liste_carte = piocheCarte(liste_pioche, 1)
@@ -397,7 +398,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
             print("Votre tour est términé.")
         time.sleep(2)
 
-    elif scores[j]["ordi"] == True:
+    elif scores[j]["ordi"]:
         if bot_decision(liste_pioche, scores, j):
             if liste_pioche == []:
                 liste_pioche = initPioche(len(scores))
@@ -436,7 +437,7 @@ def tourComplet(liste_pioche, scores):
         scores (dict): Scores des joueurs
     """
     global difficulty
-    if liste_pioche == []:
+    if not liste_pioche:
         liste_pioche = initPioche(len(scores))
     score_croupier_premier_round = croupier_prendre_carte(liste_pioche, 1)
     if score_croupier_premier_round == 0:
@@ -445,7 +446,7 @@ def tourComplet(liste_pioche, scores):
         scores[nom]["croupier_premier_round"] = score_croupier_premier_round
     count_blackjack = 0
     for nom in scores:
-        if scores[nom]["blackjack"] == True:
+        if scores[nom]["blackjack"]:
             print("%s Black Jack!" % nom)
             count_blackjack += 1
     if count_blackjack > 0:
@@ -757,9 +758,9 @@ def bot_decision(liste_pioche, scores, nom):
     Returns:
         bool: prendre carte ou pas
     """
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
     if len(history) < 5000:
-        history = read_database("INF101/TP/Projet Final/database.txt")
+        history = read_database("database.txt")
 
     score = scores[nom]["score"]
     liste_chance = []
@@ -881,6 +882,7 @@ def read_history(path):
         history[count] = {}
         item_list = line.split(",")
         history[count]["round"] = int(item_list[0])
+        history[count]["difficulty"] = int(item_list[1])
         history[count]["croupier_premier_round"] = int(item_list[2])
         history[count]["croupier_value_final"] = int(item_list[3])
         history[count]["score"] = {}
@@ -924,7 +926,7 @@ def read_history(path):
 #     win_rate.addItem(bargraph)
 
 if __name__ == "__main__":
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
     # win_rate = pg.plot()
     # win_rate.setWindowTitle('Win Rate Bar Graph')
     # timer = pg.QtCore.QTimer()
@@ -1014,7 +1016,7 @@ if __name__ == "__main__":
                 scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
         print(len(liste_pioche))
         tourComplet(liste_pioche, scores)
-        path = os.path.join("INF101", "TP", "Projet Final", "history.txt")
+        path = "history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
