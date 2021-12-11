@@ -291,6 +291,7 @@ def gagnant(scores, valeur_croupier):
     Returns:
         list: Liste des noms des joueurs encore en jeu.
     """
+    global mise_croupier
     nom_gagnant_plus = []
     point_gagnant_plus = 0
     for nom in scores:
@@ -304,6 +305,7 @@ def gagnant(scores, valeur_croupier):
                 print("%s, vous etes à égalité avec le croupier !" % nom)
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                mise_croupier -= mise_round
                 scores[nom]["draw"] = True
             else:
                 print("Vous avez perdu! %s" % nom)
@@ -500,6 +502,9 @@ def croupier_easy(score_croupier, scores):
         score_croupier (int): score du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
     while True:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -511,6 +516,8 @@ def croupier_easy(score_croupier, scores):
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
@@ -524,6 +531,9 @@ def croupier_normal(score_croupier, scores):
         score_croupier (int): scrore du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -537,6 +547,8 @@ def croupier_normal(score_croupier, scores):
                 scores[nom]["success"] = True
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                scores[nom]["mise"] += mise_croupier_round
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round
                 scores[nom]["point"] += 1
             scores[nom]["croupier_value_final"] = score_croupier
         return
@@ -556,6 +568,8 @@ def croupier_normal(score_croupier, scores):
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
@@ -568,7 +582,9 @@ def croupier_normal(score_croupier, scores):
                         scores[nom_gagner_plus_point]["point"] += 1
                         mise_round = scores[nom_gagner_plus_point][
                             "mise_round"]
-                        scores[nom_gagner_plus_point]["mise"] += mise_round * 2
+                        scores[nom_gagner_plus_point]["mise"] += mise_round
+                        scores[nom_gagner_plus_point]["mise"] += mise_croupier_round
+                        mise_croupier = mise_croupier - mise_croupier_round - mise_round
                         print("%s, vous avez gagné!" % nom_gagner_plus_point)
             return
 
@@ -581,6 +597,9 @@ def croupier_hard(score_croupier, scores):
         score_croupier (int): score du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
@@ -594,6 +613,8 @@ def croupier_hard(score_croupier, scores):
                 scores[nom]["success"] = True
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                scores[nom]["mise"] += mise_croupier_round
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round
                 scores[nom]["point"] += 1
             scores[nom]["croupier_value_final"] = score_croupier
         return
@@ -639,6 +660,8 @@ def croupier_hard(score_croupier, scores):
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
@@ -651,7 +674,9 @@ def croupier_hard(score_croupier, scores):
                         scores[nom_gagner_plus_point]["point"] += 1
                         mise_round = scores[nom_gagner_plus_point][
                             "mise_round"]
-                        scores[nom_gagner_plus_point]["mise"] += mise_round * 2
+                        scores[nom_gagner_plus_point]["mise"] += mise_round
+                        scores[nom_gagner_plus_point]["mise"] += mise_croupier_round
+                        mise_croupier = mise_croupier - mise_croupier_round - mise_round
                         print("%s, vous avez gagné!" % nom_gagner_plus_point)
             return
 
@@ -950,6 +975,8 @@ if __name__ == "__main__":
     nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
 
+    mise_croupier = 1000
+
     liste_joueurs = initJoueurs(nombre_de_personne)
     liste_ordi = initOrdi(nombre_de_ordi)
     liste_pioche = initPioche(nombre_de_personne)
@@ -969,7 +996,7 @@ if __name__ == "__main__":
             dict_point[nom] = scores[nom]["point"]
             dict_mise[nom] = scores[nom]["mise"]
         print(dict_point)
-        print(dict_mise)
+        print(dict_mise, "croupier: ", mise_croupier)
         input("Press Enter to continue...")
         scores = initScores(liste_joueurs, liste_ordi, 0)
         for nom in scores:
@@ -985,8 +1012,14 @@ if __name__ == "__main__":
             print("%s win" % list(scores.keys())[0])
             break
 
+        if mise_croupier < 10:
+            list_success = []
+            for nom in scores:
+                list_success.append(nom)
+            print("Croupier is out, %s win" % list_success)
+
         for nom in scores:
-            if scores[nom]["ordi"] == False:
+            if not scores[nom]["ordi"]:
                 print(
                     "%s, Vous avez actuellement %s $." % (nom, scores[nom]["mise"]))
                 mise_round = int(input("%s, Combien voulez-vous miser? " % nom))
@@ -1007,13 +1040,28 @@ if __name__ == "__main__":
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
                 print("%s mise %s" % (nom, mise_round))
+
+        for nom in scores:
+            mise_croupier += scores[nom]["mise_round"]
+
+        mise_croupier_round = 0
+
+        if mise_croupier > 10:
+            mise_croupier_round = random.randint(10, int(mise_croupier / len(scores)))
+            print("Croupier mise %s" % mise_croupier_round)
+        else:
+            mise_croupier_round = mise_croupier
+            print("Croupier mise %s" % mise_croupier_round)
+
         scores = premierTour(liste_pioche, scores)
         for nom in scores:
             if scores[nom]["score"] == 21:
                 scores[nom]["success"] = True
                 scores[nom]["blackjack"] = True
                 scores[nom]["point"] += 1
-                scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
+                mise_round = scores[nom]["mise_round"]
+                scores[nom]["mise"] += mise_round * 2.5
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round * 2.5
         print(len(liste_pioche))
         tourComplet(liste_pioche, scores)
         path = "history.txt"
