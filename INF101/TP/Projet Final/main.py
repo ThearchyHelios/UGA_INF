@@ -1,28 +1,16 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-09 12:08:07
+LastEditTime: 2021-12-13 16:00:13
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
 '''
-import sys
 from operator import truediv
 import random
-from sqlite3 import paramstyle
-from sre_constants import SUCCESS
 import time
 import distutils.core
-import os.path
 import multiprocessing as mp
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtWidgets import QDialog
-from PyQt6.QtWidgets import QDialogButtonBox
-from PyQt6.QtWidgets import QFormLayout
-from PyQt6.QtWidgets import QLineEdit
-from PyQt6.QtWidgets import QVBoxLayout
-from PyQt6.QtWidgets import QWidget
-from matplotlib.pyplot import hist
 import pyqtgraph as pg
 import numpy as np
 
@@ -60,7 +48,7 @@ def history_save_to_txt(path, data):
             count_round
         ) + "," + difficulty + "," + croupier_premier_round + "," + croupier_value_final + "," + history + str(
             success) + "," + str(out) + "," + str(give_up) + "," + str(
-            draw) + "\n"
+                draw) + "\n"
         with open(path, 'a+') as f:
             f.write(string)
             f.close()
@@ -113,7 +101,7 @@ def valeurCarte(carte):
     if nombre_liste[0] == "A":
         nombre = 0
     elif nombre_liste[0] == "valet" or nombre_liste[
-        0] == "dame" or nombre_liste[0] == "roi":
+            0] == "dame" or nombre_liste[0] == "roi":
         nombre = 10
     else:
         nombre = int(nombre_liste[0])
@@ -291,12 +279,13 @@ def gagnant(scores, valeur_croupier):
     Returns:
         list: Liste des noms des joueurs encore en jeu.
     """
+    global mise_croupier
     nom_gagnant_plus = []
     point_gagnant_plus = 0
     for nom in scores:
         score = scores[nom]["score"]
         if scores[nom]["give_up"] == True and scores[nom][
-            "out"] == False and scores[nom]["success"] == False:
+                "out"] == False and scores[nom]["success"] == False:
             if score > valeur_croupier:
                 point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
                 nom_gagnant_plus.append(nom)
@@ -304,6 +293,7 @@ def gagnant(scores, valeur_croupier):
                 print("%s, vous etes à égalité avec le croupier !" % nom)
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                mise_croupier -= mise_round
                 scores[nom]["draw"] = True
             else:
                 print("Vous avez perdu! %s" % nom)
@@ -422,11 +412,13 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
                 scores[j]["give_up"] = True
                 scores[j]["history"]["round %s" % (round + 1)] = score
 
+            time.sleep(2)
+
         else:
             scores[j]["give_up"] = True
             print("Votre tour est términé.")
 
-        # time.sleep(2)
+        time.sleep(2)
 
 
 def tourComplet(liste_pioche, scores):
@@ -470,13 +462,13 @@ def tourComplet(liste_pioche, scores):
             score_croupier = score_croupier_premier_round
 
             if difficulty == 3:
-                croupier_hard(score_croupier, scores)
+                croupier_hard(score_croupier, scores, liste_pioche)
                 return
             elif difficulty == 2:
-                croupier_normal(score_croupier, scores)
+                croupier_normal(score_croupier, scores, liste_pioche)
                 return
             elif difficulty == 1:
-                croupier_easy(score_croupier, scores)
+                croupier_easy(score_croupier, scores, liste_pioche)
                 return
 
         elif count_out == len(scores):
@@ -486,13 +478,13 @@ def tourComplet(liste_pioche, scores):
         else:
             for nom in scores:
                 if not scores[nom]["give_up"] and not scores[nom][
-                    "success"] and not scores[nom]["out"] and not scores[
-                    nom]["draw"]:
+                        "success"] and not scores[nom]["out"] and not scores[
+                            nom]["draw"]:
                     tourJoueur(liste_pioche, nom, scores,
                                score_croupier_premier_round)
 
 
-def croupier_easy(score_croupier, scores):
+def croupier_easy(score_croupier, scores, liste_pioche):
     """ Cette méthode permet de faire jouer le croupier en mode facile.
     Le croupier va toujours prendre le carte jusqu'a il defayant.
 
@@ -500,23 +492,30 @@ def croupier_easy(score_croupier, scores):
         score_croupier (int): score du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
+    if not liste_pioche:
+        liste_pioche = initPioche(len(scores))
+
     while True:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
-        print("Le score du croupier est maintenant de %s points." %
-              score_croupier)
+        print("Le croupier a un score de %s points." % score_croupier)
         if score_croupier > 21:
             for nom in scores:
                 if scores[nom]["out"] == False:
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
 
 
-def croupier_normal(score_croupier, scores):
+def croupier_normal(score_croupier, scores, liste_pioche):
     """ Cette méthode permet de faire jouer le croupier en mode normal
     Les cartes seront tirées au hasard par le croupier, indépendamment d'autres facteurs.
 
@@ -524,19 +523,26 @@ def croupier_normal(score_croupier, scores):
         score_croupier (int): scrore du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
+    if not liste_pioche:
+        liste_pioche = initPioche(len(scores))
+
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
         print("Le score du croupier est maintenant de %s points." %
               score_croupier)
         mise_round_total = 0
-    print("Le croupier a un score de %s points." % score_croupier)
     if score_croupier > 21:
         for nom in scores:
             if scores[nom]["out"] == False:
                 scores[nom]["success"] = True
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                scores[nom]["mise"] += mise_croupier_round
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round
                 scores[nom]["point"] += 1
             scores[nom]["croupier_value_final"] = score_croupier
         return
@@ -556,6 +562,8 @@ def croupier_normal(score_croupier, scores):
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
@@ -568,12 +576,15 @@ def croupier_normal(score_croupier, scores):
                         scores[nom_gagner_plus_point]["point"] += 1
                         mise_round = scores[nom_gagner_plus_point][
                             "mise_round"]
-                        scores[nom_gagner_plus_point]["mise"] += mise_round * 2
+                        scores[nom_gagner_plus_point]["mise"] += mise_round
+                        scores[nom_gagner_plus_point][
+                            "mise"] += mise_croupier_round
+                        mise_croupier = mise_croupier - mise_croupier_round - mise_round
                         print("%s, vous avez gagné!" % nom_gagner_plus_point)
             return
 
 
-def croupier_hard(score_croupier, scores):
+def croupier_hard(score_croupier, scores, liste_pioche):
     """ Cette méthode permet de faire jouer le croupier en mode difficile.
     Le croupier tient compte des mises placées par chaque joueur dans le champ et décide de tirer une carte en conjonction avec les cartes restantes dans le champ.
 
@@ -581,19 +592,26 @@ def croupier_hard(score_croupier, scores):
         score_croupier (int): score du croupier
         scores (dict): scores des joueurs
     """
+    global mise_croupier
+    global mise_croupier_round
+
+    if not liste_pioche:
+        liste_pioche = initPioche(len(scores))
+
     while score_croupier < 17:
         score = croupier_prendre_carte(liste_pioche, 1)
         score_croupier += score
         print("Le score du croupier est maintenant de %s points." %
               score_croupier)
         mise_round_total = 0
-    print("Le croupier a un score de %s points." % score_croupier)
     if score_croupier > 21:
         for nom in scores:
             if scores[nom]["out"] == False:
                 scores[nom]["success"] = True
                 mise_round = scores[nom]["mise_round"]
                 scores[nom]["mise"] += mise_round
+                scores[nom]["mise"] += mise_croupier_round
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round
                 scores[nom]["point"] += 1
             scores[nom]["croupier_value_final"] = score_croupier
         return
@@ -613,13 +631,13 @@ def croupier_hard(score_croupier, scores):
         for i in range(1, temp + 1):
             count = 0
             for carte in liste_pioche:
-                if valeurCarte(carte) == i + score_croupier:
+                if valeurCarte(carte) + i + score_croupier <= 21:
                     count += 1
             pourcentage_mise_joueur = 0
             for nom in scores:
                 if scores[nom]["score"] == score_croupier + i:
                     pourcentage_mise_joueur += scores[nom]["mise_round"] / (
-                            mise_round_total + 1)
+                        mise_round_total + 1)
             liste_pioche_pourcentage.append((count / (len(liste_pioche) + 1)) *
                                             (1 + pourcentage_mise_joueur))
         success_rate_pioche = 0
@@ -639,6 +657,8 @@ def croupier_hard(score_croupier, scores):
                     scores[nom]["success"] = True
                     mise_round = scores[nom]["mise_round"]
                     scores[nom]["mise"] += mise_round
+                    scores[nom]["mise"] += mise_croupier_round
+                    mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
                 scores[nom]["croupier_value_final"] = score_croupier
             return
@@ -651,7 +671,10 @@ def croupier_hard(score_croupier, scores):
                         scores[nom_gagner_plus_point]["point"] += 1
                         mise_round = scores[nom_gagner_plus_point][
                             "mise_round"]
-                        scores[nom_gagner_plus_point]["mise"] += mise_round * 2
+                        scores[nom_gagner_plus_point]["mise"] += mise_round
+                        scores[nom_gagner_plus_point][
+                            "mise"] += mise_croupier_round
+                        mise_croupier = mise_croupier - mise_croupier_round - mise_round
                         print("%s, vous avez gagné!" % nom_gagner_plus_point)
             return
 
@@ -758,9 +781,9 @@ def bot_decision(liste_pioche, scores, nom):
     Returns:
         bool: prendre carte ou pas
     """
-    history = read_history("history.txt")
+    history = read_history("INF101/TP/Projet Final/history.txt")
     if len(history) < 5000:
-        history = read_database("database.txt")
+        history = read_database("INF101/TP/Projet Final/database.txt")
 
     score = scores[nom]["score"]
     liste_chance = []
@@ -827,7 +850,6 @@ def bot_decision(liste_pioche, scores, nom):
         success_rate_final += success_rate_list[j] * (probabilite_list[j] +
                                                       1) * poid
     print("Success rate: %s" % success_rate_final)
-    time.sleep(2)
 
     if success_rate_final >= 0.2:
         return True
@@ -848,7 +870,6 @@ def read_database(path):
     count = 0
     for line in open(path, "r"):
         line = line[:-1]  # delete \n
-        # list_chaque_personne = f.split("\n")
         database[count] = {}
         item_list = line.split(",")
         database[count]["round"] = int(item_list[0])
@@ -878,7 +899,6 @@ def read_history(path):
     count = 0
     for line in open(path, "r"):
         line = line[:-1]  # delete \n
-        # list_chaque_personne = f.split("\n")
         history[count] = {}
         item_list = line.split(",")
         history[count]["round"] = int(item_list[0])
@@ -899,56 +919,14 @@ def read_history(path):
     return history
 
 
-# def show_history():
-#     global win_rate
-#     win_rate.clear()
-#     history = read_history("INF101/TP/Projet Final/history.txt")
-#     x = np.arange(17)
-#     x += 4
-#     success_rate_list_point = []
-#     for number in range(4, 21):
-#         success = 0
-#         defayant = 0
-#         for item in history:
-#             temp_list_1 = []
-#             for key, item_score in history[item]["score"].items():
-#                 temp_list_1.append(int(item_score))
-#             if number in temp_list_1:
-#                 if history[item]["success"]:
-#                     success += 1
-#                 else:
-#                     defayant += 1
-#         success_rate_list_point.append(success / (success + defayant + 1))
-#     bargraph = pg.BarGraphItem(x=x,
-#                                height=success_rate_list_point,
-#                                width=1,
-#                                brush='b')
-#     win_rate.addItem(bargraph)
-
 if __name__ == "__main__":
-    history = read_history("history.txt")
-    # win_rate = pg.plot()
-    # win_rate.setWindowTitle('Win Rate Bar Graph')
-    # timer = pg.QtCore.QTimer()
-    # timer.timeout.connect(show_history)
-    # timer.start(1000)
-    # pg.exec()
-
-    # app = QApplication(sys.argv)
-    # window = QWidget()
-    # window.setWindowTitle('Application')
-    # layout = QFormLayout()
-    # layout.addRow("Nombre du joueurs", QLineEdit())
-    # layout.addRow("Nombre de ordi", QLineEdit())
-    # btns = QDialogButtonBox()
-    # btns.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-
-    # window.setLayout(layout)
-    # window.show()
+    history = read_history("INF101/TP/Projet Final/history.txt")
 
     difficulty = int(input("Difficulté: (1, 2, 3)"))
     nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
     nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
+
+    mise_croupier = 1000
 
     liste_joueurs = initJoueurs(nombre_de_personne)
     liste_ordi = initOrdi(nombre_de_ordi)
@@ -968,9 +946,8 @@ if __name__ == "__main__":
         for nom in scores:
             dict_point[nom] = scores[nom]["point"]
             dict_mise[nom] = scores[nom]["mise"]
-        print(dict_point)
-        print(dict_mise)
-        input("Press Enter to continue...")
+        print(dict_mise, "croupier: ", mise_croupier)
+
         scores = initScores(liste_joueurs, liste_ordi, 0)
         for nom in scores:
             scores[nom]["point"] = dict_point[nom]
@@ -985,11 +962,18 @@ if __name__ == "__main__":
             print("%s win" % list(scores.keys())[0])
             break
 
+        if mise_croupier < 10:
+            list_success = []
+            for nom in scores:
+                list_success.append(nom)
+            print("Croupier is out, %s win" % list_success)
+
         for nom in scores:
-            if scores[nom]["ordi"] == False:
-                print(
-                    "%s, Vous avez actuellement %s $." % (nom, scores[nom]["mise"]))
-                mise_round = int(input("%s, Combien voulez-vous miser? " % nom))
+            if not scores[nom]["ordi"]:
+                print("%s, Vous avez actuellement %s $." %
+                      (nom, scores[nom]["mise"]))
+                mise_round = int(input("%s, Combien voulez-vous miser? " %
+                                       nom))
                 while mise_round > scores[nom]["mise"]:
                     mise_round = int(
                         input(
@@ -1007,16 +991,31 @@ if __name__ == "__main__":
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
                 print("%s mise %s" % (nom, mise_round))
+
+        for nom in scores:
+            mise_croupier += scores[nom]["mise_round"]
+
+        mise_croupier_round = 0
+
+        if mise_croupier > 10:
+            mise_croupier_round = random.randint(
+                10, int(mise_croupier / len(scores)))
+            print("Croupier mise %s" % mise_croupier_round)
+        else:
+            mise_croupier_round = mise_croupier
+            print("Croupier mise %s" % mise_croupier_round)
+
         scores = premierTour(liste_pioche, scores)
         for nom in scores:
             if scores[nom]["score"] == 21:
                 scores[nom]["success"] = True
                 scores[nom]["blackjack"] = True
                 scores[nom]["point"] += 1
-                scores[nom]["mise"] += (scores[nom]["mise_round"]) * 2.5
-        print(len(liste_pioche))
+                mise_round = scores[nom]["mise_round"]
+                scores[nom]["mise"] += mise_round * 2.5 + mise_croupier_round
+                mise_croupier = mise_croupier - mise_croupier_round - mise_round * 2.5
         tourComplet(liste_pioche, scores)
-        path = "history.txt"
+        path = "INF101/TP/Projet Final/history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
@@ -1027,5 +1026,16 @@ if __name__ == "__main__":
             for nom in scores:
                 dict_point[nom] = scores[nom]["point"]
                 dict_mise[nom] = scores[nom]["mise"]
-            print(dict_point)
             exit()
+        else:
+            scores_show = scores.copy()
+            scores_show["croupier"] = {}
+            scores_show["croupier"]["mise"] = mise_croupier
+            scores_show["croupier"]["mise_round"] = mise_croupier_round
+            app = pg.mkQApp("DataTreeWidget Example")
+            # data_scores = np.array(scores)
+            tree = pg.DataTreeWidget(data=scores_show)
+            tree.show()
+            tree.setWindowTitle('SCORES')
+            tree.resize(600, 1200)
+            pg.exec()
