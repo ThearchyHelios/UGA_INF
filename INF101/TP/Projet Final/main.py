@@ -229,6 +229,9 @@ def premierTour(liste_pioche, scores):
         dict: Scores des joueurs
     """
 
+    global mise_croupier
+    global mise_croupier_round
+
     liste_carte_joueurs = []
     for i in range(len(scores)):
         if len(liste_pioche) <= 2:
@@ -243,7 +246,7 @@ def premierTour(liste_pioche, scores):
             temp = int(valeurCarte(carte))
             if temp == 0:
                 if scores[nom]["ordi"] == False:
-                    if scores[nom]["scoraldre"] == 0:
+                    if scores[nom]["score"] == 0:
                         print("Cest ton premier tour!")
                     else:
                         print("Tu as %s maintenant." % scores[nom]["score"])
@@ -301,7 +304,7 @@ def gagnant(scores, valeur_croupier):
                 mise_croupier -= mise_round
                 scores[nom]["draw"] = True
             else:
-                print("Vous avez perdu! %s" % nom)
+                print("%s vous avez perdu!" % nom)
 
     # print(scores)
     return nom_gagnant_plus, point_gagnant_plus
@@ -463,7 +466,8 @@ def tourComplet(liste_pioche, scores):
         if count_giveup == len(scores) - count_out - count_success:
 
             score_croupier = score_croupier_premier_round
-
+            print("--------------------")
+            print("Tour du croupier")
             if difficulty == 3:
                 croupier_hard(score_croupier, scores, liste_pioche)
                 return
@@ -514,6 +518,7 @@ def croupier_easy(score_croupier, scores, liste_pioche):
                     scores[nom]["mise"] += mise_croupier_round
                     mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
+                    print("%s, vous avez gagné!" % nom)
                 scores[nom]["croupier_value_final"] = score_croupier
             return
 
@@ -569,6 +574,7 @@ def croupier_normal(score_croupier, scores, liste_pioche):
                     scores[nom]["mise"] += mise_croupier_round
                     mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
+                    print("%s, vous avez gagné!" % nom)
                 scores[nom]["croupier_value_final"] = score_croupier
             return
         else:
@@ -664,6 +670,7 @@ def croupier_hard(score_croupier, scores, liste_pioche):
                     scores[nom]["mise"] += mise_croupier_round
                     mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
+                    print("%s, vous avez gagné!" %nom)
                 scores[nom]["croupier_value_final"] = score_croupier
             return
         else:
@@ -785,7 +792,7 @@ def bot_decision(liste_pioche, scores, nom):
     Returns:
         bool: piocher ou non
     """
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
     if len(history) < 5000:
         history = read_database("INF101/TP/Projet Final/database.txt")
 
@@ -853,7 +860,7 @@ def bot_decision(liste_pioche, scores, nom):
         poid = 1 / (2 * (j + 1))
         success_rate_final += success_rate_list[j] * (probabilite_list[j] +
                                                       1) * poid
-    print("Pouurcentage de réussite : %s" % success_rate_final)
+    print("Pourcentage de réussite après avoir pioché : %s" % success_rate_final)
 
     if success_rate_final >= 0.2:
         return True
@@ -924,7 +931,7 @@ def read_history(path):
 
 
 if __name__ == "__main__":
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
 
     print("Bienvenue dans le jeu du black jack!")
     difficulty = int(input("Sélectionnez la difficulté souhaitée : (1, 2, 3) "))
@@ -995,7 +1002,7 @@ if __name__ == "__main__":
                     mise_round = mise
                 scores[nom]["mise_round"] = mise_round
                 scores[nom]["mise"] -= mise_round
-                print("%s mise %s" % (nom, mise_round))
+                print("%s a misé %s $" % (nom, mise_round))
 
         for nom in scores:
             mise_croupier += scores[nom]["mise_round"]
@@ -1014,11 +1021,11 @@ if __name__ == "__main__":
 
         tourComplet(liste_pioche, scores)
 
-        path = "INF101/TP/Projet Final/history.txt"
+        path = "history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
-        continuer = input("Le tour est términé! Encore une partie? (y ou n) ")
+        continuer = input("La partie est términée! Encore une? (y ou n) ")
         if continuer == "n":
             dict_point = {}
             dict_mise = {}
