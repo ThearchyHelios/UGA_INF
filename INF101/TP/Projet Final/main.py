@@ -88,7 +88,7 @@ def paquet():
 
 
 def valeurCarte(carte):
-    """ Cette fonction est utilisée pour obtenir la valeur de la carte
+    """ Cette fonction est utilisée pour obtenir la valeur d'une carte demandée.
 
     Args:
         carte (str): Cartes saisies. Ex: "As de carreau"
@@ -113,10 +113,7 @@ def initPioche(n):
         Si le nombre de participants est de 3, alors la taille du jeu est de 3*52=156, si le nombre de participants est de 6, alors la taille du jeu est de 6*52=312.
 
     Args:
-        n (int): Nombre de participants au jeu
-
-    Returns:
-        list: Nombre de cartes en fonction du nombre de participants
+        n (int): Nombre de participants au jeu.
     """
     liste_carte_remplacer = []
     for i in range(n):
@@ -130,7 +127,7 @@ def piocheCarte(liste_pioche, x):
     """ Cette fonction renvoie le nombre x de cartes de la pioche.
 
     Args:
-        x (int): Nombre de cartes à retourner
+        x (int): Nombre de cartes à retourner.
 
     Returns:
         list: Cartes retournées avec le nombre x.
@@ -147,7 +144,7 @@ def initJoueurs(n):
     """ Cette fonction est utilisée pour demander à l'utilisateur les noms des joueurs et renvoyer une liste avec les noms de chacun d'entre eux.
 
     Args:
-        n (int): Nombre de participants au jeu
+        n (int): Nombre de participants au jeu.
 
     Returns:
         dict: Une liste avec les noms de tous les joueurs.
@@ -171,13 +168,12 @@ def initOrdi(n):
 
 def initScores(liste_joueurs, liste_ordi, v):
     """ Fonction permettant d'initialiser les informations du joueur, y compris la remise à zéro de son score et de ses différents
-    statuts. Renvoie également ["ordi"] = Vrai s'il s'agit d'un joueur informatique, et ["ordi"] = Faux s'il s'agit d'un joueur humain.
+    statuts. Renvoie également ["ordi"] = Vrai s'il s'agit d'un bot, et ["ordi"] = Faux s'il s'agit d'un joueur humain.
 
     Args:
-        liste_joueurs (list): Une liste avec les noms de tous les joueurs humains.
-        liste_ordi (list): Une liste avec les noms de tous les joueurs ordinateurs.
-        v (int): Attribuer un score spécifique à tous les joueurs (utilisé par défaut au tour 1, où le tour 2 le tour 3 ne s'applique pas, par défaut à 0)
-    sokem : args v pas compris
+        liste_joueurs (list): Une liste avec les noms de tous les joueurs.
+        liste_ordi (list): Une liste avec les noms de tous les bots.
+        v (int): Attribuer un score spécifique à tous les joueurs (par défaut à 0)
 
     Returns:
         dict: Retourne le dictionnaire initialisé.
@@ -269,12 +265,11 @@ def premierTour(liste_pioche, scores):
 
 
 def gagnant(scores, valeur_croupier):
-    """ Cette fonction est utilisée pour comparer les scores de tous les joueurs encore en jeu avec ceux de la banque. Si il y a plus de joueurs vivants que de loteries, alors elle retourne les noms de tous les joueurs vivants.
-    sokem : pas compris
+    """ Cette fonction est utilisée pour comparer les scores de tous les joueurs encore en jeu avec celui de la banque.
 
     Args:
         scores (dict): Scores des joueurs
-        valeur_croupier (int): Valeur du croupier
+        valeur_croupier (int): Score du croupier
 
     Returns:
         list: Liste des noms des joueurs encore en jeu.
@@ -303,10 +298,10 @@ def gagnant(scores, valeur_croupier):
 
 
 def joueur_continuer() -> bool:
-    """ Cette fonction est utilisée pour demander au joueur s'il veut abandonner.
+    """ Cette fonction est utilisée pour demander au joueur s'il veut continuer ou non de piocher.
 
     Returns:
-        bool: Retourne True si le joueur veut abandonner, False sinon.
+        bool: Retourne True si le joueur veut piocher, False sinon.
     """
     continuer_le_jeux = input("Voulez-vous piocher? y ou n ")
     if continuer_le_jeux == "y":
@@ -317,7 +312,6 @@ def joueur_continuer() -> bool:
 
 def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     """ Cette fonction lance un nouveau tour de jeu et peut afficher le nombre de tours passés, le scores de tous les joueurs, et celui de ceux encore en jeu.
-    sokem : revoir tt la fonction
     Args:
         j (str): Nom du joueur
         scores (dict): Scores des joueurs
@@ -346,7 +340,6 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     print("%s, a vous de jouer." % j)
     for i in range(len(liste_score)):
         if i == 0:
-            # sokem probleme avec le print
             print("Il y a %s joueurs qui on respectivement %s " %
                   (len(liste_score), liste_score[i]),
                   end="")
@@ -357,7 +350,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     print("Le croupier a %s points." % score_croupier_premier_round)
 
     scores[j]["history"]["round %s" % round] = score
-    print("Votres score est de %s points. " % score)
+    print("Votres score est de %s points." % score)
 
     if not scores[j]["ordi"]:
         if joueur_continuer():
@@ -422,10 +415,10 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
 
 
 def tourComplet(liste_pioche, scores):
-    """ Cette méthode comprend l'ensemble du jeu et des règles
+    """ Cette fonction utilise l'ensemble des fonctions precedentes pour faire un tour complet.
 
     Args:
-        liste_pioche (list): Pile de cartes
+        liste_pioche (list): Pioche de cartes
         scores (dict): Scores des joueurs
     """
     global difficulty
@@ -439,7 +432,7 @@ def tourComplet(liste_pioche, scores):
     count_blackjack = 0
     for nom in scores:
         if scores[nom]["blackjack"]:
-            print("%s Black Jack!" % nom)
+            print("Bravo %s, vous avez un Black Jack!" % nom)
             count_blackjack += 1
     if count_blackjack > 0:
         return
@@ -458,7 +451,7 @@ def tourComplet(liste_pioche, scores):
                 count_success += 1
 
         if count_giveup == len(scores) - count_out - count_success:
-            # cest a dire que tous les joueurs sont give up , va gagner les personnes qui gangent le plus score.
+
             score_croupier = score_croupier_premier_round
 
             if difficulty == 3:
@@ -472,7 +465,7 @@ def tourComplet(liste_pioche, scores):
                 return
 
         elif count_out == len(scores):
-            # Cest a dire que tous les personnes sont out
+            # Tous les personnes ont perdu
             print("Le croupier a gagné!")
             return
         else:
@@ -485,12 +478,12 @@ def tourComplet(liste_pioche, scores):
 
 
 def croupier_easy(score_croupier, scores, liste_pioche):
-    """ Cette méthode permet de faire jouer le croupier en mode facile.
-    Le croupier va toujours prendre le carte jusqu'a il defayant.
+    """ Cette fonction est une version du croupier avec un niveau de difficulté facile.
+    Le croupier pioche à répétition, j'usqu'a être éliminé.
 
     Args:
-        score_croupier (int): score du croupier
-        scores (dict): scores des joueurs
+        score_croupier (int): Score du croupier
+        scores (dict): Scores des joueurs
     """
     global mise_croupier
     global mise_croupier_round
@@ -516,8 +509,9 @@ def croupier_easy(score_croupier, scores, liste_pioche):
 
 
 def croupier_normal(score_croupier, scores, liste_pioche):
-    """ Cette méthode permet de faire jouer le croupier en mode normal
-    Les cartes seront tirées au hasard par le croupier, indépendamment d'autres facteurs.
+    """ Cette fonction est une version du croupier avec un niveau de difficultée normal.
+
+    Le croupier pioche de manière aléatoire, sans prendre en compte les differents facteurs.
 
     Args:
         score_croupier (int): scrore du croupier
@@ -585,8 +579,8 @@ def croupier_normal(score_croupier, scores, liste_pioche):
 
 
 def croupier_hard(score_croupier, scores, liste_pioche):
-    """ Cette méthode permet de faire jouer le croupier en mode difficile.
-    Le croupier tient compte des mises placées par chaque joueur dans le champ et décide de tirer une carte en conjonction avec les cartes restantes dans le champ.
+    """ Cette fonction est une version du croupier avec un niveau de difficultée difficile.
+    Le croupier tient compte des mises et des cartes de chaques joueurs pour jouer.
 
     Args:
         score_croupier (int): score du croupier
@@ -680,14 +674,14 @@ def croupier_hard(score_croupier, scores, liste_pioche):
 
 
 def croupier_prendre_carte(liste_pioche, nombre):
-    """ Cette méthode permet au croupier de tirer une carte, d'imprimer le numéro de la carte et de renvoyer ce numéro.
+    """ Cette fonction permet au croupier de tirer une carte, de l'ajouter à son score, et de le renvoyer.
 
     Args:
         liste_pioche (list): Liste de carte
         nombre (int): Nombre de cartes à tirer
 
     Returns:
-        int: Valeur de la carte tirer
+        int: Score du croupier
     """
     if liste_pioche == []:
         liste_pioche = initPioche(len(scores))
@@ -700,7 +694,7 @@ def croupier_prendre_carte(liste_pioche, nombre):
 
 
 def bot_decision_multitask(database, liste_pioche, scores, nom, i):
-    """ Cette approche consiste à attribuer des tâches différentes à chaque cœur afin d'améliorer l'efficacité du calcul de l'IA.
+    """ Cette fonction permet d'optimiser la capacité de calcul de l'IA, en attribuant des tâches différentes à chaques cœurs.
 
     Args:
         database (dict): Résultats historiques des excursions précédentes
@@ -771,7 +765,7 @@ def bot_decision_multitask(database, liste_pioche, scores, nom, i):
 
 
 def bot_decision(liste_pioche, scores, nom):
-    """ Cette fonction est une fonction qui permet à l'ordinateur de déterminer si une carte a été tirée.
+    """ Cette fonction permet au bot de choisir si il doit piocher ou non.
 
     Args:
         liste_pioche (list): liste de carte
@@ -779,7 +773,7 @@ def bot_decision(liste_pioche, scores, nom):
         nom (str): nom du joueur
 
     Returns:
-        bool: prendre carte ou pas
+        bool: piocher ou non
     """
     history = read_history("INF101/TP/Projet Final/history.txt")
     if len(history) < 5000:
@@ -849,7 +843,7 @@ def bot_decision(liste_pioche, scores, nom):
         poid = 1 / (2 * (j + 1))
         success_rate_final += success_rate_list[j] * (probabilite_list[j] +
                                                       1) * poid
-    print("Success rate: %s" % success_rate_final)
+    print("Pouurcentage de réussite : %s" % success_rate_final)
 
     if success_rate_final >= 0.2:
         return True
@@ -858,13 +852,13 @@ def bot_decision(liste_pioche, scores, nom):
 
 
 def read_database(path):
-    """ Cette méthode est utilisée pour lire la base de données locale
+    """ Cette fonction est utilisée pour lire la base de données locale
 
     Args:
         path (str): Le chemin correspondant au fichier
 
     Returns:
-        dict: Retourner la base de données convertie
+        dict: Retourne la base de données convertie
     """
     database = {}
     count = 0
@@ -887,7 +881,7 @@ def read_database(path):
 
 
 def read_history(path):
-    """ Cette méthode est utilisée pour lire la histoire locale
+    """ Cette fonction est utilisée pour lire l'historique locale.
 
     Args:
         path (str): Le chemin correspondant au fichier
@@ -922,9 +916,10 @@ def read_history(path):
 if __name__ == "__main__":
     history = read_history("INF101/TP/Projet Final/history.txt")
 
-    difficulty = int(input("Difficulté: (1, 2, 3)"))
-    nombre_de_personne = int(input("Combien y-a-t il de joueurs?"))
-    nombre_de_ordi = int(input("Combien y-a-t il d'ordi?"))
+    print("Bienvenue dans le jeu du black jack!")
+    difficulty = int(input("Sélectionnez la difficulté souhaitée : (1, 2, 3) "))
+    nombre_de_personne = int(input("Combien y-a-t il de joueurs? "))
+    nombre_de_ordi = int(input("Combien de bots voulez-vous ajouter? "))
 
     mise_croupier = 1000
 
@@ -956,17 +951,17 @@ if __name__ == "__main__":
         for nom in list(scores.keys()):
             if scores[nom]["mise"] <= 0:
                 scores.pop(nom)
-                print("%s is out" % nom)
+                print("%s est éliminé..." % nom)
 
         if len(scores) == 1:
-            print("%s win" % list(scores.keys())[0])
+            print("%s remporte le tour!" % list(scores.keys())[0])
             break
 
         if mise_croupier < 10:
             list_success = []
             for nom in scores:
                 list_success.append(nom)
-            print("Croupier is out, %s win" % list_success)
+            print("Le croupier est éliminé, %s a gagné!" % list_success)
 
         for nom in scores:
             if not scores[nom]["ordi"]:
@@ -1000,10 +995,10 @@ if __name__ == "__main__":
         if mise_croupier > 10:
             mise_croupier_round = random.randint(
                 10, int(mise_croupier / len(scores)))
-            print("Croupier mise %s" % mise_croupier_round)
+            print("Le croupier mise %s $" % mise_croupier_round)
         else:
             mise_croupier_round = mise_croupier
-            print("Croupier mise %s" % mise_croupier_round)
+            print("Le croupier mise %s $" % mise_croupier_round)
 
         scores = premierTour(liste_pioche, scores)
         for nom in scores:
@@ -1019,7 +1014,7 @@ if __name__ == "__main__":
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
-        continuer = input("Voulez-vous rejouer? (y ou n) ")
+        continuer = input("Le tour est términé! Encore une partie? (y ou n) ")
         if continuer == "n":
             dict_point = {}
             dict_mise = {}
