@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-13 16:00:13
+LastEditTime: 2021-12-14 17:04:21
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -265,6 +265,16 @@ def premierTour(liste_pioche, scores):
                     temp = 11
             scores[nom]["score"] += temp
         count += 1
+
+    for nom in scores:
+        if scores[nom]["score"] == 21:
+            scores[nom]["success"] = True
+            scores[nom]["blackjack"] = True
+            scores[nom]["point"] += 1
+            mise_round = scores[nom]["mise_round"]
+            scores[nom]["mise"] += mise_round * 2.5 + mise_croupier_round
+            mise_croupier = mise_croupier - mise_croupier_round - mise_round * 2.5
+
     return scores
 
 
@@ -1006,15 +1016,9 @@ if __name__ == "__main__":
             print("Croupier mise %s" % mise_croupier_round)
 
         scores = premierTour(liste_pioche, scores)
-        for nom in scores:
-            if scores[nom]["score"] == 21:
-                scores[nom]["success"] = True
-                scores[nom]["blackjack"] = True
-                scores[nom]["point"] += 1
-                mise_round = scores[nom]["mise_round"]
-                scores[nom]["mise"] += mise_round * 2.5 + mise_croupier_round
-                mise_croupier = mise_croupier - mise_croupier_round - mise_round * 2.5
+
         tourComplet(liste_pioche, scores)
+
         path = "INF101/TP/Projet Final/history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
