@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-15 09:17:41
+LastEditTime: 2021-12-15 10:21:31
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -656,7 +656,7 @@ def croupier_hard(score_croupier, scores, liste_pioche):
                     count += 1
             pourcentage_mise_joueur = 0
             for nom in scores:
-                if scores[nom]["score"] == score_croupier + i:
+                if scores[nom]["score"] >= score_croupier + i and scores[nom]["out"] == False:
                     pourcentage_mise_joueur += scores[nom]["mise_round"] / (
                         mise_round_total + 1)
             liste_pioche_pourcentage.append((count / (len(liste_pioche) + 1)) *
