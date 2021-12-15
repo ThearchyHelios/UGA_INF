@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-27 14:37:13
-LastEditTime: 2021-12-12 17:12:16
+LastEditTime: 2021-12-14 23:47:08
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/show_graph.py
@@ -81,7 +81,7 @@ def show_history():
 def graph_difficulty():
     global win_rate_difficulty
     win_rate_global.clear()
-    history = read_history("history.txt")
+    history = read_history("INF101/TP/Projet Final/history.txt")
 
     list_success_rate_easy = difficulty_easy(history)
     list_success_rate_normal = difficulty_normal(history)
@@ -153,7 +153,7 @@ def difficulty_hard(history: dict) -> list:
 if __name__ == "__main__":
     history = read_history("INF101/TP/Projet Final/history.txt")
     win_rate_global = pg.plot()
-    win_rate_global.setWindowTitle('Win Rate live')
+    win_rate_global.setWindowTitle('Pourcentage de taux de réussite en fonction de score de départ')
     win_rate_difficulty = pg.plot()
     win_rate_difficulty.setWindowTitle('Win Rate of 3 difficulty')
     graph_difficulty()

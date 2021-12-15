@@ -1,7 +1,7 @@
 '''
 Author: JIANG Yilun
 Date: 2021-11-28 20:44:31
-LastEditTime: 2021-12-14 17:04:21
+LastEditTime: 2021-12-15 09:17:41
 LastEditors: JIANG Yilun
 Description: 
 FilePath: /UGA_INF/INF101/TP/Projet Final/main.py
@@ -77,6 +77,7 @@ def paquet():
             liste_carte.append(mot)
 
     liste_ramplacer = []
+    # Mélanger les cartes
     for i in range(len(liste_carte)):
         temp_random = random.randint(0, len(liste_carte) - 1)
         temp = liste_carte[i]
@@ -98,6 +99,8 @@ def valeurCarte(carte):
     """
     temp = str(carte)
     nombre_liste = temp.split(" ")
+    # Si la valeur du carte est As, alors la valeur est 0
+    # Dans le scripe suivant, quand il a detecte 0 alors l'utilisateur doit choisir une valeur pour l'As
     if nombre_liste[0] == "A":
         nombre = 0
     elif nombre_liste[0] == "valet" or nombre_liste[
@@ -152,6 +155,7 @@ def initJoueurs(n):
     liste_joueurs = []
     for i in range(n):
         nom = input("Quel est le nom du joueur? ")
+        # Si le nom contient "Ordi" alors return error.
         while "Ordi" in nom:
             print("Votre nom ne peu pas contenir le mot 'ordi'.")
             nom = input("Quel est le nom du joueur? ")
@@ -160,6 +164,14 @@ def initJoueurs(n):
 
 
 def initOrdi(n):
+    """ L'initialisation des noms du ordinateur.
+
+    Args:
+        n (int): le nombre du ordinateur.
+
+    Returns:
+        list: Une liste avec les noms des ordinateurs.
+    """
     liste_ordi = []
     for i in range(n):
         liste_ordi.append("Ordi " + str(i + 1))
@@ -265,6 +277,7 @@ def premierTour(liste_pioche, scores):
             scores[nom]["score"] += temp
         count += 1
 
+    # Si le score du joueur est 21 dans le premiere tour, c'est a dire que le joueur a obtenu un blackjack.
     for nom in scores:
         if scores[nom]["score"] == 21:
             scores[nom]["success"] = True
@@ -294,8 +307,9 @@ def gagnant(scores, valeur_croupier):
         score = scores[nom]["score"]
         if scores[nom]["give_up"] == True and scores[nom][
                 "out"] == False and scores[nom]["success"] == False:
+            # reussir, parce que le score est > que Croupier
             if score > valeur_croupier:
-                point_gagnant_plus = score  # reussir, parce que le score est > que Croupier
+                point_gagnant_plus = score
                 nom_gagnant_plus.append(nom)
             elif score == valeur_croupier:
                 print("%s, vous etes à égalité avec le croupier !" % nom)
@@ -306,7 +320,6 @@ def gagnant(scores, valeur_croupier):
             else:
                 print("%s vous avez perdu!" % nom)
 
-    # print(scores)
     return nom_gagnant_plus, point_gagnant_plus
 
 
@@ -333,15 +346,12 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
 
     score = 0
     round = 0
-    # print(scores)
     liste_score = []
+
+    score = scores[j]["score"]
+    round = scores[j]["round"]
+    # Stocker tous les scores des joueurs dans une liste
     for nom in scores:
-        if nom == j:
-            for nom_item, item in scores[nom].items():
-                if nom_item == "score":
-                    score = item
-                if nom_item == "round":
-                    round = item
         for nom_item, item in scores[nom].items():
             if nom_item == "score":
                 liste_score.append(item)
@@ -353,6 +363,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     print("%s, a vous de jouer." % j)
     for i in range(len(liste_score)):
         if i == 0:
+            # print tous les scores des joueurs
             print("Il y a %s joueurs qui on respectivement %s " %
                   (len(liste_score), liste_score[i]),
                   end="")
@@ -670,7 +681,7 @@ def croupier_hard(score_croupier, scores, liste_pioche):
                     scores[nom]["mise"] += mise_croupier_round
                     mise_croupier = mise_croupier - mise_croupier_round - mise_round
                     scores[nom]["point"] += 1
-                    print("%s, vous avez gagné!" %nom)
+                    print("%s, vous avez gagné!" % nom)
                 scores[nom]["croupier_value_final"] = score_croupier
             return
         else:
@@ -792,7 +803,7 @@ def bot_decision(liste_pioche, scores, nom):
     Returns:
         bool: piocher ou non
     """
-    history = read_history("history.txt")
+    history = read_history("INF101/TP/Projet Final/history.txt")
     if len(history) < 5000:
         history = read_database("INF101/TP/Projet Final/database.txt")
 
@@ -860,7 +871,8 @@ def bot_decision(liste_pioche, scores, nom):
         poid = 1 / (2 * (j + 1))
         success_rate_final += success_rate_list[j] * (probabilite_list[j] +
                                                       1) * poid
-    print("Pourcentage de réussite après avoir pioché : %s" % success_rate_final)
+    print("Pourcentage de réussite après avoir pioché : %s" %
+          success_rate_final)
 
     if success_rate_final >= 0.2:
         return True
@@ -931,10 +943,11 @@ def read_history(path):
 
 
 if __name__ == "__main__":
-    history = read_history("history.txt")
+    history = read_history("INF101/TP/Projet Final/history.txt")
 
     print("Bienvenue dans le jeu du black jack!")
-    difficulty = int(input("Sélectionnez la difficulté souhaitée : (1, 2, 3) "))
+    difficulty = int(
+        input("Sélectionnez la difficulté souhaitée : (1, 2, 3) "))
     nombre_de_personne = int(input("Combien y-a-t il de joueurs? "))
     nombre_de_ordi = int(input("Combien de bots voulez-vous ajouter? "))
 
@@ -1021,7 +1034,7 @@ if __name__ == "__main__":
 
         tourComplet(liste_pioche, scores)
 
-        path = "history.txt"
+        path = "INF101/TP/Projet Final/history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
