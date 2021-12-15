@@ -99,8 +99,8 @@ def valeurCarte(carte):
     """
     temp = str(carte)
     nombre_liste = temp.split(" ")
-    # Si la valeur du carte est As, alors la valeur est 0
-    # Dans le scripe suivant, quand il a detecte 0 alors l'utilisateur doit choisir une valeur pour l'As
+    # Si la carte obtenu est un As, alors la valeur est 0
+    # Si la valeur obtenu vaut 0, le script suivant demande au joueur de choisir une valeur entre 1 et 11
     if nombre_liste[0] == "A":
         nombre = 0
     elif nombre_liste[0] == "valet" or nombre_liste[
@@ -155,7 +155,7 @@ def initJoueurs(n):
     liste_joueurs = []
     for i in range(n):
         nom = input("Quel est le nom du joueur? ")
-        # Si le nom contient "Ordi" alors return error.
+        # Si le nom contient "Ordi" alors return error et le redemande.
         while "Ordi" in nom:
             print("Votre nom ne peu pas contenir le mot 'ordi'.")
             nom = input("Quel est le nom du joueur? ")
@@ -164,13 +164,13 @@ def initJoueurs(n):
 
 
 def initOrdi(n):
-    """ L'initialisation des noms du ordinateur.
+    """ Cette fonction permet d'initialier les noms des bots.
 
     Args:
-        n (int): le nombre du ordinateur.
+        n (int): le nombre de bots.
 
     Returns:
-        list: Une liste avec les noms des ordinateurs.
+        list: Une liste avec les noms des bots.
     """
     liste_ordi = []
     for i in range(n):
@@ -277,7 +277,7 @@ def premierTour(liste_pioche, scores):
             scores[nom]["score"] += temp
         count += 1
 
-    # Si le score du joueur est 21 dans le premiere tour, c'est a dire que le joueur a obtenu un blackjack.
+    # Si le score du joueur est de 21 dès le premiere tour, le joueur obtient un blackjack.
     for nom in scores:
         if scores[nom]["score"] == 21:
             scores[nom]["success"] = True
@@ -307,7 +307,7 @@ def gagnant(scores, valeur_croupier):
         score = scores[nom]["score"]
         if scores[nom]["give_up"] == True and scores[nom][
                 "out"] == False and scores[nom]["success"] == False:
-            # reussir, parce que le score est > que Croupier
+            # Si le joueur a fini son tour sans se faire éliminer et qu'il a un score inférieur à celui du croupier, alors on aplique le script suivant :
             if score > valeur_croupier:
                 point_gagnant_plus = score
                 nom_gagnant_plus.append(nom)
@@ -350,7 +350,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
 
     score = scores[j]["score"]
     round = scores[j]["round"]
-    # Stocker tous les scores des joueurs dans une liste
+    # Pour stocker tous les scores des joueurs dans une liste
     for nom in scores:
         for nom_item, item in scores[nom].items():
             if nom_item == "score":
@@ -363,7 +363,7 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     print("%s, a vous de jouer." % j)
     for i in range(len(liste_score)):
         if i == 0:
-            # print tous les scores des joueurs
+            # Pour afficher tous les scores des joueurs
             print("Il y a %s joueurs qui on respectivement %s " %
                   (len(liste_score), liste_score[i]),
                   end="")
