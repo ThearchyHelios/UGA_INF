@@ -1,13 +1,3 @@
-<!--
- * @Author: JIANG Yilun
- * @Date: 2021-12-06 09:15:35
- * @LastEditTime: 2021-12-15 09:03:28
- * @LastEditors: JIANG Yilun
- * @Description: 
- * @FilePath: /UGA_INF/INF101/TP/Projet Final/README.md
--->
-# RAPPORT
-```python
 def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
     """ Cette fonction lance un nouveau tour de jeu et peut afficher le nombre de tours passés, le scores de tous les joueurs, et celui de ceux encore en jeu.
     Args:
@@ -106,5 +96,3 @@ def tourJoueur(liste_pioche, j, scores, score_croupier_premier_round):
             print("Votre tour est términé.")
 
         time.sleep(2)
-
-```
