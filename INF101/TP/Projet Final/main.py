@@ -803,9 +803,9 @@ def bot_decision(liste_pioche, scores, nom):
     Returns:
         bool: piocher ou non
     """
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
     if len(history) < 5000:
-        history = read_database("INF101/TP/Projet Final/database.txt")
+        history = read_database("database.txt")
 
     score = scores[nom]["score"]
     liste_chance = []
@@ -943,7 +943,7 @@ def read_history(path):
 
 
 if __name__ == "__main__":
-    history = read_history("INF101/TP/Projet Final/history.txt")
+    history = read_history("history.txt")
 
     print("Bienvenue dans le jeu du black jack!")
     difficulty = int(
@@ -1034,7 +1034,7 @@ if __name__ == "__main__":
 
         tourComplet(liste_pioche, scores)
 
-        path = "INF101/TP/Projet Final/history.txt"
+        path = "history.txt"
         for nom in scores:
             if scores[nom]["history"] != []:
                 history_save_to_txt(path, scores[nom])
