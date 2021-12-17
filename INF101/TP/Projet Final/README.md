@@ -79,9 +79,9 @@ Les fonctions de bases (communes à toutes les version du jeux) :
 Toutes ces fonctions sont décrites dans le code. Avec elles, il est envisageable de coder une première version du jeu, ou les joueurs jouent les uns contre les autres, sans mises, ni croupier. Après cela, nous avons modifié le code pour permettre aux joueurs de miser.
 
 Les fonctions d’historique (pour créer une base de données et l’exploiter) :
-- history_save_to_txt
-- read_database
-- read_history
+- `history_save_to_txt`
+- `read_database`
+- `read_history`
 
 Ces fonctions nous permettent de créer un historique des parties, qui nous sera utile pour la réalisation de nos intelligences artificielles. Si l’historique n’est pas assez grand, les IA utiliseront la base de données, réalisée au préalable avec 250,000 essais.
 Les fonctions d’IA (utilisées pour les différentes difficultés du croupier) :
