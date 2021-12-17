@@ -1,7 +1,7 @@
 <!--
  * @Author: JIANG Yilun
  * @Date: 2021-12-17 21:40:39
- * @LastEditTime: 2021-12-17 21:59:02
+ * @LastEditTime: 2021-12-17 22:06:32
  * @LastEditors: JIANG Yilun
  * @Description: 
  * @FilePath: /UGA_INF/INF101/TP/Projet Final/README.md
@@ -13,16 +13,22 @@
 # Projet final - Jeu du Blackjack
 
 ## Sommaire
-[Introduction]
-[Le jeu du Blackjack]
-[Règles du jeu]
-Objectifs du projet
-Réalisation du Blackjack
-Initialisations et gestion
-Intelligences artificielles
-Taux de réussite B – IA des joueurs C – IA du croupier
-Conclusion
-Améliorations envisageables B – Bilan
+
+- [Projet final - Jeu du Blackjack](#projet-final---jeu-du-blackjack)
+  - [Sommaire](#sommaire)
+  - [Introduction](#introduction)
+    - [Le jeu du Blackjack](#le-jeu-du-blackjack)
+    - [Règles du jeu](#règles-du-jeu)
+    - [Objectifs](#objectifs)
+  - [Réalisation du Blackjack](#réalisation-du-blackjack)
+    - [Initialisations et gestion](#initialisations-et-gestion)
+  - [Intelligences artificielles](#intelligences-artificielles)
+    - [Taux de réussite](#taux-de-réussite)
+    - [IA des joueurs](#ia-des-joueurs)
+    - [IA du croupier](#ia-du-croupier)
+  - [Conclusion](#conclusion)
+    - [Améliorations envisageables](#améliorations-envisageables)
+    - [Bilan](#bilan)
 
 
 ## Introduction
