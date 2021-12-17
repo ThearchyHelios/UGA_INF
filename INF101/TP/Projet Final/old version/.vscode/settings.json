@@ -1,0 +1,4 @@
+{
+    "discord.enabled": true,
+    "python.formatting.provider": "yapf"
+}
