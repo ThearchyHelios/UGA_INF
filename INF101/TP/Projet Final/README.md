@@ -104,7 +104,7 @@ Grâce à nos recherches et nos tests, nous avons pu identifier certains facteur
 Le joueur joue avant le croupier. Il peut donc être éliminé immédiatement en dépassant les 21 points, et céder sa mise à la banque, sans que le croupier n’ait eu besoin de jouer. Cette règle est particulièrement dangereuse pour le joueur, lorsque son score de départ est compris entre 12 et 17 points, car la prochaine carte déterminera alors s’il est éliminé ou non. Le graphique ci-dessous nous montre clairement que le joueur a un pourcentage de réussite bien plus faible dans ce cas précis.
 
 *Diagramme du pourcentage de taux de réussite du joueur en fonction de score de départ, basé sur l’’historique des partiestor*
-![Diagramme du pourcentage de taux de réussite du joueur en fonction de score de départ, basé sur l’’historique des partiestor](https://github.com/Marshellson/UGA_INF/blob/Rapport/INF101/TP/Projet%20Final/imgs/2021-12-14_23.47.30.png?raw=true)
+![Diagramme du pourcentage de taux de réussite du joueur en fonction de score de départ, basé sur l’’historique des partiestor](https://github.com/Marshellson/UGA_INF/blob/master/INF101/TP/Projet%20Final/imgs/2021-12-14_23.47.30.png?raw=true)
 
 Nous avons constaté que le simple fait de s’arrêter de piocher dès que l’on n’est plus sûr de ne pas pouvoir perdre ( à partir d’un score de 11), permet d’augmenter grandement les chances du joueur de battre le croupier, car cette stratégie contraint le croupier à jouer et à faire mieux que le joueur, avec à son tour le risque de dépasser les 21 points.
 
@@ -133,7 +133,7 @@ Contrairement à l’IA des joueurs, le bot difficile n’a pas besoin d’utili
 Par exemple, on suppose que dans une partie à trois joueurs, le J1 mise une grosse somme, et les deux autres joueurs, une somme bien plus raisonnable. Le croupier ne sera peut être pas en mesure de battre le J2 et le J3, mais s’ il bat le J1, il sera quand même rentable.
 
 *Graphique du pourcentage de réussite du joueur en fonction de son score, pour chacune des version du croupier*
-![Graphique du pourcentage de réussite du joueur en fonction de son score, pour chacune des version du croupier](https://github.com/Marshellson/UGA_INF/blob/Rapport/INF101/TP/Projet%20Final/imgs/Screen_Shot_2021-12-10_at_08.45.51.png?raw=true)
+![Graphique du pourcentage de réussite du joueur en fonction de son score, pour chacune des version du croupier](https://github.com/Marshellson/UGA_INF/blob/master/INF101/TP/Projet%20Final/imgs/Screen_Shot_2021-12-10_at_08.45.51.png?raw=true)
 
 
 Les courbes rouge, vert et bleu correspondent respectivement aux bots facile, normal et difficile. Ce graphique nous permet de comparer très clairement les stratégies. En effet, on peut par exemple voir que le bot facile perd toujours à partir de 17 points, car il pioche jusqu’à l’élimination.
