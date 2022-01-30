@@ -1,0 +1,4 @@
+mkdir INF203
+cp exercice_1.txt INF203/
+cd INF203/
+touch mon_fichier.txt

@@ -1,0 +1,5 @@
+mv secret.txt Exercice_2/
+cd Exercice_2/
+ls
+cat secret.txt
+rm -r *
