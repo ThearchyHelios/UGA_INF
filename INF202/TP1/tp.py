@@ -124,7 +124,12 @@ def compte_vrai(f):
 # d'occurence dans la formule
 def compte_var(f, var):
     """compte le nombre d'apparition de la variable var dans f"""
-    return 0
+    string_f = str(f)
+    count = 0
+    for ff in string_f:
+        if ff == var:
+            count += 1
+    return count
 
 
 # Exercice 3 : # Exercice 3 : faire en sorte que la fonction suivante prenne en entrée une formule et retourne la chaine de caractère telle que
