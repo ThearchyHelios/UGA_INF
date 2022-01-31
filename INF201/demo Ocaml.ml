@@ -3,5 +3,4 @@ let max x y =
 let chengfa x y = x * y;;
 Printf.printf"%i\n" (chengfa 3 4);;
 print_int 2;;
-print_newline();;
-
+print_newline();; 

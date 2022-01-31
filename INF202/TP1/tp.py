@@ -131,6 +131,8 @@ def compte_var(f, var):
             count += 1
     return count
 
+# TODO: bug
+
 
 # Exercice 3 : # Exercice 3 : faire en sorte que la fonction suivante prenne en entrée une formule et retourne la chaine de caractère telle que
 # les ET soient remplacé par "n", les OU par "u", les NON par "-", les IMPL par =>, les EQ par "<=>",les VRAI par "V"
