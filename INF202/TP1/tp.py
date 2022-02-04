@@ -124,17 +124,23 @@ def compte_vrai(f):
 # d'occurence dans la formule
 def compte_var(f, var):
     """compte le nombre d'apparition de la variable var dans f"""
-    string_f = str(f)
-    count = 0
-    for ff in string_f:
-        if ff == var:
-            count += 1
-    return count
-
+    n = f.nb_operandes()
+    if n == 0:
+        v = f.get_val()
+        if v == var:
+            return 1
+        else:
+            return 0
+    elif n == 1:
+        f2 = (f.decompose())[0]
+        return compte_var(f2, var)
+    else:
+        [f2, f3] = f.decompose()
+        return compte_var(f2, var) + compte_var(f3, var)
 # TODO: bug
 
 
-# Exercice 3 : # Exercice 3 : faire en sorte que la fonction suivante prenne en entrée une formule et retourne la chaine de caractère telle que
+# Exercice 3 : faire en sorte que la fonction suivante prenne en entrée une formule et retourne la chaine de caractère telle que
 # les ET soient remplacé par "n", les OU par "u", les NON par "-", les IMPL par =>, les EQ par "<=>",les VRAI par "V"
 # et les FAUX par "F". Les noms de variables restent les mêmes.
 # Pour éviter tout problème d'interprétation de la formule, on mettra des parenthèses autour des opérandes des opérateurs
