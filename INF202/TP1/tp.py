@@ -1,3 +1,5 @@
+from ast import operator
+import string
 from formules import *
 
 #############################################################################################################
@@ -137,7 +139,6 @@ def compte_var(f, var):
     else:
         [f2, f3] = f.decompose()
         return compte_var(f2, var) + compte_var(f3, var)
-# TODO: bug
 
 
 # Exercice 3 : faire en sorte que la fonction suivante prenne en entrée une formule et retourne la chaine de caractère telle que
@@ -150,7 +151,66 @@ def compte_var(f, var):
 # joli_string( (fx.impl(fy).eq( -fx + fv ) ) ) -> "((x) => (y)) <=> ((- (x)) u (V))"
 def joli_string(f):
     """renvoie une jolie chaine de caractèrepour la formule f """
-    return ""
+    n = f.nb_operandes()
+    strinf_f = ""
+    if n == 0:
+        var = f.get_val()
+        operator = f.operateur()
+        if operator == "VRAI":
+            operator = "V"
+        elif operator == "FAUX":
+            operator = "F"
+        elif operator == "VAR":
+            operator = ""
+        string_f = strinf_f + " " + operator + " " + var
+        return string_f
+    elif n == 1:
+        f2 = (f.decompose())[0]
+        var = f.get_val()
+        operator = f.operateur()
+        if operator == "NON":
+            operator = "-"
+        return joli_string(f2)
+    else:
+        [f2, f3] = f.decompose()
+        n2 = f2.nb_operandes()
+        if n2 == 2:
+            operator = f.operateur()
+            [var1, var2] = f2.get_val()
+            if operator == "ET":
+                operator = "n"
+            elif operator == "OU":
+                operator = "u"
+            elif operator == "IMPL":
+                operator = "=>"
+            elif operator == "EQ":
+                operator = "<=>"
+            string_f = strinf_f + var1 + operator + var2
+        n3 = f3.nb_operandes()
+        if n3 == 2:
+            operator = f.operateur()
+            [var1, var2] = f3.get_val()
+            if operator == "ET":
+                operator = "n"
+            elif operator == "OU":
+                operator = "u"
+            elif operator == "IMPL":
+                operator = "=>"
+            elif operator == "EQ":
+                operator = "<=>"
+            string_f = strinf_f + var1 + operator + var2
+        return joli_string(f2) + joli_string(f3)
+
+f = ((fx.impl(fy).eq( -fx + fv )))
+# f = fx.impl(fy)
+[f1, f2] = f.decompose()
+print(f1)
+print(f2)
+print(f.nb_operandes())
+print(f1.get_val())
+print(f1, f2)
+print(f.operateur())
+print(joli_string(f))
 
 def affiche(f):
     print(joli_string(f))
