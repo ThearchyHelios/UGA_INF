@@ -1,0 +1,19 @@
+The 'Patch Loader Mod v2.1.2' was installed.
+The game will be closed.
+
+	IMPORTANT!
+
+If you use Paradox game launcher:
+  1. Open main game directory (Cities.app) navigate to      /Contents/Launcher directory and search for launcher-settings.json
+  2. Make backup of that file (e.g. create copy with different name)
+  3. Open launcher-settings.json using any text editor and change 'exePath' value to '../../../Cities_Loader.sh' instead of original '../MacOS/Cities'
+  4. Save file and run game normally
+
+---------------------------------------------------------------------
+Or if don't use Paradox game launcher:
+  1. Add './Cities_Loader.sh %command%' (without quotes) to the game Steam Set Launch Options
+    in the Steam Client
+  2. Run game normally
+---------------------------------------------------------------------
+If game won't launch remove commandline parameter or restore backup launcher-settings.json
+and contact the mod author for more solutions
