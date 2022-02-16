@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 (*2.6*)
 (*let (bi, bs) = i in
   or let (precede (x:int) (bi, bs:intervelle))*)
@@ -49,9 +49,11 @@ let ajout3sec (hor:horaire): horaire =
   inc_hor(inc_hor(inc_hor hor));;
 
 ajout3sec 11 11 11 Am;;
-=======
+
 let estJDM(jour:int) (mois:int):bool = 
   if mois == 2 && jour < 28 || (mois == 4 || mois == 6 || mois == 9 || mois == 11) && jour <= 30 || (mois == 1 || mois == 3 || mois = 5 || mois == 7 || mois == 8 || mois == 10 || mois == 12) && jour <= 31 then true else false;;
 
+
+
 let c = 2 and d = 4. in (c+2, d);;
->>>>>>> c6858904fec8d1b7c97e84b1f07f9018920529ca
+
