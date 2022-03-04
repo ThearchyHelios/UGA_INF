@@ -2,58 +2,59 @@
 # DLST - Universite Grenoble Alpes
 
 def readProgram(filename):
-	'''
-	Cree une liste de listes representant le programme contenu dans le fichier filename.
-	'''
-	file = open(filename, "r")
-	lines = file.readlines()
-	file.close()
+    '''
+    Cree une liste de listes representant le programme contenu dans le fichier filename.
+    '''
+    file = open(filename, "r")
+    lines = file.readlines()
+    file.close()
 
-	Dprog = []
+    Dprog = []
 
-	for line in lines:
-		str_list = line.split()
+    for line in lines:
+        str_list = line.split()
 
-		# chaque ligne doit contenir exactement cinq elements
-		assert len(str_list) == 5, "Nombre incorrect d'elements"
+        # chaque ligne doit contenir exactement cinq elements
+        assert len(str_list) == 5, "Nombre incorrect d'elements"
 
-		 # on applique la fonction int() a chaque element de str_list afin de convertir chaque element en entier
-		int_list = list(map(int, str_list))
+        # on applique la fonction int() a chaque element de str_list afin de convertir chaque element en entier
+        int_list = list(map(int, str_list))
 
-		Dprog.append(int_list)
+        Dprog.append(int_list)
 
-	return Dprog
+    return Dprog
+
 
 def printProgram(Dprog):
-	'''
-	Affiche le programme contenu dans Dprog sous format codifie
-	'''
-	pass
+    '''
+    Affiche le programme contenu dans Dprog sous format codifie
+    '''
+    pass
 
 
 def afficheRelation(R):
-	'''
-	Affiche la matrice de la relation d'ordre R
-	'''
-	pass
+    '''
+    Affiche la matrice de la relation d'ordre R
+    '''
+    pass
 
 
 def affichePlacee(placee):
-	'''
-	Affiche la liste placee
-	'''
-	pass
+    '''
+    Affiche la liste placee
+    '''
+    pass
 
 
 def affichePlacement(placement):
-	'''
-	Affiche le tableau placement
-	'''
-	pass
-	
-	
+    '''
+    Affiche le tableau placement
+    '''
+    pass
+
+
 def afficheMemoire(memoire):
-	'''
-	Affiche la memoire de maniere formatee
-	'''
-	pass
+    '''
+    Affiche la memoire de maniere formatee
+    '''
+    pass
