@@ -88,7 +88,6 @@ def getPredefinie35():
     # return [[1, 0, 0, 1], [1, 1, 1], [0, 1, 1, 1, 0, 1]]
 
 
-
 def getPredefinie53():
     print(
         "TODO: modifier la relation pour qu'elle aille les bonnes dimensions: 5x3"
@@ -104,7 +103,9 @@ def getPredefinieAutoInverse():
         "TODO: modifier la relation pour qu'elle soit tel que elle meme est sont inverse (3x3)"
     )
     # return [[0, 1, 0], [1, 1, 1], [0, 0, 0]]
-    return [[0, 1, 0], [1, 1, 0], [0, 1, 0]]
+
+    return [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
+
 
 ########################################
 #### FUNCTION D'AFFICHAGE ##############
@@ -202,9 +203,15 @@ def sont_inverses(R, invR):
         et returne False.
     '''
 
-    print("TODO: implementer sont_inverses")
-
-    return False
+    # print("TODO: implementer sont_inverses")
+    try:
+        for i in range(len(R)):
+            for j in range(len(R[i])):
+                if R[i][j] != invR[j][i]:
+                    return False
+        return True
+    except:
+        return False
 
 
 def verifier_taille(R, n, m):
@@ -261,9 +268,11 @@ def intersection(R, S):
         et returne une liste vide [].
     '''
     RiS = []
-
-    print("TODO: implementer intersection")
-
+    # print("TODO: implementer intersection")
+    for i in range(len(R)):
+        RiS.append([])
+        for j in range(len(R[i])):
+            RiS[i].append(R[i][j] and S[i][j])
     return RiS
 
 
@@ -274,8 +283,12 @@ def inverse(R):
     invS = []
 
     print("TODO: implementer inverse")
-
+    for i in range(len(R[0])):
+        invS.append([])
+        for j in range(len(R)):
+            invS[i].append(R[j][i])
     return invS
+
 
 
 def composition(S, R):
@@ -379,7 +392,6 @@ def ex_union():
     # print('TODO: Tester que RR1 est incluse dans l\'union')
     # print('TODO: Tester que RR2 est incluse dans l\'union')
 
-
     print(
         "TODO: Tester que l'UNION d'une matrice avec elle meme, reste elle meme"
     )
@@ -404,7 +416,7 @@ def ex_intersecion():
     else:
         print("Test Intersection egal 1 FAIL")
 
-    print('TODO: Tester que l\'intersection es incluse dans RV et dans RP')
+    # print('TODO: Tester que l\'intersection es incluse dans RV et dans RP')
 
     # Avec la Random
     RV_I_RR = intersection(RV, RR)
@@ -413,11 +425,11 @@ def ex_intersecion():
     else:
         print("Test Intersection egal 2 FAIL")
 
-    print('TODO: Tester que l\'intersection es incluse dans RV et dans RR')
+    # print('TODO: Tester que l\'intersection es incluse dans RV et dans RR')
 
-    print(
-        "TODO: Tester que l'INTERSECTION d'une matrice avec elle meme, reste elle meme"
-    )
+    # print(
+    #     "TODO: Tester que l'INTERSECTION d'une matrice avec elle meme, reste elle meme"
+    # )
 
 
 def ex_inverse():
@@ -441,9 +453,9 @@ def ex_inverse():
 
     R53 = getPredefinie53()
     invR53 = inverse(R53)
-    print(
-        "TODO: Modifier la fonction getPredefinie53() tel qu'elle renvoye l'inverse de getPredefinie35"
-    )
+    # print(
+    #     "TODO: Modifier la fonction getPredefinie53() tel qu'elle renvoye l'inverse de getPredefinie35"
+    # )
 
     if sont_inverses(R35, R53):
         print("Test Inverse 2 OK")
@@ -460,9 +472,9 @@ def ex_inverse():
     else:
         print("Test Inverse 4 FAIL")
 
-    print(
-        "TODO: Modifier la fonction getPredefinieAutoInverse() tel qu'elle renvoye une matrice qui est l'inverse d'elle meme"
-    )
+    # print(
+    #     "TODO: Modifier la fonction getPredefinieAutoInverse() tel qu'elle renvoye une matrice qui est l'inverse d'elle meme"
+    # )
 
     R = getPredefinieAutoInverse()
 
@@ -511,19 +523,19 @@ def ex_composition():
 
 
 if __name__ == "__main__":
-    print("EXERCICE INITIAL")
+    # print("EXERCICE INITIAL")
     # ex_initial()
 
     # Une fois l'exercice ex_initial fini,
     # commentez la ligne avec '#' et decomentez l'exercice suivant en enlevant le #
-    print("EXERCICE UNION")
-    ex_union()
+    # print("EXERCICE UNION")
+    # ex_union()
 
     print("EXERCICE INTERSECTION")
-    # ex_intersecion()
+    ex_intersecion()
 
-    print("EXERCICE INVERSE")
+    # print("EXERCICE INVERSE")
     # ex_inverse()
 
-    print("EXERCICE COMPOSITION")
-    # ex_composition()
+    # print("EXERCICE COMPOSITION")
+    # # ex_composition()
