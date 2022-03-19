@@ -36,6 +36,7 @@ let estJourDansMois_4 jours mois =
   |Janvier | Mars | Mai | Juillet | Aout | Octobre | Decembre when jours < 32 && jours > 0 -> true
   | Avril | Juin | Septembre | Novembre when jours < 31 && jours > 0 -> true
   | Fevrier when jours < 29 && jours > 0 -> true
+  | _ -> false
 ;;
 estJourDansMois_4 29 Fevrier;;
 assert((estJourDansMois_4 0 Avril) = true);;

@@ -43,6 +43,8 @@ let coutFormOuDess fromOUdess =
   | F(value) -> coutFormage(value)
   | D(value) -> coutDessert(value);;
 
+coutFormOuDess(D(D1));;
+coutFormOuDess(F(M(12)));;
 
 type repa = | F1 of tailleEntree * platPrincipal | F2 of platPrincipal * fromOUdess;;
 
