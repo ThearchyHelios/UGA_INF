@@ -1,7 +1,7 @@
 /*
  * @Author: JIANG Yilun
  * @Date: 2022-03-21 15:19:40
- * @LastEditTime: 2022-03-21 16:44:12
+ * @LastEditTime: 2022-03-21 19:40:52
  * @LastEditors: JIANG Yilun
  * @Description:
  * @FilePath: /UGA_INF/INF203/Language C/semaine 7/Exercice2.c
@@ -49,6 +49,9 @@ int nb_character(FILE *f)
 
 int main(int argc, char *argv[])
 {
+    // if (argc = 1){
+    //     printf("Il y a %d caracteres dans le fichier %s\n", nb_character(stdin));
+    // }
     for (int i = 1; i < argc; i++)
     {
         FILE *f = fopen(argv[i], "r");
