@@ -1,7 +1,7 @@
 /*
  * @Author: JIANG Yilun
  * @Date: 2022-03-21 15:19:40
- * @LastEditTime: 2022-03-21 16:34:45
+ * @LastEditTime: 2022-03-21 16:39:43
  * @LastEditors: JIANG Yilun
  * @Description:
  * @FilePath: /UGA_INF/INF203/Language C/semaine 7/Exercice2.c
@@ -28,6 +28,7 @@
 //     char s[100];
 //     printf("Entrez une chaine de caractere: ");
 //     scanf("%s", s);
+//     // scanf 只能读取一个字符串
 //     printf("Il y a %d mots dans la chaine\n", wc(s));
 //     return 0;
 // }
