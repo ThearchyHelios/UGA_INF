@@ -1,7 +1,7 @@
 /*
  * @Author: JIANG Yilun
  * @Date: 2022-03-21 15:19:40
- * @LastEditTime: 2022-03-21 16:39:43
+ * @LastEditTime: 2022-03-21 16:44:12
  * @LastEditors: JIANG Yilun
  * @Description:
  * @FilePath: /UGA_INF/INF203/Language C/semaine 7/Exercice2.c
@@ -49,16 +49,20 @@ int nb_character(FILE *f)
 
 int main(int argc, char *argv[])
 {
-    FILE *f = fopen(argv[1], "r");
-    if (f == NULL)
+    for (int i = 1; i < argc; i++)
     {
-        printf("Erreur d'ouverture du fichier\n");
-        return 1;
-    }
-    else
-    {
-        printf("Il y a %d caracteres dans le fichier\n", nb_character(f));
-        fclose(f);
+        FILE *f = fopen(argv[i], "r");
+        if (f == NULL)
+        {
+            printf("Erreur dans l'ouverture du fichier %s\n", argv[i]);
+            return 1;
+        }
+        else
+        {
+            printf("Il y a %d caracteres dans le fichier %s\n", nb_character(f), argv[i]);
+            fclose(f);
+        }
+
         return 0;
     }
 }
